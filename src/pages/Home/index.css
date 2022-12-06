@@ -1,0 +1,42 @@
+#homePage {
+  margin: 0 60px;
+}
+
+.fit {
+  max-width: 100%;
+  margin: 30px 0;
+}
+
+#content #bookOfWeekCont {
+  max-height: 400px;
+  max-width: 100%;
+  margin: 20px 0;
+  font-size: 19px;
+  text-align: justify;
+  border: 1px solid #f0f0f0;
+  border-left: none;
+  border-right: none;
+  padding: 30px 10px;
+}
+#content #bookOfWeekCont img {
+  float: left;
+  max-height: 300px;
+}
+
+#content #bookOfWeekCont p span {
+  font-size: 26px;
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+  top: 50%;
+  bottom: auto;
+  width: auto;
+  padding: 10px;
+}
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  background-color: #008b8b;
+}

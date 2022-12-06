@@ -1,0 +1,108 @@
+#dashboard header,
+#dashboard footer {
+  position: relative;
+  z-index: 100;
+}
+
+#dashboard header,
+#dashboard .account {
+  display: flex;
+  align-items: center;
+}
+
+#dashboard .logo,
+#dashboard .account {
+  cursor: pointer;
+}
+
+#dashboard header {
+  height: 50px;
+  font-weight: 500;
+  justify-content: space-between;
+  box-shadow: 0px 0 4px 0 #111;
+}
+
+#dashboard .account {
+  justify-content: space-between;
+  font-size: 17px;
+}
+
+#dashboard .logo {
+  margin: auto 20px;
+}
+
+#dashboard #headerLeft {
+  display: flex;
+  width: 50%;
+  justify-content: start;
+  align-items: center;
+}
+#dashboard .logo a {
+  text-decoration: none;
+}
+
+#dashboard .logo p {
+  font-size: 26px !important;
+  margin: 0;
+  color: black;
+  font-weight: 500;
+}
+#dashboard .logo p span {
+  color: #008b8b;
+  font-weight: bolder;
+  font-size: 26;
+}
+
+#dashboard .title {
+  margin: 0;
+  font-weight: 400;
+  color: #604d4d;
+}
+
+#dashboard .account > span {
+  font-weight: 400;
+  margin: 0 10px;
+}
+
+#dashboard #copyright {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+}
+
+#dashboard .container {
+  background-color: #efefef;
+}
+
+#dashboard nav {
+  background-color: white;
+  width: 240px;
+}
+
+#dashboard nav a {
+  width: 100%;
+  display: inline-block;
+  background-color: white;
+  color: var(--primary-color);
+  border-bottom: 1px solid #efefef;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+}
+
+#dashboard nav a svg {
+  margin: 0 12px;
+}
+
+#dashboard nav a.isActive,
+#dashboard nav a:hover {
+  color: white;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}

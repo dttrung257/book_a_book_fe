@@ -1,0 +1,154 @@
+:root {
+  --head-banner: #e8ebe6;
+}
+.container {
+  width: 1400px;
+  min-height: 500px;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.filter {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+}
+.content {
+  width: 75%;
+  border-left: 1px solid black;
+  padding: 20px;
+  min-height: 500px;
+  height: fit-content;
+}
+.bookContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  height: fit-content;
+  min-height: 500px;
+}
+.filterArea {
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+  margin-right: 50px;
+  padding-bottom: 30px;
+}
+.filterArea:nth-child(3) {
+  border: 0px;
+}
+.filterTitle {
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: bolder;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.criterionTitle,
+.TitleOnClick {
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 26px;
+  color: #008b8b;
+  padding-left: 20px;
+  letter-spacing: 1px;
+}
+.criterionTitle:hover,
+.TitleOnClick:hover {
+  text-decoration: underline;
+}
+.TitleOnClick {
+  background-color: #008b8b;
+  color: white;
+  border-radius: 15px;
+  border-collapse: collapse;
+}
+.starContainer {
+  display: flex;
+  line-height: 26px;
+}
+.starItem {
+  margin-right: 5px;
+  cursor: pointer;
+}
+.pageContainer {
+  list-style-type: none;
+  float: right;
+  display: flex;
+}
+
+.pageItem {
+  display: inline;
+  margin-left: 10px;
+  border-radius: 10px;
+  min-width: 30px;
+  min-height: 30px;
+  vertical-align: middle;
+  text-align: center;
+  padding: 2;
+}
+.pageItem > a:hover,
+.pageItem:hover {
+  color: #008b8b;
+}
+.pageItem a {
+  text-decoration: none;
+  color: black;
+  text-align: center;
+  font-weight: 500;
+}
+.currentPage {
+  background-color: #008b8b;
+  color: white;
+}
+.currentPage:hover {
+  color: white;
+}
+.pageNull {
+  display: none;
+}
+
+.headerCate,
+.headBanner {
+  width: 100%;
+}
+.headerCate {
+  height: 100px;
+}
+.headBanner {
+  line-height: 30px;
+  background-color: var(--head-banner);
+  vertical-align: middle;
+  text-align: center;
+  font-size: 12px;
+}
+
+.categoryTitle {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #000;
+  line-height: 0.1em;
+  margin: 10px 0 20px;
+  font-family: Poynter, Georgia, serif;
+  letter-spacing: 2px;
+  font-weight: 300;
+  font-size: 36px;
+}
+
+.categoryTitle > span {
+  background: #fff;
+  padding: 0 10px;
+}
+.banner {
+  width: 100%;
+}
+.bannerContainer {
+  display: flex;
+  justify-items: center;
+  margin-bottom: 15px;
+}
+.imgBanner {
+  object-fit: cover;
+}
