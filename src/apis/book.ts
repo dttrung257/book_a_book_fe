@@ -32,24 +32,8 @@ export const getBooksOfCategory = async (filter: FilterSearch) => {
   return response.data;
 };
 
-export const getBookByName = async (name: string, page: number) => {
-  try {
-    const response = await axiosInstance.get(
-      `books/name?name=${name}&page=${page}&size=12`
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getBooks = async (filter: FilterSearch) => {
-  let query = `?name=${filter.name}`;
-  query = query.concat(`&category=${filter.category}`);
-  query =
-    query.concat(`&from=${filter.from}&to=${filter.to}&rating=${filter.rating}
-                        &page=${filter.page}&size=12`);
-
+  let query = `?page=${filter.page}&name=${filter.name}&category=${filter.category}&from=${filter.from}&to=${filter.to}&rating=${filter.rating}&best_selling=${filter.best_selling}`;
   const response = await axiosInstance.get(`books/${query}`);
   return response.data;
 };

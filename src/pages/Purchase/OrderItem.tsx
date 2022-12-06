@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import AppModal from "../../components/AppModal/AppModal";
 import { getOrderDetails } from "../../apis/order";
 import { useAppSelector } from "../../store/hook";
-import style from "./OrderItem.module.css";
+import { BsTruck } from "react-icons/bs";
+import { Button } from "react-bootstrap";
 interface Message {
   status: "success" | "fail";
   content: string;
@@ -48,16 +49,22 @@ const OrderItem = (props: { order: PersonalOrder }) => {
   };
   return (
     <div className="itemContainer">
+      <div className="status">
+        <BsTruck className="mx-2" />
+        {props.order.status}
+      </div>
       {itemList.map((item) => {
         return (
           <div className="item">
-            <img
-              src={item.image}
-              alt={item.id}
-              key={item.id}
-              width={90}
-              height={90}
-            />
+            <div className="itemBox">
+              <img
+                src={item.image}
+                alt={item.id}
+                key={item.id}
+                width={90}
+                height={90}
+              />
+            </div>
             <div className="infor">
               <h5>{item.bookName}</h5>
               <p>x{item.quantityOrdered}</p>
@@ -65,6 +72,22 @@ const OrderItem = (props: { order: PersonalOrder }) => {
           </div>
         );
       })}
+      <div className="divider"></div>
+      <div className="totalInfor">
+        <div className="clearfix">
+          <span className="mx-2">Total:</span>
+          <span className="cash">
+            <sup>$</sup>
+            {props.order.total}
+          </span>
+        </div>
+      </div>
+      <div className="buttonOrder">
+        <Button className="rebuyBt px-5 mx-3">ReBuy</Button>
+        <Button variant="secondary" className="deleteOrderBt px-5">
+          Delete
+        </Button>
+      </div>
     </div>
   );
 };

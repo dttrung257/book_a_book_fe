@@ -1,12 +1,13 @@
 import "./index.css";
-import { BookInfoBrief } from "../../models";
+import { Book } from "../../models";
 import { useNavigate, useLocation } from "react-router-dom";
 import { formatStr } from "../../utils";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { cartActions } from "../../store/cartSlice";
 import { useState } from "react";
+import { FaStar } from "react-icons/fa";
 
-const BookCard = (props: { book: BookInfoBrief }) => {
+const BookCard = (props: { book: Book }) => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
@@ -58,8 +59,22 @@ const BookCard = (props: { book: BookInfoBrief }) => {
           <h3 id="CardName" onClick={handleProductClick}>
             {formatStr(props.book.name, 16)}
           </h3>
-          <p style={{ color: "#008b8b" }}>{formatStr(props.book.author, 15)}</p>
-          <p style={{ fontSize: "10" }}>{`${props.book.sellingPrice}$`}</p>
+          <span>
+            by{" "}
+            <span style={{ color: "#008b8b" }}>
+              {formatStr(props.book.author, 15)}
+            </span>
+          </span>
+          <div style={{ color: "grey" }}>
+            {props.book.rating}{" "}
+            <sup>
+              <FaStar size={16} style={{ color: "#dcd13a" }} />
+            </sup>
+            <span className="mx-2">Sold: {props.book.quantitySold}</span>
+          </div>
+          <div
+            style={{ fontSize: "20", color: "#008b8b" }}
+          >{`${props.book.sellingPrice}$`}</div>
         </div>
       </div>
     </div>

@@ -38,16 +38,15 @@
   width: 200px;
   border: 1px solid #f0f0f0;
   height: 300px;
-
+  margin-bottom: 15px;
   margin-top: 20px;
 }
 #CardName {
   font-size: 20px;
+  font-weight: 400;
   cursor: pointer;
 }
-#CardFrame div img {
-  cursor: pointer;
-}
+
 #CardName:hover {
   text-decoration: underline;
 }
@@ -67,12 +66,18 @@
   cursor: pointer;
   object-fit: cover;
 }
+#CardImg > img:hover {
+  filter: brightness(105%);
+}
+.BookCard:hover {
+  border: 1px solid rgb(200, 200, 200);
+}
 #CardImg {
   position: relative;
   width: fit-content;
   height: 200px;
-  object-fit: cover;
   z-index: 1;
+  cursor: pointer;
 }
 #AddContainer {
   width: 160px;

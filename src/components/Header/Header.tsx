@@ -13,7 +13,6 @@ import {
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { Link, useNavigate } from "react-router-dom";
 import { authActions } from "../../store/authSlice";
-import { searchActions } from "../../store/searchSlice";
 
 const Header = () => {
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -24,9 +23,12 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
   const handleSearch = () => {
-    //redux
-    dispatch(searchActions.setNameSearch({ name }));
-    navigate("/books");
+    setName(name.trim());
+    let param = `books?page=0`;
+    if (name !== "") {
+      param = param.concat(`&name=${name}`);
+    }
+    navigate(param);
   };
 
   const onChangeSearchBox = (event: ChangeEvent<HTMLInputElement>) => {
@@ -119,37 +121,39 @@ const Header = () => {
                       />
                     </ListItemButton>
                   </ListItem>
-                  {user.authority === "ADMIN" ? <ListItem disablePadding>
-                    <ListItemButton
-                      style={{ padding: "3px 30px 3px 15px" }}
-                      component="a"
-                      href="/dashboard"
-                    >
-                      <ListItemText
-                        primaryTypographyProps={{
-                          fontSize: 14,
-                          fontWeight: 500,
-                        }}
-                        primary="Dashboard"
-                      />
-                    </ListItemButton>
-                  </ListItem> : 
-                  <ListItem disablePadding>
-                    <ListItemButton
-                      style={{ padding: "3px 30px 3px 15px" }}
-                      component="a"
-                      href="#simple-list"
-                    >
-                      <ListItemText
-                        primaryTypographyProps={{
-                          fontSize: 14,
-                          fontWeight: 500,
-                        }}
-                        primary="My Purchase"
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                  }
+                  {user.authority === "ADMIN" ? (
+                    <ListItem disablePadding>
+                      <ListItemButton
+                        style={{ padding: "3px 30px 3px 15px" }}
+                        component="a"
+                        href="/dashboard"
+                      >
+                        <ListItemText
+                          primaryTypographyProps={{
+                            fontSize: 14,
+                            fontWeight: 500,
+                          }}
+                          primary="Dashboard"
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  ) : (
+                    <ListItem disablePadding>
+                      <ListItemButton
+                        style={{ padding: "3px 30px 3px 15px" }}
+                        component="a"
+                        href="#simple-list"
+                      >
+                        <ListItemText
+                          primaryTypographyProps={{
+                            fontSize: 14,
+                            fontWeight: 500,
+                          }}
+                          primary="My Purchase"
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  )}
                   <ListItem disablePadding>
                     <ListItemButton
                       style={{ padding: "3px 30px 3px 15px" }}
@@ -169,16 +173,16 @@ const Header = () => {
                 </List>
               </div>
             </div>
-            {user.authority === "ADMIN" ? null : 
-            <Badge
-              overlap="rectangular"
-              badgeContent={totalQuantity}
-              color="error"
-              onClick={() => navigate("/cart")}
-            >
-              <FiShoppingCart fontSize={20} />
-            </Badge>
-            }
+            {user.authority === "ADMIN" ? null : (
+              <Badge
+                overlap="rectangular"
+                badgeContent={totalQuantity}
+                color="error"
+                onClick={() => navigate("/cart")}
+              >
+                <FiShoppingCart fontSize={20} />
+              </Badge>
+            )}
           </Fragment>
         ) : (
           <Fragment>

@@ -110,12 +110,13 @@
   display: none;
 }
 
-.headerCate,
+.bookHeader,
 .headBanner {
   width: 100%;
 }
-.headerCate {
+.bookHeader {
   height: 100px;
+  z-index: 0;
 }
 .headBanner {
   line-height: 30px;
@@ -151,4 +152,62 @@
 }
 .imgBanner {
   object-fit: cover;
+}
+.dropDown {
+  float: right;
+  line-height: 30px;
+  width: 200px;
+  background-color: var(--book-sort);
+  border: 1px solid grey;
+  vertical-align: middle;
+  cursor: pointer;
+  font-size: 12px;
+  color: grey;
+  position: relative;
+  padding: 0;
+  margin-top: 20px;
+  z-index: 50;
+}
+.dropIcon {
+  float: right;
+  margin-right: 10px;
+  margin-top: 8px;
+}
+.dropDown:hover {
+  border: 1px solid black;
+  border-bottom: 0;
+}
+.dropDownList {
+  position: absolute;
+  width: 100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: none;
+  border: 1px solid black;
+  background-color: var(--book-sort);
+  z-index: inherit;
+  background-color: white;
+}
+.dropDown:hover .dropDownList {
+  display: block;
+}
+.dropDownItem {
+  color: #000;
+  font-size: 14px;
+  padding-left: 10px;
+  justify-content: center;
+  transition: border-left 0.1s linear;
+  margin: 0;
+}
+.dropDownItem:hover {
+  border-left: 2px solid black;
+  background-color: rgb(184, 184, 184);
+}
+.dropDown:before {
+  content: "Sort by:";
+  margin: 5px;
+}
+.pageNull {
+  display: none;
 }

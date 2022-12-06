@@ -1,16 +1,15 @@
 import React, { useState, useLayoutEffect } from "react";
 import styled from "styled-components";
 import "./index.css";
-import { FaStar, FaBookOpen } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaStar, FaBookOpen, FaChevronDown } from "react-icons/fa";
+import { Link, useSearchParams } from "react-router-dom";
 import * as bookSearch from "../../apis/book";
 import BookCard from "../../components/Book/BookCard";
-import { Subject, priceRanges, BookInfoBrief } from "../../models";
-import ReactPaginate from "react-paginate";
-import { useAppSelector } from "../../store/hook";
+import { Subject, priceRanges, Book } from "../../models";
 import { FilterSearch } from "../../models/Filter";
 import { isAxiosError } from "../../apis/axiosInstance";
 import CategoryBanner from "../../components/CategoryBanner/CategoryBanner";
+import Pagination from "@mui/material/Pagination";
 const Wrapper = styled.div`
   background-color: #ffffff;
   position: relative;
@@ -24,30 +23,27 @@ const Wrapper = styled.div`
 const price = [0, 5, 10, 25, 50, 100000000];
 
 const CategoryPage = () => {
-  const [searchResult, setSearchResult] = useState<BookInfoBrief[]>([]);
-  const [page, setPage] = useState<number>(0);
+  const [searchResult, setSearchResult] = useState<Book[]>([]);
+
   const [hover, setHover] = useState(-1);
-  const name = useAppSelector((state) => state.search.name);
-  const [filter, setFilter] = useState<FilterSearch>({
-    page: 0,
-    category: "",
-    rating: 0,
-    from: 0.1,
-    to: 100000000,
-    size: 12,
-    best_selling: false,
-    name: name,
-  });
+  const [filter, setFilter] = useState<FilterSearch>({ rating: 0 });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [totalpage, setTotalPages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(
+    parseInt(searchParams.get("page") || "0")
+  );
   const stars = Array(5).fill(0);
 
   const handleHoverStar = (value: number) => {
     setHover(value);
   };
-  const handlePageClick = (value: number) => {
-    setFilter({
-      ...filter,
-      page: value,
-    });
+  const handleChangePage = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setCurrentPage(value - 1);
+    searchParams.set("page", (value - 1).toString());
+    setSearchParams(searchParams);
   };
 
   const handlePriceChange = (id: number) => {
@@ -56,54 +52,91 @@ const CategoryPage = () => {
         ...filter,
         from: price[id],
         to: price[id + 1],
-        page: 0,
       });
+      searchParams.set("from", price[id].toString());
+      searchParams.set("to", price[id + 1].toString());
     } else {
       setFilter({
         ...filter,
         from: 0.1,
         to: 100000000,
-        page: 0,
       });
+      searchParams.delete("from");
+      searchParams.delete("to");
     }
+    setSearchParams(searchParams);
   };
   const handleCategoryClick = (category: string) => {
     if (filter.category === category) {
       setFilter({
         ...filter,
         category: "",
-        page: 0,
       });
+      searchParams.delete("category");
     } else {
       setFilter({
         ...filter,
         category: category,
-        page: 0,
       });
+      searchParams.set("category", category);
     }
+    setSearchParams(searchParams);
   };
-  const handleRatingClick = (value: number) => {
+  const handleRatingChange = (value: number) => {
     if (filter.rating === value) {
       setFilter({
         ...filter,
         rating: 0,
-        page: 0,
       });
+      searchParams.delete("rating");
     } else {
       setFilter({
         ...filter,
         rating: value,
-        page: 0,
       });
+      searchParams.set("rating", value.toString());
     }
+  };
+  const handleBestSelling = (bestSelling: boolean) => {
+    if (bestSelling) {
+      setFilter({
+        ...filter,
+        best_selling: true,
+      });
+      searchParams.set("best_selling", "true");
+    } else {
+      setFilter({
+        ...filter,
+        best_selling: false,
+      });
+      searchParams.delete("best_selling");
+    }
+    setSearchParams(searchParams);
   };
 
   useLayoutEffect(() => {
+    const name = searchParams.get("name") || "";
+    const category = searchParams.get("category") || "";
+    const from = searchParams.get("from") || "";
+    const to = searchParams.get("to") || "";
+    const rating = searchParams.get("rating") || "";
+    const page = searchParams.get("page") || "0";
+    const best_selling = searchParams.get("best_selling") || false;
     const fetchApi = async () => {
       try {
-        const result = await bookSearch.getBooks(filter);
-        setSearchResult(result.content);
-        setPage(result.totalPages);
+        const result = await bookSearch.getBooks({
+          name,
+          category,
+          from,
+          to,
+          rating,
+          page,
+          best_selling,
+        });
+        searchParams.set("page", page);
+        setSearchParams(searchParams);
+        setSearchResult(result.content as Book[]);
+        setTotalPages(result.totalPages);
         console.log(result);
       } catch (error) {
         if (isAxiosError(error)) {
@@ -112,7 +145,7 @@ const CategoryPage = () => {
       }
     };
     fetchApi();
-  }, [name, filter]);
+  }, [filter, searchParams]);
   console.log(searchResult);
   return (
     <Wrapper>
@@ -172,7 +205,7 @@ const CategoryPage = () => {
                           }
                         : { color: "#989898" }
                     }
-                    onClick={() => handleRatingClick(index + 1)}
+                    onClick={() => handleRatingChange(index + 1)}
                     onMouseOver={() => handleHoverStar(index)}
                     onMouseLeave={() => handleHoverStar(-1)}
                   />
@@ -182,16 +215,36 @@ const CategoryPage = () => {
           </div>
         </div>
         <div className="content">
-          <div className="headerCate">
+          <div className="bookHeader">
             <div className="categoryTitle">
               <span>
-                {filter.category === "" ? "The Book Store" : filter.category}
+                {searchParams.get("category")
+                  ? filter.category
+                  : "The Book Store"}
               </span>
             </div>
+            <label className="dropDown">
+              {filter.best_selling ? "Best Selling" : "Alls"}
+              <FaChevronDown className="dropIcon" />
+              <ul className="dropDownList">
+                <li
+                  className="dropDownItem"
+                  onClick={() => handleBestSelling(false)}
+                >
+                  All
+                </li>
+                <li
+                  className="dropDownItem"
+                  onClick={() => handleBestSelling(true)}
+                >
+                  Best Selling
+                </li>
+              </ul>
+            </label>
           </div>
-          <div className="bannerContainer">
+          {/* <div className="bannerContainer">
             <CategoryBanner category={"FANTASY"} />
-          </div>
+          </div> */}
           <div className="headBanner">
             <FaBookOpen size={14} className="mx-2" />
             Have a good day at Book a book. Get it at our home page
@@ -204,20 +257,22 @@ const CategoryPage = () => {
               return <BookCard key={result.id} book={result} />;
             })}
           </div>
-          <ReactPaginate
-            pageCount={page}
-            nextLabel={">>"}
-            previousLabel={"<<"}
-            breakLabel={" . . . "}
-            marginPagesDisplayed={1}
-            pageRangeDisplayed={2}
-            containerClassName={page <= 1 ? "pageNull" : "pageContainer"}
-            pageClassName="pageItem"
-            previousClassName="pageItem"
-            nextClassName="pageItem"
-            onPageChange={(data) => handlePageClick(data.selected)}
-            activeClassName="currentPage"
-            forcePage={filter.page}
+          <Pagination
+            count={totalpage}
+            page={currentPage + 1}
+            showFirstButton
+            showLastButton
+            color="primary"
+            style={{
+              maxHeight: "25px",
+              width: "75vw",
+              // marginLeft: "auto",
+              // marginRight: "auto",
+              // height: "auto",
+              // marginTop: "auto",
+            }}
+            onChange={handleChangePage}
+            className={totalpage <= 1 ? "pageNull" : ""}
           />
         </div>
       </div>

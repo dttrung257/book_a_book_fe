@@ -1,11 +1,11 @@
 export interface FilterSearch {
   //num of items in 1 page
   size?: number;
-  page?: number;
+  page?: number | string;
   name?: string;
   category?: string;
-  rating: number;
-  from?: number;
-  to?: number;
-  best_selling?: boolean;
+  rating: number | string;
+  from?: number | string;
+  to?: number | string;
+  best_selling?: boolean | string;
 }

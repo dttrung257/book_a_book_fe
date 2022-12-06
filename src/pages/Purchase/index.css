@@ -8,29 +8,6 @@
 #orderHead {
   border: 1px solid grey;
 }
-.iconSetting {
-  position: relative;
-}
-.icon {
-  cursor: pointer;
-}
-.iconSetting a {
-  text-decoration: none;
-  color: inherit;
-}
-.iconSetting:hover > .action {
-  display: block;
-}
-.iconSetting > .action {
-  position: absolute;
-  z-index: 100;
-  left: 0;
-  top: 100%;
-  background-color: white;
-  width: 100%;
-  display: none;
-  border: 1px solid grey;
-}
 .divider {
   line-height: 0.5px;
   border-bottom: 1px solid grey;
@@ -40,16 +17,66 @@
 }
 .itemContainer {
   width: 80%;
-  border: 0.5px solid rgb(147, 145, 145);
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
+
+  margin: 20px;
+  display: block;
+  position: relative;
 }
 .item {
-  margin: 20px;
   display: flex;
   flex-direction: row;
+  border-top: 0.1px solid rgb(225, 225, 225);
+  margin: 10px;
+  padding-top: 10px;
 }
 .infor {
   padding-left: 20px;
+}
+.divider {
+  line-height: 0.5px;
+  border-bottom: 0.1px dashed rgb(226, 226, 226);
+  width: 100%;
+}
+.status {
+  color: #008b8b;
+  font-size: large;
+  text-align: right;
+  margin: 5px;
+}
+.itemBox {
+  height: 92px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.1px solid rgb(206, 206, 206);
+}
+.totalInfor {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  width: 100%;
+}
+.cash {
+  font-size: 30px;
+  color: #008b8b;
+}
+.buttonOrder {
+  text-align: right;
+  display: block;
+}
+.clearfix::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.clearfix::before {
+  clear: both;
+}
+.rebuyBt:hover {
+  filter: brightness(90%);
+}
+.deleteOrderBt {
+  background-color: white;
+  color: black;
 }
