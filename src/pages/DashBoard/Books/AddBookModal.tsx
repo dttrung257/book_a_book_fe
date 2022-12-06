@@ -121,7 +121,10 @@ const AddBookModal = (prop: {
       <AppModal
         title="Add Book"
         showModal={prop.showModal}
-        setShowModal={prop.setShowModal}
+        setShowModal={(showModal) => {
+          prop.setShowModal(showModal);
+          setError({});
+        }}
       >
         <Form
           onSubmit={addBook}

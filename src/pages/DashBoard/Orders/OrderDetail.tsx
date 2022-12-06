@@ -9,7 +9,8 @@ import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import AppModal from "../../../components/AppModal/AppModal";
 import { OrderInfo, UserDetailInfo } from "../../../models";
 import { useAppSelector } from "../../../store/hook";
-import style from "../User/User.module.css"; // dung ke
+import { toast } from "react-toastify";
+import style from "../MainLayout.module.css";
 
 const SubContainer = styled.div`
   border-bottom: solid 2px #cbcbcb;
@@ -42,7 +43,6 @@ const OrderDetail = () => {
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [orderStatus, setOrderStatus] = useState<string>("");
   const [message, setMessage] = useState<MessageStatus | null>(null);
-  //const [newStatus, setNewStatus] = useState<string>('');
   useEffect(() => {
     const getInfo = async () => {
       try {
@@ -54,7 +54,6 @@ const OrderDetail = () => {
         console.log("order: ", responseOrder.data);
         setOrderInfo(responseOrder.data);
 
-        // order status?
         setOrderStatus(responseOrder.data.status);
 
         const responseOrderDetails = await axios.get(
@@ -108,9 +107,9 @@ const OrderDetail = () => {
           },
         }
       );
-      //setOrderStatus(status);
       setOrderInfo({ ...orderInfo, status } as OrderInfo);
       setStatusModal(false);
+      toast.success(`Changed status of order #${id} to ${status}`);
       console.log(res);
     } catch (error) {
       if (isAxiosError(error)) {
@@ -141,7 +140,7 @@ const OrderDetail = () => {
         },
       });
       console.log(res);
-
+      toast.success("Order deleted");
       navigate("/dashboard/orders");
     } catch (error) {
       if (isAxiosError(error)) {
@@ -243,7 +242,9 @@ const OrderDetail = () => {
             </div>
             <div className="flex-fill ps-3">
               <h5>Shipping Address</h5>
-              <p className="fw-bold">{orderInfo.fullName}</p>
+              <span className="fw-bold">{orderInfo.fullName}</span>
+              <br />
+              <span>{orderInfo.phoneNumber}</span>
               <p>{orderInfo.address}</p>
             </div>
           </SubContainer>

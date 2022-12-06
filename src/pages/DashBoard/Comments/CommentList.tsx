@@ -3,27 +3,25 @@ import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { toast } from "react-toastify";
 import { Table, Form } from "react-bootstrap";
 import style from "../MainLayout.module.css";
-import OrderItem from "./OrderItem";
+import { CommentDetail } from "../../../models";
 import { useAppSelector } from "../../../store/hook";
-import { OrderInfo } from "../../../models";
 import { Button, Pagination } from "@mui/material";
 import { BsSearch } from "react-icons/bs";
 import { useSearchParams } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
 import moment from "moment";
+import CommentItem from "./CommentItem";
 
 interface SearchInfo {
-  name?: string;
-  status?: string;
-  priceFrom?: number | string;
-  priceTo?: number | string;
+  bookID?: string;
+  bookName?: string;
   date?: string;
+  userName?: string;
 }
 
-const Order = () => {
-  //   const navigate = useNavigate();
+const CommentList = () => {
   const accessToken = useAppSelector((state) => state.auth.accessToken);
-  const [ordersList, setOrdersList] = useState<OrderInfo[]>([]);
+  const [commentsList, setCommentsList] = useState<CommentDetail[]>([]);
   const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchInfo, setSearchInfo] = useState<SearchInfo>({});
@@ -33,10 +31,10 @@ const Order = () => {
     parseInt(searchParams.get("page") || "0")
   );
 
-  const getOrdersList = useCallback(
+  const getCommentsList = useCallback(
     async (filter: SearchInfo, page: number | string = 0) => {
       const response = await axios.get(
-        `/manage/orders/?page=${page}&name=${filter.name}&from=${filter.priceFrom}&to=${filter.priceTo}&date=${filter.date}&status=${filter.status}`,
+        `/manage/comments?page=${page}&book_id=${filter.bookID}&book_name=${filter.bookName}&date=${filter.date}&fullname=${filter.userName}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -47,19 +45,17 @@ const Order = () => {
     },
     [accessToken]
   );
-
   useEffect(() => {
-    const name = searchParams.get("name") || "";
-    const status = searchParams.get("status") || "";
-    const priceFrom = searchParams.get("from") || "";
-    const priceTo = searchParams.get("to") || "";
+    const bookID = searchParams.get("bookID") || "";
+    const bookName = searchParams.get("bookName") || "";
     const date = searchParams.get("date") || "";
+    const userName = searchParams.get("userName") || "";
     const page = searchParams.get("page") || "0";
 
-    getOrdersList({ name, status, priceFrom, priceTo, date }, page)
+    getCommentsList({ bookID, bookName, date, userName }, page)
       .then((data) => {
         console.log(data);
-        setOrdersList(data.content);
+        setCommentsList(data.content);
         setTotalPages(data.totalPages);
       })
       .catch((error) => {
@@ -74,46 +70,34 @@ const Order = () => {
     window.scrollTo(0, 0);
 
     return () => {};
-  }, [getOrdersList, searchParams]);
+  }, [getCommentsList, searchParams]);
 
   const onSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (Object.keys(searchInfo).length === 0 || searchInfo.status === "")
+    if (Object.keys(searchInfo).length === 0)
       return setMessage("Please enter something to search");
     setMessage("");
-    if (
-      (searchInfo.priceFrom && searchInfo.priceFrom < 0) ||
-      (searchInfo.priceTo && searchInfo.priceTo <= 0)
-    ) {
-      return setMessage("Price must be greater than 0");
-    }
-    if (
-      searchInfo.priceFrom &&
-      searchInfo.priceTo &&
-      searchInfo.priceFrom > searchInfo.priceTo
-    ) {
-      return setMessage("Price From must be less than Price To");
-    }
 
-    if (searchInfo.name) {
-      searchParams.set("name", searchInfo.name.replace(/\s+/g, " ").trim());
+    if (searchInfo.bookID) {
+      searchParams.set("bookID", searchInfo.bookID.toString());
     } else {
-      searchParams.delete("name");
+      searchParams.delete("bookID");
     }
-    if (searchInfo.status) {
-      searchParams.set("status", searchInfo.status);
+    if (searchInfo.bookName) {
+      searchParams.set(
+        "bookName",
+        searchInfo.bookName.replace(/\s+/g, " ").trim()
+      );
     } else {
-      searchParams.delete("status");
+      searchParams.delete("bookName");
     }
-    if (searchInfo.priceFrom) {
-      searchParams.set("from", searchInfo.priceFrom.toString());
+    if (searchInfo.userName) {
+      searchParams.set(
+        "userName",
+        searchInfo.userName.replace(/\s+/g, " ").trim()
+      );
     } else {
-      searchParams.delete("from");
-    }
-    if (searchInfo.priceTo) {
-      searchParams.set("to", searchInfo.priceTo.toString());
-    } else {
-      searchParams.delete("to");
+      searchParams.delete("userName");
     }
     if (searchInfo.date) {
       searchParams.set("date", moment(searchInfo.date).format("DD-MM-YYYY"));
@@ -139,25 +123,17 @@ const Order = () => {
   return (
     <>
       <div className={`${style.header} mb-2`}>
-        <h2> Orders list</h2>
-        <Button
-          style={{ backgroundColor: "var(--primary-color)", color: "white" }}
-          onClick={() => {
-            console.log("add");
-          }}
-        >
-          Add Order
-        </Button>
+        <h2> Comments list</h2>
       </div>
       <div className={`${style.content}`}>
         <div className="d-flex justify-content-between align-items-center">
-          <h4>Result for {searchParams.get("name") || "all orders"}</h4>
+          <h4>Result for {searchParams.get("bookName") || "all comments"}</h4>
           <div
             id={style.search}
             className="px-3 py-2 d-flex justify-content-between align-items-center"
             onClick={() => setShowSearchModal(true)}
           >
-            Search for orders
+            Search for comments
             <BsSearch />
           </div>
         </div>
@@ -166,17 +142,17 @@ const Order = () => {
             <thead className={`${style.tableHeader}`}>
               <tr>
                 <th>ID</th>
+                <th>Content</th>
+                <th>Star</th>
+                <th>Book</th>
                 <th>User</th>
-                <th>Date</th>
-                <th>Quantity</th>
-                <th>Total</th>
-                <th>Status</th>
+                <th>Created At</th>
                 <th></th>
               </tr>
             </thead>
             <tbody className={`${style.tableBody}`}>
-              {ordersList.map((order) => (
-                <OrderItem key={order.id} order={order} />
+              {commentsList.map((comment) => (
+                <CommentItem key={comment.id} comment={comment} />
               ))}
             </tbody>
           </Table>
@@ -195,79 +171,57 @@ const Order = () => {
           onChange={handleChangePage}
         />
       </div>
-
       <AppModal
         showModal={showSearchModal}
         setShowModal={(showModal) => {
           setShowSearchModal(showModal);
           setMessage("");
         }}
-        title={"Search for orders "}
+        title={"Search for comments "}
       >
         <div>
           <form className={style.searchForm} onSubmit={onSearchSubmit}>
             <div>
-              <label htmlFor="nameInput">Name or email</label>
+              <label htmlFor="bookIDInput">Book ID</label>
               <input
-                id="nameInput"
-                name="nameInput"
-                type="text"
-                value={searchInfo.name || ""}
+                id="bookIDInput"
+                name="bookIDInput"
+                type="number"
+                min="1"
+                value={searchInfo.bookID || ""}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setSearchInfo({
                     ...searchInfo,
-                    name: e.target.value,
+                    bookID: e.target.value,
                   })
                 }
               />
-              <label htmlFor="statusInput">Status</label>
-              <Form.Select
-                id="statusInput"
-                value={searchInfo.status || ""}
-                onChange={(e) => {
+              <label htmlFor="bookNameInput">Book Name</label>
+              <input
+                id="bookNameInput"
+                name="bookNameInput"
+                type="text"
+                value={searchInfo.bookName || ""}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setSearchInfo({
                     ...searchInfo,
-                    status: e.target.value,
-                  });
-                }}
-              >
-                <option value="">Choose status</option>
-                <option value="PENDING">PENDING</option>
-                <option value="SHIPPING">SHIPPING</option>
-                <option value="SUCCESS">SUCCESS</option>
-                <option value="CANCELED">CANCELED</option>
-              </Form.Select>
-
-              <label htmlFor="priceInput">Price</label>
-              <div className="d-flex align-items-center" id="priceInput">
-                <input
-                  id="fromInput"
-                  name="fromInput"
-                  type="number"
-                  placeholder="From"
-                  value={searchInfo.priceFrom || ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSearchInfo({
-                      ...searchInfo,
-                      priceFrom: e.target.value,
-                    })
-                  }
-                />
-                <span>&nbsp;-&nbsp;</span>
-                <input
-                  id="toInput"
-                  name="toInput"
-                  type="number"
-                  placeholder="To"
-                  value={searchInfo.priceTo || ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSearchInfo({
-                      ...searchInfo,
-                      priceTo: e.target.value,
-                    })
-                  }
-                />
-              </div>
+                    bookName: e.target.value,
+                  })
+                }
+              />
+              <label htmlFor="userNameInput">User Name</label>
+              <input
+                id="userNameInput"
+                name="userNameInput"
+                type="text"
+                value={searchInfo.userName || ""}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchInfo({
+                    ...searchInfo,
+                    userName: e.target.value,
+                  })
+                }
+              />
               <label htmlFor="dateInput">Date</label>
               <input
                 id="dateInput"
@@ -306,4 +260,4 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default CommentList;

@@ -34,17 +34,6 @@ const Books = () => {
   const [currentPage, setCurrentPage] = useState<number>(
     parseInt(searchParams.get("page") || "0")
   );
-  // const getBooksList = useCallback(
-  //   async (page: number | string = 0) => {
-  //     const response = await axios.get(`/books?page=${page}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     });
-  //     return response.data;
-  //   },
-  //   [accessToken]
-  // );
 
   const getBooksList = useCallback(
     async (filter: SearchInfo, page: number | string = 0) => {
@@ -88,43 +77,6 @@ const Books = () => {
         }
       });
     window.scrollTo(0, 0);
-    // if (name || category || priceFrom || priceTo || rating) {
-    //   getFilteredBooks({ name, category, priceFrom, priceTo, rating }, page)
-    //     .then((data) => {
-    //       console.log(data);
-    //       setBooksList(data.content);
-    //       setPage(data.totalPages);
-    //       //setTotalPages(data.totalPages);
-    //     })
-    //     .catch((error) => {
-    //       if (isAxiosError(error)) {
-    //         const data = error.response?.data;
-    //         console.log("error:", data);
-    //         //setMessage(data?.message);
-    //       } else {
-    //         //setMessage("Unknow error!!!");
-    //         console.log(error);
-    //       }
-    //     });
-    // } else {
-    //   getBooksList(page)
-    //     .then((data) => {
-    //       console.log(data);
-    //       setBooksList(data.content);
-    //       setPage(data.totalPages);
-    //       //setTotalPages(data.totalPages);
-    //     })
-    //     .catch((error) => {
-    //       if (isAxiosError(error)) {
-    //         const data = error.response?.data;
-    //         console.log("error:", data?.message);
-    //         //setMessage(data?.message);
-    //       } else {
-    //         //setMessage("Unknow error!!!");
-    //         console.log(error);
-    //       }
-    //     });
-    // }
     return () => {};
   }, [getBooksList, searchParams]);
 
@@ -246,23 +198,22 @@ const Books = () => {
           style={{
             maxHeight: "25px",
             width: "75vw",
-            // marginLeft: "auto",
-            // marginRight: "auto",
-            // height: "auto",
-            // marginTop: "auto",
           }}
           onChange={handleChangePage}
         />
       </div>
       <AppModal
         showModal={showSearchModal}
-        setShowModal={setShowSearchModal}
+        setShowModal={(showModal) => {
+          setShowSearchModal(showModal);
+          setMessage("");
+        }}
         title={"Search for books "}
       >
         <div>
           <form className={style.searchForm} onSubmit={onSearchSubmit}>
             <div>
-              <label htmlFor="nameInput">Name or email</label>
+              <label htmlFor="nameInput">Name</label>
               <input
                 id="nameInput"
                 name="nameInput"

@@ -3,6 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { HiUserGroup } from "react-icons/hi";
 import { MdLibraryBooks } from "react-icons/md";
 import { RiFileList3Fill } from "react-icons/ri";
+import { VscCommentDiscussion } from "react-icons/vsc";
 import style from "./DashBoardLayout.module.css";
 import { Avatar } from "@mui/material";
 import { useAppSelector } from "../../store/hook";
@@ -73,6 +74,15 @@ const Navbar = () => {
         >
           <RiFileList3Fill />
           Orders
+        </NavLink>
+      </div>
+      <div>
+        <NavLink
+          to={"comments"}
+          className={({ isActive }) => (isActive ? style.isActive : "")}
+        >
+          <VscCommentDiscussion />
+          Comments
         </NavLink>
       </div>
     </nav>

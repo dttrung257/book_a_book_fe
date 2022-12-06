@@ -130,7 +130,10 @@ const EditBookModal = (prop: {
       <AppModal
         title={`Update Book #${prop.book.id} information`}
         showModal={prop.showModal}
-        setShowModal={prop.setShowModal}
+        setShowModal={(showModal) => {
+          prop.setShowModal(showModal);
+          setError({});
+        }}
       >
         <Form
           onSubmit={editBook}

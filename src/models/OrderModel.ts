@@ -6,6 +6,7 @@ export interface OrderInfo {
   orderDate: string;
   address: string;
   quantity: number;
+  phoneNumber: string;
   total: number;
   status: string;
 }

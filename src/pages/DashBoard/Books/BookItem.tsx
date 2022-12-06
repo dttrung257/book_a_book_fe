@@ -3,10 +3,11 @@ import { CgMoreVertical } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
-import { Avatar, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { useAppSelector } from "../../../store/hook";
 import AppModal from "../../../components/AppModal/AppModal";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { toast } from "react-toastify";
 import style from "../MainLayout.module.css";
 const BookItem = ({ book: bookInfo }: { book: Book }) => {
   const { accessToken } = useAppSelector((state) => state.auth);
@@ -33,6 +34,11 @@ const BookItem = ({ book: bookInfo }: { book: Book }) => {
       );
       setIsStopSelling(!isStopSelling);
       setStatusModal(false);
+      toast.success(
+        `Changed book ID #${bookInfo.id} to ${
+          isStopSelling ? "Selling" : "Stop Selling"
+        }`
+      );
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;
