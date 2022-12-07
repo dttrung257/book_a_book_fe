@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button, Pagination } from "@mui/material";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import validator from "validator";
 import { UserDetailInfo, UserSignUp } from "../../../models";
 import UserItem from "./UserItem";
 import style from "./User.module.css";
+import styleMain from "../MainLayout.module.css";
 import { useAppSelector } from "../../../store/hook";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import AppModal from "../../../components/AppModal/AppModal";
@@ -24,11 +25,11 @@ const validationInfo = (info: UserSignUp): InfoError => {
   const error: InfoError = {};
 
   if (!info.firstName) error.firstName = "First name is required";
-  else if (!validator.isAscii(info.firstName))
+  else if (!/^[A-Za-z\s]*$/.test(info.firstName))
     error.firstName = " First name must contains only letters";
 
   if (!info.lastName) error.lastName = "Last name is required";
-  else if (!validator.isAscii(info.lastName))
+  else if (!/^[A-Za-z\s]*$/.test(info.lastName))
     error.lastName = " Last name must contains only letters";
 
   if (!info.email) error.email = "Email address is required";
@@ -46,7 +47,6 @@ const validationInfo = (info: UserSignUp): InfoError => {
 };
 
 const User = () => {
-  const navigate = useNavigate();
   const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [userAddInfo, setUserAddInfo] = useState<UserSignUp>({
@@ -56,6 +56,7 @@ const User = () => {
     gender: "",
     password: "",
   });
+  const [checkAddUser, setCheckAddUser] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [error, setError] = useState<InfoError>({});
   const [curPage, setCurPage] = useState<number>(
@@ -64,6 +65,8 @@ const User = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [usersList, setUsersList] = useState<UserDetailInfo[]>([]);
   const [searchText, setSearchText] = useState<string>("");
+  const searchUserInputRef = useRef<HTMLInputElement>(null);
+  const addUserInputRef = useRef<HTMLInputElement>(null);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
 
   const getUsersList = useCallback(
@@ -81,13 +84,28 @@ const User = () => {
     [accessToken]
   );
 
+  const handleCloseAddModal = (show: boolean) => {
+    setShowAddModal(show);
+    setUserAddInfo({
+      firstName: "",
+      lastName: "",
+      email: "",
+      gender: "",
+      password: "",
+    });
+    setError({});
+  };
+
   useEffect(() => {
     const user = searchParams.get("user") || "";
-    const page = searchParams.get("page") || "0";
+    const pageParam = searchParams.get("page") || "0";
+    let page = 0;
+    if (!isNaN(Number(pageParam))) page = Number(pageParam);
 
     getUsersList(user, page)
       .then((data) => {
         setUsersList(data.content);
+        setCurPage(page);
         setTotalPages(data.totalPages);
       })
       .catch((error) => {
@@ -102,7 +120,7 @@ const User = () => {
 
     window.scrollTo(0, 0);
     return () => {};
-  }, [getUsersList, searchParams]);
+  }, [getUsersList, searchParams, checkAddUser]);
 
   const onAddUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -121,7 +139,8 @@ const User = () => {
 
       toast.success("User has been added successfully");
       console.log(response);
-      navigate("/dashboard/users");
+      setCheckAddUser((pre) => !pre);
+      handleCloseAddModal(false);
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;
@@ -147,17 +166,16 @@ const User = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setCurPage(value - 1);
     searchParams.set("page", (value - 1).toString());
     setSearchParams(searchParams);
   };
 
   return (
     <div>
-      <div className={`${style.header} mb-2`}>
+      <div className={`${styleMain.header}`}>
         <h2> Users list</h2>
         <Button
-          style={{ backgroundColor: "var(--primary-color)", color: "white" }}
+          variant="contained"
           onClick={() => {
             setShowAddModal(true);
           }}
@@ -166,7 +184,7 @@ const User = () => {
         </Button>
       </div>
       <div
-        className={`${style.content} d-flex flex-column justify-content-between`}
+        className={`${styleMain.content} d-flex flex-column justify-content-between`}
       >
         <div>
           <div className="d-flex justify-content-between align-items-center">
@@ -213,6 +231,8 @@ const User = () => {
             marginTop: "auto",
           }}
           onChange={handleChangePage}
+          showFirstButton
+          showLastButton
         />
       </div>
 
@@ -220,14 +240,16 @@ const User = () => {
         showModal={showSearchModal}
         setShowModal={setShowSearchModal}
         title={"Search for users "}
+        inputRef={searchUserInputRef}
       >
         <div>
-          <form className={style.searchForm} onSubmit={onSearchSubmit}>
+          <form className={styleMain.searchForm} onSubmit={onSearchSubmit}>
             <div>
               <label htmlFor="searchInput">Name or email</label>
               <input
                 id="searchInput"
                 name="searchInput"
+                ref={searchUserInputRef}
                 type="text"
                 value={searchText}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -237,7 +259,7 @@ const User = () => {
             </div>
             <div className="d-flex justify-content-end">
               <Button
-                className={style.cancelBtn}
+                className={styleMain.cancelBtn}
                 type="button"
                 onClick={() => {
                   setSearchText("");
@@ -246,7 +268,7 @@ const User = () => {
               >
                 Cancel
               </Button>
-              <Button className={style.searchBtn} type="submit">
+              <Button className={styleMain.searchBtn} type="submit">
                 Search
               </Button>
             </div>
@@ -256,13 +278,15 @@ const User = () => {
       <AppModal
         title="Add User"
         showModal={showAddModal}
-        setShowModal={setShowAddModal}
+        setShowModal={handleCloseAddModal}
+        inputRef={addUserInputRef}
       >
         <div className={`${style.addUserModal}`}>
           <form onSubmit={onAddUser}>
             <Form.Group className="mb-3" controlId="firstNameAdd">
               <Form.Label>First name</Form.Label>
               <Form.Control
+                ref={addUserInputRef}
                 type="text"
                 placeholder=""
                 value={userAddInfo.firstName}
@@ -316,24 +340,26 @@ const User = () => {
 
             <Form.Group className="mb-3">
               <Form.Label>Gender</Form.Label>
-              {["Female", "Male", "Other"].map((gen) => {
-                return (
-                  <Form.Check
-                    key={gen}
-                    type="radio"
-                    label={gen}
-                    name="gender"
-                    value={gen}
-                    id={gen}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setUserAddInfo({
-                        ...userAddInfo,
-                        gender: e.target.value,
-                      })
-                    }
-                  />
-                );
-              })}
+              <div className="d-flex justify-content-between">
+                {["Female", "Male", "Other"].map((gen) => {
+                  return (
+                    <Form.Check
+                      key={gen}
+                      type="radio"
+                      label={gen}
+                      name="gender"
+                      value={gen}
+                      id={gen}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setUserAddInfo({
+                          ...userAddInfo,
+                          gender: e.target.value,
+                        })
+                      }
+                    />
+                  );
+                })}
+              </div>
               {error?.gender ? (
                 <Form.Text className="text-danger">{error.gender}</Form.Text>
               ) : null}
@@ -357,16 +383,19 @@ const User = () => {
               ) : null}
             </Form.Group>
 
-            <Button
-              type="submit"
-              style={{
-                backgroundColor: "var(--primary-color)",
-                color: "white",
-              }}
-              className="float-end"
-            >
-              Add
-            </Button>
+            <div className={`${style.btnGroup} float-end`}>
+              <Button
+                type="button"
+                color="secondary"
+                className={style.cancelBtn}
+                onClick={() => handleCloseAddModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained">
+                Add
+              </Button>
+            </div>
           </form>
         </div>
       </AppModal>

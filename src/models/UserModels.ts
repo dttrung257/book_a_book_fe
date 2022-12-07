@@ -47,6 +47,7 @@ export interface PassError {
 }
 
 export interface UserInfo {
+  email: string;
   avatar?: string;
   firstName: string;
   lastName: string;

@@ -17,8 +17,6 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
   const [errMessage, setErrMessage] = useState<string>("");
   const { accessToken, user } = useAppSelector((state) => state.auth);
 
-  console.log(userInfo.emailVerified, userInfo.email, userInfo.locked);
-
   const closeModal = (show: boolean) => {
     setModal(show);
     setErrMessage("");
@@ -122,12 +120,16 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
             <div>
               <Link to={`/dashboard/users/${userInfo.id}`}>Details</Link>
             </div>
-            <div className={style.divider}></div>
-            <div onClick={showToggleLockUserModal}>
-              {locked ? "Unlock" : "Lock"}
-            </div>
-            <div className={style.divider}></div>
-            <div onClick={showActivateUserModal}>Activate</div>
+            {userInfo.authority !== "ADMIN" && (
+              <>
+                <div className={style.divider}></div>
+                <div onClick={showToggleLockUserModal}>
+                  {locked ? "Unlock" : "Lock"}
+                </div>
+                <div className={style.divider}></div>
+                <div onClick={showActivateUserModal}>Activate</div>
+              </>
+            )}
           </div>
           <div>
             <AppModal

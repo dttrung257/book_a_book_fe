@@ -11,6 +11,7 @@ const initialState: AuthState = {
   accessToken: "",
   isLoggedIn: false,
   user: {
+    email: "",
     firstName: "",
     lastName: "",
     authority: "",
@@ -33,7 +34,13 @@ const authSlice = createSlice({
     logout(state) {
       state.isLoggedIn = false;
       state.accessToken = "";
-      state.user = { firstName: "", lastName: "", authority: "", avatar: "" };
+      state.user = {
+        firstName: "",
+        lastName: "",
+        authority: "",
+        avatar: "",
+        email: "",
+      };
 
       Cookies.remove("token");
       Cookies.remove("user");

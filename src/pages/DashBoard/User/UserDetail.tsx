@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button, Avatar } from "@mui/material";
+import { Button, Avatar, Pagination } from "@mui/material";
+import { TiArrowBack } from "react-icons/ti";
 import { Table, Form } from "react-bootstrap";
 import style from "./User.module.css";
+import styleMain from "../MainLayout.module.css";
 import { UserDetailInfo } from "../../../models";
 import AppModal from "../../../components/AppModal/AppModal";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
@@ -14,7 +16,7 @@ import PasswordError, { checkPassword } from "../../../utils/checkPassword";
 interface Order {
   id: string;
   address: string;
-  orderDate: string;
+  order_date: string;
   status: string;
   user_id: string;
 }
@@ -25,6 +27,8 @@ const UserDetail = () => {
   const { accessToken, user } = useAppSelector((state) => state.auth);
   const [userInfo, setUserInfo] = useState<UserDetailInfo | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [curPage, setCurPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [editModal, setEditModal] = useState<boolean>(false);
   const [newPassword, setNewPassword] = useState<string>("");
@@ -34,27 +38,34 @@ const UserDetail = () => {
   );
   const [errMessage, setErrMessage] = useState<string>("");
 
+  const getOrders = async (page: number = 0) => {
+    const responseOrder = await axios.get(
+      `manage/orders?user_id=${userInfo?.id}&page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    console.log(responseOrder.data);
+    setOrders(responseOrder.data.content);
+    setTotalPages(responseOrder.data.totalPages);
+  };
+
   useEffect(() => {
     const getInfo = async () => {
       try {
-        const responseUser = await axios.get(`manage/users/${id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setUserInfo(responseUser.data);
-        console.log(responseUser.data);
-
-        const responseOrder = await axios.get(
-          `manage/orders?user_id=${responseUser.data.id}`,
-          {
+        if (!userInfo) {
+          const responseUser = await axios.get(`manage/users/${id}`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
-          }
-        );
-        console.log(responseOrder.data.content);
-        setOrders(responseOrder.data.content);
+          });
+          setUserInfo(responseUser.data);
+          console.log(responseUser.data);
+        }
+
+        await getOrders(curPage);
       } catch (error) {
         if (isAxiosError(error)) {
           const data = error.response?.data;
@@ -68,7 +79,14 @@ const UserDetail = () => {
 
     getInfo();
     return () => {};
-  }, [accessToken, id]);
+  }, [accessToken, id, curPage]);
+
+  const handleChangePage = async (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setCurPage(value - 1);
+  };
 
   const deleteUser = async () => {
     if (userInfo && userInfo.authority === "ADMIN") {
@@ -103,6 +121,14 @@ const UserDetail = () => {
   const editPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (
+      userInfo &&
+      userInfo.authority === "ADMIN" &&
+      userInfo.email !== user.email
+    ) {
+      return toast.error("Can not edit this user's password!");
+    }
+
     try {
       const passwordError = checkPassword(newPassword, confirmNewPassword);
       setEditPassErrMessage(passwordError);
@@ -136,14 +162,12 @@ const UserDetail = () => {
 
   return (
     <div id={style.userDetail}>
-      <div className={`${style.header} mb-2`}>
-        <h2>User Profile</h2>
-        <div>
-          {/* <Button
-            style={{ backgroundColor: "var(--primary-color)", color: "white" }}
-          >
-            Save
-          </Button> */}
+      <div className={`${styleMain.header}`}>
+        <div className="d-flex align-items-center">
+          <TiArrowBack size={30} onClick={() => navigate(-1)} />
+          <h2>User Profile</h2>
+        </div>
+        <div className={style.btnGroup}>
           <Button variant="contained" onClick={() => setEditModal(true)}>
             Edit password
           </Button>
@@ -156,7 +180,7 @@ const UserDetail = () => {
           </Button>
         </div>
       </div>
-      <div className={`${style.content} d-flex flex-wrap`}>
+      <div className={`${styleMain.content} d-flex flex-wrap`}>
         <div className={`${style.left} pe-3`}>
           <div
             className={`${style.avatar} d-flex flex-column align-items-center`}
@@ -236,27 +260,43 @@ const UserDetail = () => {
           </div>
           <div>
             <p className={`${style.title}`}>Orders history</p>
-            {orders.length > 0 ? (
-              <Table bordered hover>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Order date</th>
-                    <th>Status</th>
-                    <th>Address</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order) => (
-                    <tr key={order.id}>
-                      <td>{order.id}</td>
-                      <td>{order.orderDate}</td>
-                      <td>{order.status}</td>
-                      <td>{order.address}</td>
+            {totalPages > 0 ? (
+              <>
+                <Table bordered hover>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Order date</th>
+                      <th>Status</th>
+                      <th>Address</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr key={order.id}>
+                        <td>{order.id}</td>
+                        <td>{order.order_date}</td>
+                        <td>{order.status}</td>
+                        <td>{order.address}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+                <Pagination
+                  count={totalPages}
+                  page={curPage + 1}
+                  color="primary"
+                  style={{
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    height: "auto",
+                    marginTop: "auto",
+                  }}
+                  onChange={handleChangePage}
+                  showFirstButton
+                  showLastButton
+                />
+              </>
             ) : (
               <p>Not ordered</p>
             )}

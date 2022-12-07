@@ -106,3 +106,52 @@
   background-color: var(--primary-color);
   border-color: var(--primary-color);
 }
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #f9f9f9;
+  filter: drop-shadow(rgba(0, 0, 0, 0.4) 0 2px 3px);
+  z-index: 1;
+  min-width: 120px;
+}
+
+.dropdownContent::before,
+.dropdownContent::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 100%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.dropdownContent::after {
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: transparent transparent #fff transparent;
+  border-width: 7px;
+}
+
+.dropdownContent::before {
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: transparent transparent #666 transparent;
+  border-width: 7px;
+}
+
+.dropdown:hover .dropdownContent {
+  display: block;
+}
+
+.dropdownContent a:hover {
+  color: var(--primary-color);
+}

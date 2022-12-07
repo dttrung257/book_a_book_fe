@@ -9,6 +9,7 @@ import style from "./Cart.module.css";
 import CartItem from "./CartItem";
 import { useNavigate } from "react-router-dom";
 import { cartActions } from "../../store/cartSlice";
+import AppModal from "../../components/AppModal/AppModal";
 
 interface BookCart {
   book: Book;
@@ -24,7 +25,7 @@ const Cart = () => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [checkedAll, setCheckedAll] = useState<boolean>(false);
   const [checkedQuantity, setCheckedQuantity] = useState<number>(0);
-  //TODO: delete selected item, select all item
+  const [noItemModal, setNoItemModal] = useState<boolean>(false);
 
   const calculateTotalPrice = () => {
     return booksInfo.reduce((total, item) => {
@@ -36,7 +37,6 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    //TODO: call api with cartItem then set books
     const getBook = async () => {
       try {
         const response = await axios.get(
@@ -64,7 +64,6 @@ const Cart = () => {
   }, []);
 
   useEffect(() => {
-    //TODO: check all when all item cheked
     let check = true;
     let checkedAmount = 0;
     for (let i = 0; i < booksInfo.length; i++) {
@@ -94,6 +93,18 @@ const Cart = () => {
           .map((bookInfo) => bookInfo.book.id),
       })
     );
+  };
+
+  const handleCheckout = () => {
+    if (checkedQuantity === 0) setNoItemModal(true);
+    else
+      navigate("/checkout", {
+        state: {
+          items: booksInfo.filter((bookInfo) => bookInfo.checked),
+          totalQuantity: checkedQuantity,
+          totalPrice: totalPrice.toFixed(2),
+        },
+      });
   };
 
   return (
@@ -143,7 +154,11 @@ const Cart = () => {
                   <p>Total</p>
                   <h5>{totalPrice.toFixed(2)}$</h5>
                 </div>
-                <Button variant="contained" className={`${style.checkoutBtn}`}>
+                <Button
+                  variant="contained"
+                  className={`${style.checkoutBtn}`}
+                  onClick={handleCheckout}
+                >
                   Check out ({checkedQuantity})
                 </Button>
               </div>
@@ -168,6 +183,19 @@ const Cart = () => {
           </div>
         </div>
       )}
+      <AppModal
+        title=" "
+        showModal={noItemModal}
+        setShowModal={setNoItemModal}
+        closeBtn={false}
+      >
+        <h5>You have not selected any items for checkout</h5>
+        <div className="float-end mt-4">
+          <Button variant="contained" onClick={() => setNoItemModal(false)}>
+            OK
+          </Button>
+        </div>
+      </AppModal>
     </div>
   );
 };

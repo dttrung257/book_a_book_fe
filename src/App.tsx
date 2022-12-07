@@ -34,6 +34,7 @@ import DashBoardLayout from "./pages/DashBoard/DashBoardLayout";
 import Loading from "./pages/Loading";
 import SignUp from "./pages/Signup/SignUp";
 import Account from "./pages/Account/Account";
+import Checkout from "./pages/Checkout/Checkout";
 const Cart = React.lazy(() => import("./pages/Cart/Cart"));
 
 const theme = createTheme({
@@ -59,6 +60,7 @@ const App = () => {
       authActions.storeInfo({
         accessToken: token,
         user: {
+          email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
           authority: user.authority,
@@ -78,6 +80,7 @@ const App = () => {
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
             <Route path="product/:id/:title" element={<Product />} />
             <Route path="books" element={<CategoryPage />} />
             <Route path="user/purchase" element={<Purchase />} />

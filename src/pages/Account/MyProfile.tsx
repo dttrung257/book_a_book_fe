@@ -22,11 +22,11 @@ const authValidator = (info: UserDetail): AuthError => {
   const error: AuthError = {};
 
   if (!info.firstName) error.firstName = "First name is required";
-  else if (!validator.isAlpha(info.firstName))
+  else if (!/^[A-Za-z\s]*$/.test(info.firstName))
     error.firstName = " First name must contains only letters";
 
   if (!info.lastName) error.lastName = "Last name is required";
-  else if (!validator.isAlpha(info.lastName))
+  else if (!/^[A-Za-z\s]*$/.test(info.lastName))
     error.lastName = " Last name must contains only letters";
 
   if (!info.gender) error.gender = "Gender is required";

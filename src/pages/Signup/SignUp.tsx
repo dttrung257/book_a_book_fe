@@ -33,11 +33,11 @@ const authValidator = (info: AuthInfo): AuthError => {
   const error: AuthError = {};
 
   if (!info.firstName) error.firstName = "First name is required";
-  else if (!validator.isAlpha(info.firstName))
+  else if (!/^[A-Za-z\s]*$/.test(info.firstName))
     error.firstName = " First name must contains only letters";
 
   if (!info.lastName) error.lastName = "Last name is required";
-  else if (!validator.isAlpha(info.lastName))
+  else if (!/^[A-Za-z\s]*$/.test(info.lastName))
     error.lastName = " Last name must contains only letters";
 
   if (!info.email) error.email = "Email address is required";
@@ -107,19 +107,13 @@ const Login = () => {
       setIsSending(true);
 
       const data = await signUp({
-        firstName: info.firstName,
-        lastName: info.lastName,
+        firstName: info.firstName.trim(),
+        lastName: info.lastName.trim(),
         email: info.email,
         password: info.password,
         gender: info.gender,
       });
       console.log(data);
-      // const response = await axios.post("/authen/register", {
-      //   firstName: info.firstName,
-      //   lastName: info.lastName,
-      //   email: info.email,
-      //   password: info.password,
-      // });
 
       setErrMessage("");
       dispatch(emailVerifyActions.setEmail({ email: info.email }));
@@ -203,7 +197,7 @@ const Login = () => {
                   onChange={(e: React.ChangeEvent) =>
                     setInfo({
                       ...info,
-                      email: (e.target as HTMLInputElement).value,
+                      email: (e.target as HTMLInputElement).value.trim(),
                     })
                   }
                 />
@@ -223,7 +217,7 @@ const Login = () => {
                   onChange={(e: React.ChangeEvent) =>
                     setInfo({
                       ...info,
-                      password: (e.target as HTMLInputElement).value,
+                      password: (e.target as HTMLInputElement).value.trim(),
                     })
                   }
                 />
@@ -259,7 +253,9 @@ const Login = () => {
                   onChange={(e: React.ChangeEvent) =>
                     setInfo({
                       ...info,
-                      confirmPassword: (e.target as HTMLInputElement).value,
+                      confirmPassword: (
+                        e.target as HTMLInputElement
+                      ).value.trim(),
                     })
                   }
                 />

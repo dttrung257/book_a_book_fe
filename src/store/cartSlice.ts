@@ -45,14 +45,11 @@ const cartSlice = createSlice({
 
       if (itemIndex >= 0) {
         state.items[itemIndex].quantity += addedQuantity;
-        toast.success("Book has been successfully added");
       } else {
         if (state.items.length === MAX_ITEMS)
           toast.error("Cart has maximum items!");
         else {
           state.items.push({ id: id, quantity: addedQuantity });
-          toast.success("Book has been successfully added");
-          console.log(state);
         }
       }
 

@@ -1,21 +1,5 @@
-/* Header */
-.header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Content */
-.content {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1rem;
-  min-height: 748px;
-}
-
-th,
-td {
+.tableHeader th,
+.tableBody td {
   text-align: center;
   max-width: 300px;
 }
@@ -137,7 +121,7 @@ td {
   opacity: 0.7;
 }
 
-#userDetail .header button + button {
+.btnGroup button + button {
   margin-left: 12px;
 }
 
@@ -163,4 +147,14 @@ td {
 
 .addUserModal {
   width: 400px;
+}
+
+.addUserModal .cancelBtn {
+  background-color: #cbcbcb;
+  color: white;
+}
+
+.addUserModal .cancelBtn:hover {
+  background-color: #cbcbcb;
+  opacity: 0.7;
 }

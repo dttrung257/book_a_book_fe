@@ -4,6 +4,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem !important;
+}
+
+.header h2 {
+  margin: 0;
 }
 
 /* Content */

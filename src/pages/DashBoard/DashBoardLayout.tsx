@@ -1,16 +1,30 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { HiUserGroup } from "react-icons/hi";
 import { MdLibraryBooks } from "react-icons/md";
 import { RiFileList3Fill } from "react-icons/ri";
 import { VscCommentDiscussion } from "react-icons/vsc";
 import style from "./DashBoardLayout.module.css";
-import { Avatar } from "@mui/material";
-import { useAppSelector } from "../../store/hook";
+import {
+  Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+} from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { NavLink } from "react-router-dom";
+import { formatStr } from "../../utils";
+import { authActions } from "../../store/authSlice";
 
 const Header = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
+
+  const onLogout = () => {
+    dispatch(authActions.logout());
+  };
 
   return (
     <header>
@@ -29,10 +43,54 @@ const Header = () => {
       </div>
 
       <div className={style.account}>
-        <>
-          <Avatar src={user.avatar} style={{ maxWidth: 25, maxHeight: 25 }} />
-          <span>{`${user.firstName} ${user.lastName}`}</span>
-        </>
+        <div className={style.dropdown}>
+          <div
+            style={{
+              width: "200px",
+              gap: "8px",
+            }}
+            className="d-flex justify-content-start px-1"
+          >
+            <Avatar src={user.avatar} style={{ maxWidth: 25, maxHeight: 25 }} />
+            <span>{formatStr(`${user.firstName} ${user.lastName}`, 18)}</span>
+          </div>
+          <div className={style.dropdownContent}>
+            <List>
+              <ListItem disablePadding>
+                <ListItemButton
+                  style={{ padding: "3px 30px 3px 15px" }}
+                  component="a"
+                  onClick={() => navigate("/account")}
+                >
+                  <ListItemText
+                    primaryTypographyProps={{
+                      fontSize: 14,
+                      fontWeight: 500,
+                    }}
+                    primary="My Account"
+                  />
+                </ListItemButton>
+              </ListItem>
+
+              <ListItem disablePadding>
+                <ListItemButton
+                  style={{ padding: "3px 30px 3px 15px" }}
+                  component="a"
+                  href=""
+                  onClick={onLogout}
+                >
+                  <ListItemText
+                    primaryTypographyProps={{
+                      fontSize: 14,
+                      fontWeight: 500,
+                    }}
+                    primary="Log out"
+                  />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </div>
+        </div>
       </div>
     </header>
   );

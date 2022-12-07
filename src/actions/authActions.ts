@@ -18,6 +18,7 @@ export const login = createAsyncThunk(
 
       const info = {
         user: {
+          email: email,
           avatar: data.avatar,
           firstName: data.firstName,
           lastName: data.lastName,

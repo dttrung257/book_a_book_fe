@@ -1,0 +1,48 @@
+#checkout {
+  background-color: #efefef;
+}
+
+#content {
+  background: #ffffff;
+  min-height: 100vh;
+  position: relative;
+  margin-top: 0;
+  padding-top: 1rem;
+}
+
+.imageContainer {
+  position: relative;
+}
+
+.image {
+  height: 72px;
+  width: 64px;
+  object-fit: contain;
+  border: 1px #f0f0f0 solid;
+}
+
+.imageContainer .quantity {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+}
+
+.shippingHeader {
+  color: var(--primary-color);
+}
+
+.bookSumamry {
+  max-height: 400px;
+  overflow: auto;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #efefef;
+}
+
+.productInfo {
+}
