@@ -6,7 +6,7 @@ import style from "../MainLayout.module.css";
 import { CommentDetail } from "../../../models";
 import { useAppSelector } from "../../../store/hook";
 import { Button, Pagination } from "@mui/material";
-import { BsSearch } from "react-icons/bs";
+import { FaFilter } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
 import moment from "moment";
@@ -133,8 +133,8 @@ const CommentList = () => {
             className="px-3 py-2 d-flex justify-content-between align-items-center"
             onClick={() => setShowSearchModal(true)}
           >
-            Search for comments
-            <BsSearch />
+            Filter
+            <FaFilter color="#008b8b" />
           </div>
         </div>
         <div>

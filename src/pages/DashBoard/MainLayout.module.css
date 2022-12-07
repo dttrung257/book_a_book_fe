@@ -42,8 +42,8 @@
 
 #search {
   border: 2px solid #cbcbcb;
-  border-radius: 20px;
-  width: 220px;
+  border-radius: 10px;
+  width: 96px;
   cursor: pointer;
 }
 
@@ -70,16 +70,23 @@
   border: 2px solid #cbcbcb;
   width: 100%;
 }
-
+.searchForm input,
+.searchForm select {
+  margin: 5px 0px 15px;
+}
 .lockModal .cancelBtn,
-.searchForm .cancelBtn {
+.searchForm .cancelBtn,
+.deleteModal .cancelBtn,
+.editModal .cancelBtn {
   background-color: #cbcbcb;
   color: white;
   margin-right: 12px;
 }
 
 .lockModal .cancelBtn:hover,
-.searchForm .cancelBtn:hover {
+.searchForm .cancelBtn:hover,
+.deleteModal .cancelBtn:hover,
+.editModal .cancelBtn:hover {
   background-color: #cbcbcb;
   opacity: 0.7;
 }
@@ -99,4 +106,8 @@
 }
 .deleteModal {
   min-width: 300px;
+}
+
+.goBackBtn:hover {
+  color: rgb(95, 95, 95);
 }

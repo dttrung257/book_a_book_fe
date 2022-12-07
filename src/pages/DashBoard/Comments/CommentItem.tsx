@@ -53,10 +53,11 @@ const CommentItem = ({ comment: comment }: { comment: CommentDetail }) => {
             style={{ cursor: "pointer" }}
           />
           <AppModal
-            title={`Delete comment #${comment.id}?`}
+            title={`Delete comment`}
             showModal={deleteModal}
             setShowModal={setDeleteModal}
           >
+            <div>Delete comment #{comment.id}?</div>
             <div
               className={`${style.lockModal} d-flex justify-content-end mt-3`}
             >

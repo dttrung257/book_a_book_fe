@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
+import { Rating } from "@mui/material";
 //import { useNavigate } from "react-router-dom";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { Table, Form } from "react-bootstrap";
-import style from "../User/User.module.css"; // dung ke
+import style from "../MainLayout.module.css"; // dung ke
 import BookItem from "./BookItem";
 import { useAppSelector } from "../../../store/hook";
 import { Book } from "../../../models";
 import { Button } from "@mui/material";
-import { BsSearch } from "react-icons/bs";
+import { FaFilter } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
 
@@ -19,7 +20,7 @@ interface SearchInfo {
   category?: string;
   priceFrom?: number | string;
   priceTo?: number | string;
-  rating?: number | string;
+  rating?: string;
 }
 
 const Books = () => {
@@ -36,15 +37,6 @@ const Books = () => {
   );
 
   const getBooksList = useCallback(
-    async (filter: SearchInfo, page: number | string = 0) => {
-      const response = await axios.get(
-        `/books/?page=${page}&name=${filter.name}&category=${filter.category}&from=${filter.priceFrom}&to=${filter.priceTo}&rating=${filter.rating}`
-      );
-      return response.data;
-    },
-    [accessToken]
-  );
-  const getFilteredBooks = useCallback(
     async (filter: SearchInfo, page: number | string = 0) => {
       const response = await axios.get(
         `/books/?page=${page}&name=${filter.name}&category=${filter.category}&from=${filter.priceFrom}&to=${filter.priceTo}&rating=${filter.rating}`
@@ -162,8 +154,8 @@ const Books = () => {
             className="px-3 py-2 d-flex justify-content-between align-items-center"
             onClick={() => setShowSearchModal(true)}
           >
-            Search for books
-            <BsSearch />
+            Filter
+            <FaFilter color="#008b8b" />
           </div>
         </div>
         <div>
@@ -278,22 +270,21 @@ const Books = () => {
                   }
                 />
               </div>
-              <label htmlFor="ratingInput">Ratings</label>
-              <input
-                id="ratingInput"
-                name="ratingInput"
-                type="number"
-                step={1}
-                min="0"
-                max="5"
-                value={searchInfo.rating || ""}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setSearchInfo({
-                    ...searchInfo,
-                    rating: e.target.value,
-                  })
-                }
-              />
+              <div style={{ alignItems: "center", display: "flex" }}>
+                <label htmlFor="ratingInput">Ratings&nbsp;</label>
+
+                <Rating
+                  name="ratingInput"
+                  value={parseInt(searchInfo.rating || "0")}
+                  onChange={(event, newValue) => {
+                    setSearchInfo({
+                      ...searchInfo,
+                      rating: newValue?.toString(),
+                    });
+                  }}
+                />
+              </div>
+
               <div style={{ color: "red" }}>{message}</div>
             </div>
             <div className="d-flex justify-content-end">

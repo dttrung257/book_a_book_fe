@@ -7,7 +7,7 @@ import OrderItem from "./OrderItem";
 import { useAppSelector } from "../../../store/hook";
 import { OrderInfo } from "../../../models";
 import { Button, Pagination } from "@mui/material";
-import { BsSearch } from "react-icons/bs";
+import { FaFilter } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
 import moment from "moment";
@@ -157,8 +157,8 @@ const Order = () => {
             className="px-3 py-2 d-flex justify-content-between align-items-center"
             onClick={() => setShowSearchModal(true)}
           >
-            Search for orders
-            <BsSearch />
+            Filter
+            <FaFilter color="#008b8b" />
           </div>
         </div>
         <div>

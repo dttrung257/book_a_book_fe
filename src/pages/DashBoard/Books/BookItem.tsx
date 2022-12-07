@@ -1,6 +1,6 @@
 import { Book } from "../../../models";
 import { CgMoreVertical } from "react-icons/cg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
 import { Button } from "@mui/material";
@@ -10,6 +10,7 @@ import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { toast } from "react-toastify";
 import style from "../MainLayout.module.css";
 const BookItem = ({ book: bookInfo }: { book: Book }) => {
+  const navigate = useNavigate();
   const { accessToken } = useAppSelector((state) => state.auth);
   const [statusModal, setStatusModal] = useState<boolean>(false);
   const [isStopSelling, setIsStopSelling] = useState<boolean>(
@@ -32,8 +33,8 @@ const BookItem = ({ book: bookInfo }: { book: Book }) => {
           },
         }
       );
-      setIsStopSelling(!isStopSelling);
       setStatusModal(false);
+      setIsStopSelling(!isStopSelling);
       toast.success(
         `Changed book ID #${bookInfo.id} to ${
           isStopSelling ? "Selling" : "Stop Selling"
@@ -51,7 +52,12 @@ const BookItem = ({ book: bookInfo }: { book: Book }) => {
   };
   return (
     <>
-      <tr>
+      <tr
+      // onClick={(e) => {
+      //   navigate(`/dashboard/books/${bookInfo.id}`);
+      // }}
+      // style={{ cursor: "pointer" }}
+      >
         <td>{bookInfo.id}</td>
         <td>
           <img
@@ -71,12 +77,14 @@ const BookItem = ({ book: bookInfo }: { book: Book }) => {
             <Form.Switch onChange={toggleBookStatus} checked={!isStopSelling} />
           </Form>
           <AppModal
-            title={`Change status of book #${bookInfo.id} to ${
-              isStopSelling ? "Selling" : "Stop Selling"
-            }`}
+            title={`Change status`}
             showModal={statusModal}
             setShowModal={setStatusModal}
           >
+            <div>
+              Change status of book #{bookInfo.id} to
+              {isStopSelling ? " Selling" : " Stop Selling"}?
+            </div>
             {/* <div style={{ color: "red" }}>{errMessage}</div> */}
             <div
               className={`${style.lockModal} d-flex justify-content-end mt-3`}
@@ -96,7 +104,7 @@ const BookItem = ({ book: bookInfo }: { book: Book }) => {
             </div>
           </AppModal>
         </td>
-        {/* <td>{bookInfo.stopSelling ? <BsToggleOff/> : <BsToggleOn/>}</td> */}
+
         <td>
           <Link to={`/dashboard/books/${bookInfo.id}`} title="More">
             <CgMoreVertical color="black" />

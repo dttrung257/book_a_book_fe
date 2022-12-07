@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Form, Table } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { TiArrowBack } from "react-icons/ti";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import AppModal from "../../../components/AppModal/AppModal";
 import { OrderInfo, UserDetailInfo } from "../../../models";
@@ -156,7 +157,14 @@ const OrderDetail = () => {
   return (
     <>
       <div className={`${style.header} mb-2`}>
-        <h2> Order detail</h2>
+        <h2>
+          <TiArrowBack
+            className={style.goBackBtn}
+            onClick={() => navigate(-1)}
+            style={{ cursor: "pointer" }}
+          />
+          Order detail
+        </h2>
         <div>
           <Button
             style={{
@@ -316,7 +324,14 @@ const OrderDetail = () => {
             </Form.Group>
           </div>
 
-          <div className="mt-3">
+          <div className="mt-3 d-flex justify-content-end">
+            <Button
+              className={style.cancelBtn}
+              type="button"
+              onClick={() => setStatusModal(false)}
+            >
+              Cancel
+            </Button>
             <Button
               className={`${style.deleteBtn} float-end`}
               onClick={() => {
@@ -346,7 +361,14 @@ const OrderDetail = () => {
               {message?.message}
             </div>
           ) : null}
-          <div>
+          <div className="d-flex justify-content-end">
+            <Button
+              className={style.cancelBtn}
+              type="button"
+              onClick={() => setDeleteModal(false)}
+            >
+              Cancel
+            </Button>
             <Button
               className={`${style.deleteBtn} float-end`}
               onClick={() => {

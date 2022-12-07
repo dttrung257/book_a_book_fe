@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
+import { TiArrowBack } from "react-icons/ti";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { Book } from "../../../models";
 import style from "../MainLayout.module.css";
@@ -61,7 +62,14 @@ const BookDetail = () => {
   return (
     <>
       <div className={`${style.header} mb-2`}>
-        <h2> Book detail</h2>
+        <h2>
+          <TiArrowBack
+            className={style.goBackBtn}
+            onClick={() => navigate(-1)}
+            style={{ cursor: "pointer" }}
+          />
+          Book detail
+        </h2>
         <div>
           <Button
             style={{
@@ -197,7 +205,14 @@ const BookDetail = () => {
               {message?.message}
             </div>
           ) : null} */}
-          <div>
+          <div className="d-flex justify-content-end">
+            <Button
+              className={style.cancelBtn}
+              type="button"
+              onClick={() => setDeleteModal(false)}
+            >
+              Cancel
+            </Button>
             <Button
               className={`${style.deleteBtn} float-end`}
               onClick={() => {

@@ -8,6 +8,7 @@ import { useAppSelector } from "../../../store/hook";
 import validator from "validator";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
+import style from "../MainLayout.module.css";
 interface InfoError {
   name?: string;
   image?: string;
@@ -127,6 +128,7 @@ const AddBookModal = (prop: {
         }}
       >
         <Form
+          className={style.editModal}
           onSubmit={addBook}
           style={{ minWidth: "50vw", maxHeight: "600px", overflowY: "auto" }}
         >
@@ -405,16 +407,25 @@ const AddBookModal = (prop: {
               }
             />
           </Form.Group>
-          <Button
-            type="submit"
-            style={{
-              backgroundColor: "var(--primary-color)",
-              color: "white",
-            }}
-            className="float-end"
-          >
-            Add
-          </Button>
+          <div className="d-flex justify-content-end">
+            <Button
+              className={style.cancelBtn}
+              type="button"
+              onClick={() => prop.setShowModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              style={{
+                backgroundColor: "var(--primary-color)",
+                color: "white",
+              }}
+              className="float-end"
+            >
+              Submit
+            </Button>
+          </div>
         </Form>
       </AppModal>
     </div>
