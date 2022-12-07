@@ -156,11 +156,17 @@ const Product = () => {
           text="Collections"
           rectLeftWidth={150}
           rectRightWidth={
-            info.category.length < 7
-              ? info.category.length * 20 + 45
-              : info.category.length * 17 + 45 > 190
-              ? 190
-              : info.category.length * 17 + 45
+            info.category == "EDUCATION"
+              ? 180
+              : info.category == "COMIC"
+              ? 140
+              : info.category == "ROMANCE" || info.category == "DETECTIVE"
+              ? 170
+              : info.category == "TECHNOLOGY"
+              ? 200
+              : info.category == "SCIENCE"
+              ? 155
+              : 165
           }
           rectText={info.category.toUpperCase()}
         />

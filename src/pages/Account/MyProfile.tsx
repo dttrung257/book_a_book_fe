@@ -30,9 +30,10 @@ const authValidator = (info: UserDetail): AuthError => {
     error.lastName = " Last name must contains only letters";
 
   if (!info.gender) error.gender = "Gender is required";
-  if (info.phoneNumber && !validator.isMobilePhone(info.phoneNumber))
+  if (!info.phoneNumber) error.phoneNumber = "Phone number is required"
+  else if (!validator.isMobilePhone(info.phoneNumber))
     error.phoneNumber = "Please enter a valid phone number";
-
+    if (!info.address) error.address = "Address is required";
   return error;
 };
 const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
@@ -59,6 +60,8 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    setErrMessage("")
+    setError({})
     getUserInfo({
       headers: {
         Authorization: `Bearer ${loginInfo.accessToken}`,
@@ -98,18 +101,17 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload is paused");
-                break;
-              case "running":
-                console.log("Upload is running");
-                break;
-            }
+            // console.log("Upload is " + progress + "% done");
+            // switch (snapshot.state) {
+            //   case "paused":
+            //     // console.log("Upload is paused");
+            //     break;
+            //   case "running":
+            //     // console.log("Upload is running");
+            //     break;
+            // }
           },
           (error) => {
-            console.log(error);
             setError({ ...error, avatar: "Upload photo failed!" });
           },
           () => {
@@ -128,7 +130,7 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
     if (err && Object.keys(err).length !== 0) return setError(err);
     setError({});
     setInfo({ ...info, avatar: url });
-    console.log(info);
+    
     updateUserInfo(
       { ...info, avatar: url },
       {
@@ -138,7 +140,6 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
       }
     )
       .then((res) => {
-        console.log(res);
         setIsSending();
         dispatch(
           authActions.storeInfo({
@@ -158,7 +159,6 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
           setErrMessage(data?.message);
         } else {
           setErrMessage("Unknown error!!!");
-          console.log(error);
         }
       });
     setErrMessage("");
@@ -169,7 +169,7 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
         <Form className={`${style.form}`} onSubmit={onSaveUpdate}>
           <Form.Group className="mb-3" controlId="firstName">
             <div className={`${style.formField}`}>
-              <Form.Label>First name</Form.Label>
+              <Form.Label>First name&nbsp;<span className="text-danger">*</span></Form.Label>
               <Form.Control
                 className={`${style.formInput}`}
                 type="text"
@@ -189,7 +189,7 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
 
           <Form.Group className="mb-3" controlId="lastName">
             <div className={`${style.formField}`}>
-              <Form.Label>Last name</Form.Label>
+              <Form.Label>Last name&nbsp;<span className="text-danger">*</span></Form.Label>
               <Form.Control
                 className={`${style.formInput}`}
                 type="text"
@@ -220,7 +220,7 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
           </Form.Group>
           <Form.Group className="mb-3" controlId="phoneNumber">
             <div className={`${style.formField}`}>
-              <Form.Label>Phone number</Form.Label>
+              <Form.Label>Phone number&nbsp;<span className="text-danger">*</span></Form.Label>
               <Form.Control
                 className={`${style.formInput}`}
                 type="tel"
@@ -239,7 +239,7 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
           </Form.Group>
           <Form.Group className="mb-3" controlId="address">
             <div className={`${style.formField}`}>
-              <Form.Label>Address</Form.Label>
+              <Form.Label>Address&nbsp;<span className="text-danger">*</span></Form.Label>
               <Form.Control
                 className={`${style.formInput}`}
                 type="text"
@@ -252,6 +252,9 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
                 }
               />
             </div>
+            {error?.address ? (
+              <Form.Text className="text-danger">{error.address}</Form.Text>
+            ) : null}
           </Form.Group>
           <Form.Group className="mb-3">
             <div
@@ -260,7 +263,7 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Form.Label>Gender</Form.Label>
+              <Form.Label>Gender&nbsp;<span className="text-danger">*</span></Form.Label>
               <div style={{ display: "flex" }}>
                 {["Female", "Male", "Other"].map((gen) => {
                   return (

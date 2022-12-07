@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import { Comment as Cmt } from "../../models";
 import {
   deleteComment,
@@ -30,7 +30,8 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
   useEffect(() => {
     if (props.id === 0) return;
     setComment("");
-    console.log(sent);
+    setPage(0)
+    
     if (sent) {
       getUserComments(props.id, {
         headers: {
@@ -68,6 +69,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then((res) => {
+        setTotalPage(res.totalPage);
         setOtherComments(res.content);
       });
     }
@@ -76,21 +78,21 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
   const changeToggle = () => {
     setToggle(toggle ? false : true);
   };
-  const handleChangePage = () => {
+  const handleChangePage = (event: ChangeEvent<unknown>, pg: number) => {
     if (!isLoggedIn) {
-      getAllComments(props.id, page + 1).then((res) => {
+      getAllComments(props.id, pg - 1).then((res) => {
         setOtherComments(res.content);
       });
     } else {
-      getOtherComments(props.id, page + 1, {
+      getOtherComments(props.id, pg - 1, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then((res) => {
-        setOtherComments(res);
+        setOtherComments(res.content);
       });
     }
-    setPage(page + 1);
+    setPage(pg - 1);
   };
 
   const delComment = () => {

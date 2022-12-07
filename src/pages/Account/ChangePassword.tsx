@@ -71,7 +71,6 @@ const ChangePassword = ({ setIsSending }: { setIsSending: () => void }) => {
       },
     })
       .then((res) => {
-        console.log(res);
         setIsSending();
       })
       .catch((err) => {
@@ -80,7 +79,6 @@ const ChangePassword = ({ setIsSending }: { setIsSending: () => void }) => {
           setErrMessage(data?.message);
         } else {
           setErrMessage("Unknown error!!!");
-          console.log(err);
         }
       });
     setErrMessage("");

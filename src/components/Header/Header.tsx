@@ -65,7 +65,7 @@ const Header = () => {
           </div>
 
           <div className="navAddr">
-            <Link to="/blogs">Blogs</Link>
+            <Link to="/about-us">Blogs</Link>
           </div>
           <div className="navAddr">
             <Link to="/about-us">About us</Link>
@@ -116,6 +116,7 @@ const Header = () => {
                         primaryTypographyProps={{
                           fontSize: 14,
                           fontWeight: 500,
+                          minWidth: "85px",
                         }}
                         primary="My Account"
                       />
