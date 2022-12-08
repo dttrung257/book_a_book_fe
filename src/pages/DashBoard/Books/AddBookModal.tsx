@@ -1,6 +1,6 @@
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import AppModal from "../../../components/AppModal/AppModal";
 import { BookAddInfo, Category } from "../../../models";
@@ -89,7 +89,6 @@ const AddBookModal = (prop: {
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
   const addBook = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     try {
       //validate info
       console.log(bookAddInfo);

@@ -27,6 +27,7 @@ const CommentList = () => {
   const [searchInfo, setSearchInfo] = useState<SearchInfo>({});
   const [message, setMessage] = useState<string>("");
   const [totalpage, setTotalPages] = useState<number>(0);
+  const [checkDeleteComment, setCheckDeleteComment] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(
     parseInt(searchParams.get("page") || "0")
   );
@@ -70,7 +71,7 @@ const CommentList = () => {
     window.scrollTo(0, 0);
 
     return () => {};
-  }, [getCommentsList, searchParams]);
+  }, [getCommentsList, searchParams, checkDeleteComment]);
 
   const onSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -152,7 +153,11 @@ const CommentList = () => {
             </thead>
             <tbody className={`${style.tableBody}`}>
               {commentsList.map((comment) => (
-                <CommentItem key={comment.id} comment={comment} />
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  setCheckDeleteComment={setCheckDeleteComment}
+                />
               ))}
             </tbody>
           </Table>

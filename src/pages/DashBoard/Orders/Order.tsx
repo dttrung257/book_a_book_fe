@@ -11,6 +11,7 @@ import { FaFilter } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
 import moment from "moment";
+import AddOrderModal from "./AddOrderModal";
 
 interface SearchInfo {
   name?: string;
@@ -25,6 +26,7 @@ const Order = () => {
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const [ordersList, setOrdersList] = useState<OrderInfo[]>([]);
   const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchInfo, setSearchInfo] = useState<SearchInfo>({});
   const [message, setMessage] = useState<string>("");
@@ -143,7 +145,7 @@ const Order = () => {
         <Button
           style={{ backgroundColor: "var(--primary-color)", color: "white" }}
           onClick={() => {
-            console.log("add");
+            setShowAddModal(true);
           }}
         >
           Add Order
@@ -302,6 +304,7 @@ const Order = () => {
           </form>
         </div>
       </AppModal>
+      <AddOrderModal showModal={showAddModal} setShowModal={setShowAddModal} />
     </>
   );
 };

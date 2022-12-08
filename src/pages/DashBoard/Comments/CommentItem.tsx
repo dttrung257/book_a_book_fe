@@ -7,7 +7,13 @@ import style from "../MainLayout.module.css";
 import { Button } from "@mui/material";
 import { toast } from "react-toastify";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
-const CommentItem = ({ comment: comment }: { comment: CommentDetail }) => {
+const CommentItem = ({
+  comment: comment,
+  setCheckDeleteComment: setCheckDeleteComment,
+}: {
+  comment: CommentDetail;
+  setCheckDeleteComment: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const { accessToken } = useAppSelector((state) => state.auth);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const handleDeleteBtn = () => {
@@ -24,6 +30,7 @@ const CommentItem = ({ comment: comment }: { comment: CommentDetail }) => {
       console.log(response);
       setDeleteModal(false);
       toast.success("Comment deleted");
+      setCheckDeleteComment((prev) => !prev);
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;

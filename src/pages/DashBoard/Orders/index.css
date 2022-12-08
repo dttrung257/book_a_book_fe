@@ -1,0 +1,75 @@
+#addOrderForm {
+  width: 60vw;
+}
+
+#addOrderForm input.form-control {
+  margin-right: 20px;
+}
+#orderTable {
+  margin-top: 20px;
+  width: 100%;
+  text-align: left;
+}
+
+#orderTable tbody {
+  overflow-y: auto;
+  max-height: 40vh;
+}
+/* #orderTable thead,
+#orderTable tbody,
+#orderTable tr,
+#orderTable td,
+#orderTable th {
+  display: block;
+}
+
+#orderTable tbody td,
+#orderTable thead > tr > th {
+  float: left;
+  border-bottom-width: 0;
+} */
+
+#orderTable .index {
+  width: 5%;
+}
+
+#orderTable .ID {
+  width: 5%;
+}
+#orderTable .bookInfo {
+  width: 45%;
+}
+
+#orderTable .price {
+  width: 12%;
+}
+#orderTable .quantity {
+  width: 13%;
+}
+#orderTable .quantity input {
+  max-width: 40px;
+  text-align: center;
+  border-radius: 5px;
+}
+#orderTable .subtotal {
+  width: 10%;
+}
+#orderTable .deleteBtn {
+  width: 3%;
+}
+
+.cancelBtn {
+  background-color: #cbcbcb !important;
+  border: #cbcbcb !important;
+  color: white;
+  margin-right: 12px;
+}
+.cancelBtn:hover {
+  background-color: #cbcbcb;
+  opacity: 0.7;
+}
+
+.submitBtn:hover {
+  background-color: var(--primary-color);
+  opacity: 0.7;
+}
