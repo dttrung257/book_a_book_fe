@@ -3,13 +3,11 @@ import AppModal from "../../../components/AppModal/AppModal";
 import Table from "react-bootstrap/Table";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-import { BookInfoBrief } from "../../../models";
 import { toast } from "react-toastify";
 import { useAppSelector } from "../../../store/hook";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { Form, Button } from "react-bootstrap";
-import "./index.css";
-import { maxWidth } from "@mui/system";
+import style from "./Orders.module.css";
 interface BookOrder {
   id: number;
   image: string;
@@ -90,7 +88,7 @@ const AddOrderModal = (prop: {
     bookID: number
   ) => {
     if (e.target.value === "") {
-      handleBookAmount(bookID, 1);
+      handleBookAmount(bookID, 0);
       return;
     }
     let newAmount = e.target.valueAsNumber;
@@ -109,11 +107,18 @@ const AddOrderModal = (prop: {
   };
 
   const addOrder = async () => {
+    setErrorMessage("");
     if (bookList.length < 1) {
       setErrorMessage("No book in order");
       return;
     }
 
+    let bookErr = bookList.find(({ quantity }) => quantity === 0);
+
+    if (bookErr) {
+      setErrorMessage(`Please enter quantity of book ID #${bookErr.id}`);
+      return;
+    }
     try {
       const response = await axios.post(
         `/manage/orders`,
@@ -152,7 +157,7 @@ const AddOrderModal = (prop: {
   };
 
   return (
-    <>
+    <div style={{ overflowY: "initial" }}>
       <AppModal
         title="Add new order"
         showModal={prop.showModal}
@@ -161,10 +166,10 @@ const AddOrderModal = (prop: {
           closeModal();
         }}
       >
-        <div id="addOrderForm">
+        <div className={`${style.addOrderForm}`}>
           <Form onSubmit={handleAddBtn}>
             {/* <Form.Label>Book ID</Form.Label> */}
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between mt-3">
               <Form.Control
                 type="number"
                 placeholder="Enter Book ID"
@@ -173,13 +178,14 @@ const AddOrderModal = (prop: {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setBookAddID(e.target.value)
                 }
+                className={style.inputForm}
               />
 
               <Button
                 variant="primary"
                 type="submit"
                 size="sm"
-                className="submitBtn"
+                className={style.submitBtn}
               >
                 ADD
               </Button>
@@ -188,7 +194,7 @@ const AddOrderModal = (prop: {
               <Form.Text className="text-danger">{errorMessage}</Form.Text>
             ) : null}
           </Form>
-          <Table id="orderTable">
+          <Table className={style.orderTable}>
             <thead>
               <tr>
                 {/* <th style={{ width: "5%" }}>No.</th>
@@ -211,8 +217,8 @@ const AddOrderModal = (prop: {
             <tbody>
               {bookList.map((book, index) => (
                 <tr key={book.id}>
-                  <td className="index">{index + 1}</td>
-                  <td className="ID">{book.id}</td>
+                  <td className={style.index}>{index + 1}</td>
+                  <td className={style.ID}>{book.id}</td>
                   <td>
                     <img
                       src={book.image}
@@ -220,23 +226,24 @@ const AddOrderModal = (prop: {
                       style={{ height: "60px", maxWidth: "60px" }}
                     />
                   </td>
-                  <td className="bookInfo ">{book.name}</td>
+                  <td className={style.bookInfo}>{book.name}</td>
 
-                  <td className="price">${book.sellingPrice}</td>
-                  <td className="quantity">
+                  <td className={style.price}>${book.sellingPrice}</td>
+                  <td className={style.quantity}>
                     <input
                       type="number"
-                      value={book.quantity}
+                      value={book.quantity ? book.quantity : ""}
                       onChange={(e) => handleChangeQuantity(e, book.id)}
                     />
                   </td>
-                  <td className="subtotal">
+                  <td className={style.subtotal}>
                     ${(book.sellingPrice * book.quantity).toFixed(2)}
                   </td>
-                  <td className="deleteBtn">
+                  <td className={style.deleteBtn}>
                     <RiDeleteBinLine
                       onClick={() => handleDeleteBtn(book.id)}
                       style={{ cursor: "pointer" }}
+                      size={20}
                     />
                   </td>
                 </tr>
@@ -265,7 +272,7 @@ const AddOrderModal = (prop: {
           </Table>
           <div className="d-flex justify-content-end">
             <Button
-              className="cancelBtn"
+              className={style.cancelBtn}
               type="button"
               onClick={() => {
                 prop.setShowModal(false);
@@ -280,7 +287,7 @@ const AddOrderModal = (prop: {
                 backgroundColor: "var(--primary-color)",
                 color: "white",
               }}
-              className="float-end submitBtn"
+              className={`${style.index} float-end`}
               onClick={addOrder}
             >
               SUBMIT
@@ -288,7 +295,7 @@ const AddOrderModal = (prop: {
           </div>
         </div>
       </AppModal>
-    </>
+    </div>
   );
 };
 

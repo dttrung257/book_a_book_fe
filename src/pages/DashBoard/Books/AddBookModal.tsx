@@ -89,6 +89,7 @@ const AddBookModal = (prop: {
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
   const addBook = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       //validate info
       console.log(bookAddInfo);

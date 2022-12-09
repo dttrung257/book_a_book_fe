@@ -62,14 +62,15 @@ const BookDetail = () => {
   return (
     <>
       <div className={`${style.header} mb-2`}>
-        <h2>
+        <div className="d-flex align-items-center">
           <TiArrowBack
             className={style.goBackBtn}
             onClick={() => navigate(-1)}
             style={{ cursor: "pointer" }}
+            size="30"
           />
-          Book detail
-        </h2>
+          <h2>Book detail</h2>
+        </div>
         <div>
           <Button
             style={{

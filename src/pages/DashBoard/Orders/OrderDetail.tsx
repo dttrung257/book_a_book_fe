@@ -157,14 +157,15 @@ const OrderDetail = () => {
   return (
     <>
       <div className={`${style.header} mb-2`}>
-        <h2>
+        <div className="d-flex align-items-center">
           <TiArrowBack
             className={style.goBackBtn}
             onClick={() => navigate(-1)}
             style={{ cursor: "pointer" }}
+            size="30"
           />
-          Order detail
-        </h2>
+          <h2>Order detail</h2>
+        </div>
         <div>
           <Button
             style={{
@@ -209,7 +210,8 @@ const OrderDetail = () => {
             </div>
             <div className="flex-fill">
               <p>
-                <span className="fw-bold">Total: </span>${orderInfo?.total}
+                <span className="fw-bold">Total: </span>$
+                {orderInfo?.total.toFixed(2)}
               </p>
               <p>
                 <span className="fw-bold">Quantity: </span>
@@ -284,14 +286,16 @@ const OrderDetail = () => {
                   <td>{order.bookName}</td>
                   <td>${order.priceEach}</td>
                   <td>{order.quantityOrdered}</td>
-                  <td>${order.priceEach * order.quantityOrdered}</td>
+                  <td>
+                    ${(order.priceEach * order.quantityOrdered).toFixed(2)}
+                  </td>
                 </tr>
               ))}
               <tr className="fs-5 lh-lg">
                 <td colSpan={5} className="fw-bold text-start">
                   Total
                 </td>
-                <td>${orderInfo?.total}</td>
+                <td>${orderInfo?.total.toFixed(2)}</td>
               </tr>
             </tbody>
           </Table>

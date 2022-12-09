@@ -1,60 +1,62 @@
-#addOrderForm {
+.addOrderForm {
   width: 60vw;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
-#addOrderForm input.form-control {
+.addOrderForm .inputForm {
   margin-right: 20px;
 }
-#orderTable {
+.orderTable {
   margin-top: 20px;
   width: 100%;
   text-align: left;
 }
 
-#orderTable tbody {
+.orderTable tbody {
   overflow-y: auto;
   max-height: 40vh;
 }
-/* #orderTable thead,
-#orderTable tbody,
-#orderTable tr,
-#orderTable td,
-#orderTable th {
+/* .orderTable thead,
+.orderTable tbody,
+.orderTable tr,
+.orderTable td,
+.orderTable th {
   display: block;
 }
 
-#orderTable tbody td,
-#orderTable thead > tr > th {
+.orderTable tbody td,
+.orderTable thead > tr > th {
   float: left;
   border-bottom-width: 0;
 } */
 
-#orderTable .index {
+.orderTable .index {
   width: 5%;
 }
 
-#orderTable .ID {
+.orderTable .ID {
   width: 5%;
 }
-#orderTable .bookInfo {
+.orderTable .bookInfo {
   width: 45%;
 }
 
-#orderTable .price {
+.orderTable .price {
   width: 12%;
 }
-#orderTable .quantity {
+.orderTable .quantity {
   width: 13%;
 }
-#orderTable .quantity input {
+.orderTable .quantity input {
   max-width: 40px;
   text-align: center;
   border-radius: 5px;
 }
-#orderTable .subtotal {
+.orderTable .subtotal {
   width: 10%;
 }
-#orderTable .deleteBtn {
+.orderTable .deleteBtn {
   width: 3%;
 }
 

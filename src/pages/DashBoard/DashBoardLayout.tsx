@@ -1,9 +1,8 @@
 import React from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { HiUserGroup } from "react-icons/hi";
-import { MdLibraryBooks } from "react-icons/md";
+import { MdLibraryBooks, MdComment } from "react-icons/md";
 import { RiFileList3Fill } from "react-icons/ri";
-import { VscCommentDiscussion } from "react-icons/vsc";
 import style from "./DashBoardLayout.module.css";
 import {
   Avatar,
@@ -141,7 +140,7 @@ const Navbar = () => {
           to={"comments"}
           className={({ isActive }) => (isActive ? style.isActive : "")}
         >
-          <VscCommentDiscussion />
+          <MdComment />
           Comments
         </NavLink>
       </div>

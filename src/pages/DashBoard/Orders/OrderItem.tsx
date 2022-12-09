@@ -14,7 +14,7 @@ const OrderItem = ({ order: orderInfo }: { order: OrderInfo }) => {
         <td>{orderInfo.fullName || "Guest"}</td>
         <td>{orderInfo.orderDate}</td>
         <td>{orderInfo.quantity}</td>
-        <td>${orderInfo.total}</td>
+        <td>${orderInfo.total.toFixed(2)}</td>
         <td>{orderInfo.status}</td>
         <td>
           <Link to={`/dashboard/orders/${orderInfo.id}`} title="More">
