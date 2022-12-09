@@ -110,7 +110,7 @@ const Header = () => {
                     <ListItemButton
                       style={{ padding: "3px 30px 3px 15px" }}
                       component="a"
-                      href="/account"
+                      onClick={() => navigate("/account")}
                     >
                       <ListItemText
                         primaryTypographyProps={{
@@ -127,7 +127,7 @@ const Header = () => {
                       <ListItemButton
                         style={{ padding: "3px 30px 3px 15px" }}
                         component="a"
-                        href="/dashboard"
+                        onClick={() => navigate("/dashboard")}
                       >
                         <ListItemText
                           primaryTypographyProps={{
@@ -143,7 +143,7 @@ const Header = () => {
                       <ListItemButton
                         style={{ padding: "3px 30px 3px 15px" }}
                         component="a"
-                        href="#simple-list"
+                        onClick={() => navigate("#simple-list")}
                       >
                         <ListItemText
                           primaryTypographyProps={{

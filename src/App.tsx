@@ -35,6 +35,7 @@ import Loading from "./pages/Loading";
 import SignUp from "./pages/Signup/SignUp";
 import Account from "./pages/Account/Account";
 import Checkout from "./pages/Checkout/Checkout";
+import Error from "./pages/Error/Error";
 const Cart = React.lazy(() => import("./pages/Cart/Cart"));
 
 const theme = createTheme({
@@ -87,6 +88,7 @@ const App = () => {
             <Route path="account" element={<Account />} />
             <Route path="about-us" element={<AboutUs />} />
             {/* Product Collection Account AboutUs Blog Checkout Order */}
+            <Route path="*" element={<Error />} />
           </Route>
           <Route path="dashboard" element={<DashBoardLayout />}>
             <Route index element={<Navigate to={"users"} />} />
@@ -106,8 +108,6 @@ const App = () => {
             <Route path="verify" element={<CodeVerify />} />
             <Route path="reset/:resetToken" element={<Reset />} />
           </Route>
-
-          {/* <Route path='*' element={<Home />} /> */}
         </Routes>
       </Suspense>
       <ToastContainer

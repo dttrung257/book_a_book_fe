@@ -120,7 +120,6 @@
   background-color: #f9f9f9;
   filter: drop-shadow(rgba(0, 0, 0, 0.4) 0 2px 3px);
   z-index: 1;
-  min-width: 120px;
 }
 
 .dropdownContent::before,

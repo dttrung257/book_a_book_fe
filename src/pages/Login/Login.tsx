@@ -69,8 +69,6 @@ const Login = () => {
       <Loading isSending={isSending} />
       <div className={`${style.container}`}>
         <div className={`${style.left}`}>
-          {/* <img className={`${style.img1}`} src='/images/bg_login_1.png' alt='img1' />
-					<img className={`${style.img2}`} src='/images/bg_login_2.png' alt='img2' /> */}
           <img className={`${style.img2}`} src="/images/book.png" alt="img2" />
         </div>
         <div className={`${style.right}`}>

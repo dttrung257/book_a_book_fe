@@ -130,9 +130,13 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
     if (err && Object.keys(err).length !== 0) return setError(err);
     setError({});
     setInfo({ ...info, avatar: url });
-    
+
     updateUserInfo(
-      { ...info, avatar: url },
+      {
+        ...info,
+        address: info.address.trim(),
+        avatar: url,
+      },
       {
         headers: {
           Authorization: `Bearer ${loginInfo.accessToken}`,
@@ -228,7 +232,7 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
                 onChange={(e: React.ChangeEvent) =>
                   setInfo({
                     ...info,
-                    phoneNumber: (e.target as HTMLInputElement).value,
+                    phoneNumber: (e.target as HTMLInputElement).value.trim(),
                   })
                 }
               />

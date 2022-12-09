@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button, Avatar, Pagination } from "@mui/material";
 import { TiArrowBack } from "react-icons/ti";
+import { MdVerifiedUser, MdWarning } from "react-icons/md";
 import { Table, Form } from "react-bootstrap";
 import style from "./User.module.css";
 import styleMain from "../MainLayout.module.css";
@@ -16,7 +17,7 @@ import PasswordError, { checkPassword } from "../../../utils/checkPassword";
 interface Order {
   id: string;
   address: string;
-  order_date: string;
+  orderDate: string;
   status: string;
   user_id: string;
 }
@@ -28,7 +29,7 @@ const UserDetail = () => {
   const [userInfo, setUserInfo] = useState<UserDetailInfo | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [curPage, setCurPage] = useState<number>(0);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [editModal, setEditModal] = useState<boolean>(false);
   const [newPassword, setNewPassword] = useState<string>("");
@@ -37,17 +38,27 @@ const UserDetail = () => {
     {}
   );
   const [errMessage, setErrMessage] = useState<string>("");
+  const [lastOrder, setLastOrder] = useState<{ date: string; id: string }>({
+    date: "",
+    id: "",
+  });
 
-  const getOrders = async (page: number = 0) => {
+  const getOrders = async (id: string, page: number = 0) => {
     const responseOrder = await axios.get(
-      `manage/orders?user_id=${userInfo?.id}&page=${page}`,
+      `manage/orders?user_id=${id}&page=${page}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }
     );
-    console.log(responseOrder.data);
+    if (page === 0 && responseOrder.data.content.length > 0) {
+      setLastOrder({
+        date: responseOrder.data.content[0].orderDate,
+        id: responseOrder.data.content[0].id,
+      });
+    }
+    console.log(responseOrder);
     setOrders(responseOrder.data.content);
     setTotalPages(responseOrder.data.totalPages);
   };
@@ -62,10 +73,11 @@ const UserDetail = () => {
             },
           });
           setUserInfo(responseUser.data);
-          console.log(responseUser.data);
+          console.log(responseUser);
+          await getOrders(responseUser.data.id as string);
+        } else {
+          await getOrders(userInfo.id, curPage);
         }
-
-        await getOrders(curPage);
       } catch (error) {
         if (isAxiosError(error)) {
           const data = error.response?.data;
@@ -78,6 +90,7 @@ const UserDetail = () => {
     };
 
     getInfo();
+    window.scrollTo(0, 0);
     return () => {};
   }, [accessToken, id, curPage]);
 
@@ -164,7 +177,11 @@ const UserDetail = () => {
     <div id={style.userDetail}>
       <div className={`${styleMain.header}`}>
         <div className="d-flex align-items-center">
-          <TiArrowBack size={30} onClick={() => navigate(-1)} />
+          <TiArrowBack
+            className={styleMain.goBackBtn}
+            size={30}
+            onClick={() => navigate(-1)}
+          />
           <h2>User Profile</h2>
         </div>
         <div className={style.btnGroup}>
@@ -180,7 +197,7 @@ const UserDetail = () => {
           </Button>
         </div>
       </div>
-      <div className={`${styleMain.content} d-flex flex-wrap`}>
+      <div className={`${styleMain.content} d-flex flex-nowrap`}>
         <div className={`${style.left} pe-3`}>
           <div
             className={`${style.avatar} d-flex flex-column align-items-center`}
@@ -216,7 +233,14 @@ const UserDetail = () => {
             <p className={`${style.title}`}>Information</p>
             <div>
               <h5>Email</h5>
-              <p>{userInfo && userInfo?.email}</p>
+              <p>
+                {userInfo && userInfo?.email}{" "}
+                {userInfo && userInfo.emailVerified ? (
+                  <MdVerifiedUser style={{ color: "green" }} />
+                ) : (
+                  <MdWarning style={{ color: "red" }} />
+                )}
+              </p>
             </div>
             <div>
               <h5>Phone number</h5>
@@ -245,7 +269,7 @@ const UserDetail = () => {
           </div>
         </div>
         <div className={`${style.right} ps-3 flex-grow-1`}>
-          <div className={`${style.order}`}>
+          <div>
             <p className={`${style.title}`}>Overview</p>
             <div className={` d-flex flex-wrap flex-column mx-3`}>
               <div>
@@ -254,7 +278,11 @@ const UserDetail = () => {
               </div>
               <div>
                 <h5>Last order</h5>
-                <p>11/11/1111 - #123</p>
+                <p>
+                  {totalPages === 0
+                    ? "Not ordered"
+                    : `${lastOrder.date} - #${lastOrder.id}`}
+                </p>
               </div>
             </div>
           </div>
@@ -273,9 +301,15 @@ const UserDetail = () => {
                   </thead>
                   <tbody>
                     {orders.map((order) => (
-                      <tr key={order.id}>
+                      <tr
+                        key={order.id}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          navigate(`/dashboard/orders/${order.id}`);
+                        }}
+                      >
                         <td>{order.id}</td>
-                        <td>{order.order_date}</td>
+                        <td>{order.orderDate}</td>
                         <td>{order.status}</td>
                         <td>{order.address}</td>
                       </tr>
@@ -301,6 +335,7 @@ const UserDetail = () => {
               <p>Not ordered</p>
             )}
           </div>
+          <span style={{ color: "red" }}>{errMessage}</span>
         </div>
       </div>
       <AppModal
@@ -308,11 +343,20 @@ const UserDetail = () => {
         showModal={deleteModal}
         setShowModal={setDeleteModal}
       >
-        <div className={`${style.deleteModal}`}>
+        <div className={`${styleMain.deleteModal}`}>
           <p>Delete user {id} ?</p>
-          <div>
+          <div className="float-end">
             <Button
-              className={`${style.deleteBtn} float-end`}
+              className={styleMain.cancelBtn}
+              type="button"
+              onClick={() => {
+                setDeleteModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
               onClick={() => {
                 deleteUser();
               }}
@@ -327,7 +371,7 @@ const UserDetail = () => {
         showModal={editModal}
         setShowModal={setEditModal}
       >
-        <div style={{ minWidth: "500px" }}>
+        <div style={{ minWidth: "500px" }} className={styleMain.editModal}>
           <Form onSubmit={editPassword}>
             <Form.Group className="mb-3" controlId="newPassword">
               <Form.Label>New password</Form.Label>
@@ -364,6 +408,15 @@ const UserDetail = () => {
             </Form.Group>
 
             <div className="float-end">
+              <Button
+                className={styleMain.cancelBtn}
+                type="button"
+                onClick={() => {
+                  setDeleteModal(false);
+                }}
+              >
+                Cancel
+              </Button>
               <Button variant="contained" type="submit">
                 Submit
               </Button>

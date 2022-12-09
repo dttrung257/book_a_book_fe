@@ -110,10 +110,11 @@ const CartItem = ({
         <input
           className="form-check-input"
           type="checkbox"
-          checked={checked}
+          checked={checked && book.availableQuantity !== 0}
           name=""
           id=""
           onChange={handleChecked}
+          disabled={book.availableQuantity === 0}
         />
       </div>
       <div className={`${style.productInfo}`}>
@@ -135,12 +136,22 @@ const CartItem = ({
               .toLowerCase()}`}
             className={`${style.name}`}
           >
-            <h5>{formatStr(book.name, 28)}</h5>
+            <h5 className={`${book.availableQuantity === 0 && "text-muted"}`}>
+              {formatStr(book.name, 28)}
+            </h5>
           </Link>
-          <div className={`${style.author} text-muted`}>
+          <div
+            className={`${style.author} ${
+              book.availableQuantity === 0 && "text-muted"
+            }`}
+          >
             Author: {formatStr(book.author, 28)}
           </div>
-          <div className={`${style.category} text-muted`}>
+          <div
+            className={`${style.category} ${
+              book.availableQuantity === 0 && "text-muted"
+            }`}
+          >
             Category:{" "}
             {formatStr(
               book.category.charAt(0).toUpperCase() +

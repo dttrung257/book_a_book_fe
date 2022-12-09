@@ -7,7 +7,7 @@
   min-height: 100vh;
   position: relative;
   margin-top: 0;
-  padding-top: 1rem;
+  padding-top: 2rem;
 }
 
 .imageContainer {
@@ -19,14 +19,6 @@
   width: 64px;
   object-fit: contain;
   border: 1px #f0f0f0 solid;
-}
-
-.imageContainer .quantity {
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(50%, -50%);
-  border-radius: 50%;
 }
 
 .shippingHeader {
@@ -44,5 +36,13 @@
   background-color: #efefef;
 }
 
-.productInfo {
+.deliveryOptions {
+  background-color: white;
+  border: 1px solid #f0f0f0;
+  border-radius: 20px;
+  margin-bottom: 0.5rem;
+}
+
+.deliveryOptions.selected {
+  border-color: var(--primary-color);
 }

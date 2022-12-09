@@ -67,9 +67,11 @@ const Cart = () => {
     let check = true;
     let checkedAmount = 0;
     for (let i = 0; i < booksInfo.length; i++) {
-      if (!booksInfo[i].checked) {
-        check = false;
-      } else checkedAmount++;
+      if (booksInfo[i].book.availableQuantity !== 0) {
+        if (!booksInfo[i].checked) {
+          check = false;
+        } else checkedAmount++;
+      }
     }
     setCheckedAll(check);
     setCheckedQuantity(checkedAmount);
@@ -80,7 +82,10 @@ const Cart = () => {
   const handleCheckAll = () => {
     setCheckedAll(!checkedAll);
     setBooksInfo(
-      booksInfo.map((bookInfo) => ({ ...bookInfo, checked: !checkedAll }))
+      booksInfo.map((bookInfo) => ({
+        ...bookInfo,
+        checked: bookInfo.book.availableQuantity !== 0 ? !checkedAll : false,
+      }))
     );
   };
 
@@ -96,6 +101,7 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
+    console.log(booksInfo);
     if (checkedQuantity === 0) setNoItemModal(true);
     else
       navigate("/checkout", {
@@ -123,7 +129,14 @@ const Cart = () => {
                   onChange={handleCheckAll}
                 />
               </div>
-              <div>Product ({totalQuantity})</div>
+              <div>
+                Product (
+                {totalQuantity -
+                  booksInfo.filter(
+                    (bookInfo) => bookInfo.book.availableQuantity === 0
+                  ).length}
+                )
+              </div>
               <div>Price each</div>
               <div>Quantity</div>
               <div>Total price</div>

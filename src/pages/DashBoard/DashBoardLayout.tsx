@@ -60,14 +60,15 @@ const Header = () => {
                 <ListItemButton
                   style={{ padding: "3px 30px 3px 15px" }}
                   component="a"
-                  onClick={() => navigate("/account")}
+                  onClick={() => navigate("/")}
                 >
                   <ListItemText
                     primaryTypographyProps={{
                       fontSize: 14,
                       fontWeight: 500,
+                      minWidth: "85px",
                     }}
-                    primary="My Account"
+                    primary="Home"
                   />
                 </ListItemButton>
               </ListItem>
@@ -83,6 +84,7 @@ const Header = () => {
                     primaryTypographyProps={{
                       fontSize: 14,
                       fontWeight: 500,
+                      minWidth: "85px",
                     }}
                     primary="Log out"
                   />

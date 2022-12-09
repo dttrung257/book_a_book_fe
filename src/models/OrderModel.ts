@@ -18,3 +18,12 @@ export interface PersonalOrder {
   total?: number;
   status: string;
 }
+
+export interface OrderPost {
+  address: string;
+  phoneNumber: string;
+  orderdetails: {
+    bookId: number;
+    quantity: number;
+  }[];
+}

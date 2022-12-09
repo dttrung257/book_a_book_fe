@@ -12,10 +12,10 @@ import { useAppSelector } from "../../../store/hook";
 const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
   const [locked, setLocked] = useState<boolean>(userInfo.locked);
   const [modal, setModal] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>("");
+  const [modalContent, setModalContent] = useState<string>("");
   const [modalType, setModalType] = useState<"LOCK" | "ACTIVATE">("LOCK");
   const [errMessage, setErrMessage] = useState<string>("");
-  const { accessToken, user } = useAppSelector((state) => state.auth);
+  const { accessToken } = useAppSelector((state) => state.auth);
 
   const closeModal = (show: boolean) => {
     setModal(show);
@@ -91,13 +91,15 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
   };
 
   const showToggleLockUserModal = () => {
-    setModalTitle(`${userInfo.locked ? "Unlock" : "Lock"} user ${userInfo.id}`);
+    setModalContent(
+      `${userInfo.locked ? "Unlock" : "Lock"} user ${userInfo.id} ?`
+    );
     setModalType("LOCK");
     setModal(true);
   };
 
   const showActivateUserModal = () => {
-    setModalTitle(`Active user ${userInfo.id}`);
+    setModalContent(`Active user ${userInfo.id} ?`);
     setModalType("ACTIVATE");
     setModal(true);
   };
@@ -133,10 +135,11 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
           </div>
           <div>
             <AppModal
-              title={modalTitle}
+              title={"Confirmation"}
               showModal={modal}
               setShowModal={closeModal}
             >
+              <p>{modalContent}</p>
               <div style={{ color: "red" }}>{errMessage}</div>
               <div
                 className={`${style.lockModal} d-flex justify-content-end mt-3`}

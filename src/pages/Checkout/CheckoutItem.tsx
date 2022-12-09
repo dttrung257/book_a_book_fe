@@ -1,7 +1,6 @@
 import React from "react";
 import style from "./Checkout.module.css";
 import { Book } from "../../models";
-import { Badge } from "react-bootstrap";
 
 interface Props {
   book: Book;
@@ -14,16 +13,21 @@ const CheckoutItem = ({ book, quantity }: Props) => {
       <div className="d-flex p-1 m-2">
         <div className={style.imageContainer}>
           <img className={style.image} src={book.image} alt="img" />
-          <Badge bg="secondary" className={style.quantity}>
-            {quantity}
-          </Badge>
         </div>
-        <div className="ms-2 flex-grow-1">
-          <div>
-            <span>{book.name}</span>
-          </div>
-          <div className="d-flex justify-content-end">
-            <span>{quantity * book.sellingPrice}$</span>
+        <div className="ms-3 flex-grow-1">
+          <div className="d-flex">
+            <div className="me-2 flex-grow-1">
+              <div>{book.name} this is just a test</div>
+              <div>
+                <div>
+                  {book.author} - {book.category}
+                </div>
+                <div>Quantity: {quantity}</div>
+              </div>
+            </div>
+            <div className="d-flex justify-content-end">
+              <h6>{(quantity * book.sellingPrice).toFixed(2)}$</h6>
+            </div>
           </div>
         </div>
       </div>
