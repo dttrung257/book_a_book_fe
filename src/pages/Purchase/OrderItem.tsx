@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import { BookInfoBrief, PersonalOrder } from "../../models";
-import { Link } from "react-router-dom";
 import AppModal from "../../components/AppModal/AppModal";
-import { getOrderDetails } from "../../apis/order";
+import { deleteOrder, getOrderDetails } from "../../apis/order";
 import { useAppSelector } from "../../store/hook";
 import { BsTruck } from "react-icons/bs";
 import { Button } from "react-bootstrap";
-interface Message {
-  status: "success" | "fail";
-  content: string;
-}
+
 interface Item {
   bookName: string;
   id: string;
@@ -18,14 +14,10 @@ interface Item {
   quantityOrdered: number;
 }
 const OrderItem = (props: { order: PersonalOrder }) => {
-  const [message, setMessage] = useState<Message | null>(null);
-  const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const [itemList, setItemList] = useState<Item[]>([]);
-  const closeModal = (show: boolean) => {
-    setDeleteModal(show);
-    setMessage(null);
-  };
+  const status = props.order.status;
   useEffect(() => {
     const fetchApi = async () => {
       try {
@@ -37,25 +29,26 @@ const OrderItem = (props: { order: PersonalOrder }) => {
       }
     };
     fetchApi();
-  }, []);
+  }, [accessToken]);
 
   const handleDelete = async () => {
-    if (props.order.status !== "PENDING") {
-      return setMessage({
-        status: "fail",
-        content: "Can not delete this order!",
-      });
-    }
+    await deleteOrder(accessToken, props.order.id);
+    setShowDeleteModal(false);
+    window.location.reload();
   };
   return (
     <div className="itemContainer">
-      <div className="status">
-        <BsTruck className="mx-2" />
-        {props.order.status}
+      <div style={{ display: "flex" }}>
+        <span className="date">{props.order.orderDate.toString()}</span>
+        <div className="status">
+          <BsTruck className="mx-2" />
+          {props.order.status}
+        </div>
       </div>
-      {itemList.map((item) => {
+
+      {itemList.map((item, index) => {
         return (
-          <div className="item">
+          <div className="item" key={index}>
             <div className="itemBox">
               <img
                 src={item.image}
@@ -73,21 +66,53 @@ const OrderItem = (props: { order: PersonalOrder }) => {
         );
       })}
       <div className="divider"></div>
-      <div className="totalInfor">
-        <div className="clearfix">
-          <span className="mx-2">Total:</span>
+      <div className="totalInfor mb-3">
+        <div className="mt-3 d-flex justify-content-end">
           <span className="cash">
+            <span style={{ color: "black", fontSize: "16px" }}>Total:</span>
             <sup>$</sup>
             {props.order.total}
           </span>
         </div>
+        <div className="d-flex justify-content-end">
+          Address: {props.order.address}
+        </div>
       </div>
       <div className="buttonOrder">
-        <Button className="rebuyBt px-5 mx-3">ReBuy</Button>
-        <Button variant="secondary" className="deleteOrderBt px-5">
+        <Button
+          variant="secondary"
+          className="deleteOrderBt px-5"
+          onClick={() => setShowDeleteModal(true)}
+        >
           Delete
         </Button>
       </div>
+      <AppModal
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
+        title={`Delete Order ${props.order.orderDate}`}
+      >
+        {status !== "PENDING" ? (
+          <p>You can not delete or suspend this order</p>
+        ) : (
+          <p>Delete this order?</p>
+        )}
+        <div className="mt-3 d-flex justify-content-end">
+          <Button
+            className="cancelBt"
+            onClick={() => setShowDeleteModal(false)}
+          >
+            Cancel
+          </Button>
+          {status === "PENDING" ? (
+            <Button className="confirmBt mx-3" onClick={handleDelete}>
+              Confirm
+            </Button>
+          ) : (
+            <></>
+          )}
+        </div>
+      </AppModal>
     </div>
   );
 };

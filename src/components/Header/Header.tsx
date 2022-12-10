@@ -31,6 +31,12 @@ const Header = () => {
     navigate(param);
   };
 
+  const searchEnterHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.code === "Enter") {
+      handleSearch();
+    }
+  };
+
   const onChangeSearchBox = (event: ChangeEvent<HTMLInputElement>) => {
     console.log(event.currentTarget.value);
     setSearchKey(event.currentTarget.value.trim());
@@ -80,6 +86,7 @@ const Header = () => {
           onChange={(e) =>
             setName(e.target.value)
           } /*onChange={onChangeSearchBox}*/
+          onKeyDown={searchEnterHandler}
         />
         <FiSearch
           color="008B8B"
@@ -143,7 +150,7 @@ const Header = () => {
                       <ListItemButton
                         style={{ padding: "3px 30px 3px 15px" }}
                         component="a"
-                        onClick={() => navigate("#simple-list")}
+                        href="/purchase"
                       >
                         <ListItemText
                           primaryTypographyProps={{

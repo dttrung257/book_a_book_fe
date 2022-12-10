@@ -33,7 +33,7 @@ export const getBooksOfCategory = async (filter: FilterSearch) => {
 };
 
 export const getBooks = async (filter: FilterSearch) => {
-  let query = `?page=${filter.page}&name=${filter.name}&category=${filter.category}&from=${filter.from}&to=${filter.to}&rating=${filter.rating}&best_selling=${filter.best_selling}`;
+  let query = `?page=${filter.page}&name=${filter.name}&category=${filter.category}&from=${filter.from}&to=${filter.to}&rating=${filter.rating}&best_selling=${filter.best_selling}&size=12`;
   const response = await axiosInstance.get(`books/${query}`);
   return response.data;
 };

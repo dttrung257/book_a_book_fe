@@ -1,9 +1,16 @@
-.orderContainer {
-  min-height: 400px;
+.purchaseContainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  background-color: white;
+  width: 70%;
+  padding-top: 40px;
+}
+.orderContainer {
+  min-height: 300px;
+  height: fit-content;
+  display: flex;
   flex-direction: column;
+  width: fit-content;
 }
 #orderHead {
   border: 1px solid grey;
@@ -17,8 +24,7 @@
 }
 .itemContainer {
   width: 80%;
-
-  margin: 20px;
+  margin: 20px 20px 30px 20px;
   display: block;
   position: relative;
 }
@@ -42,6 +48,13 @@
   font-size: large;
   text-align: right;
   margin: 5px;
+  width: 50%;
+}
+.date {
+  text-align: left;
+  font-size: large;
+  width: 50%;
+  margin: 5px;
 }
 .itemBox {
   height: 92px;
@@ -52,26 +65,18 @@
   border: 0.1px solid rgb(206, 206, 206);
 }
 .totalInfor {
-  display: flex;
-  align-items: center;
-  justify-content: right;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .cash {
   font-size: 30px;
   color: #008b8b;
+  float: right;
 }
 .buttonOrder {
   text-align: right;
   display: block;
-}
-.clearfix::after {
-  clear: both;
-  content: "";
-  display: table;
-}
-.clearfix::before {
-  clear: both;
 }
 .rebuyBt:hover {
   filter: brightness(90%);
@@ -79,4 +84,41 @@
 .deleteOrderBt {
   background-color: white;
   color: black;
+}
+#panel {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  height: inherit;
+  margin-right: 30px;
+}
+#purchaseLogo {
+  height: 100%;
+}
+.left,
+.right {
+  color: #008b8b;
+  font-style: italic;
+  font-size: 25px;
+  font-weight: 500;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.confirmBt {
+  background-color: red !important;
+  color: white !important;
+  border-color: red !important;
+}
+.cancelBt {
+  background-color: grey !important;
+  border-color: grey !important;
+}
+.confirmBt:hover,
+.cancelBt:hover {
+  opacity: 0.7;
 }

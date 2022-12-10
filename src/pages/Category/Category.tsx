@@ -1,14 +1,12 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import "./index.css";
 import { FaStar, FaBookOpen, FaChevronDown } from "react-icons/fa";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import * as bookSearch from "../../apis/book";
 import BookCard from "../../components/Book/BookCard";
 import { Subject, priceRanges, Book } from "../../models";
-import { FilterSearch } from "../../models/Filter";
 import { isAxiosError } from "../../apis/axiosInstance";
-import CategoryBanner from "../../components/CategoryBanner/CategoryBanner";
 import Pagination from "@mui/material/Pagination";
 const Wrapper = styled.div`
   background-color: #ffffff;
@@ -19,19 +17,21 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
+const convertNumber = (value: any) => {
+  if (value === null) {
+    return -0.1;
+  } else return parseInt(value);
+};
 const price = [0, 5, 10, 25, 50, 100000000];
 
-const CategoryPage = () => {
+const Category = () => {
   const [searchResult, setSearchResult] = useState<Book[]>([]);
 
   const [hover, setHover] = useState(-1);
-  const [filter, setFilter] = useState<FilterSearch>({ rating: 0 });
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [totalpage, setTotalPages] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState<number>(
-    parseInt(searchParams.get("page") || "0")
-  );
+
   const stars = Array(5).fill(0);
 
   const handleHoverStar = (value: number) => {
@@ -41,80 +41,54 @@ const CategoryPage = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setCurrentPage(value - 1);
     searchParams.set("page", (value - 1).toString());
     setSearchParams(searchParams);
   };
 
+  const resetPageHandler = () => {
+    searchParams.set("page", "0");
+  };
+
   const handlePriceChange = (id: number) => {
-    if (filter.from !== price[id]) {
-      setFilter({
-        ...filter,
-        from: price[id],
-        to: price[id + 1],
-      });
+    if (convertNumber(searchParams.get("from")) !== price[id]) {
       searchParams.set("from", price[id].toString());
       searchParams.set("to", price[id + 1].toString());
     } else {
-      setFilter({
-        ...filter,
-        from: 0.1,
-        to: 100000000,
-      });
       searchParams.delete("from");
       searchParams.delete("to");
     }
+    resetPageHandler();
     setSearchParams(searchParams);
   };
   const handleCategoryClick = (category: string) => {
-    if (filter.category === category) {
-      setFilter({
-        ...filter,
-        category: "",
-      });
+    if (searchParams.get("category") === category) {
       searchParams.delete("category");
     } else {
-      setFilter({
-        ...filter,
-        category: category,
-      });
       searchParams.set("category", category);
     }
+    resetPageHandler();
     setSearchParams(searchParams);
   };
   const handleRatingChange = (value: number) => {
-    if (filter.rating === value) {
-      setFilter({
-        ...filter,
-        rating: 0,
-      });
+    if (convertNumber(searchParams.get("rating")) === value) {
       searchParams.delete("rating");
     } else {
-      setFilter({
-        ...filter,
-        rating: value,
-      });
       searchParams.set("rating", value.toString());
     }
+    resetPageHandler();
+    setSearchParams(searchParams);
   };
   const handleBestSelling = (bestSelling: boolean) => {
     if (bestSelling) {
-      setFilter({
-        ...filter,
-        best_selling: true,
-      });
       searchParams.set("best_selling", "true");
     } else {
-      setFilter({
-        ...filter,
-        best_selling: false,
-      });
       searchParams.delete("best_selling");
     }
+    resetPageHandler();
     setSearchParams(searchParams);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const name = searchParams.get("name") || "";
     const category = searchParams.get("category") || "";
     const from = searchParams.get("from") || "";
@@ -133,8 +107,6 @@ const CategoryPage = () => {
           page,
           best_selling,
         });
-        searchParams.set("page", page);
-        setSearchParams(searchParams);
         setSearchResult(result.content as Book[]);
         setTotalPages(result.totalPages);
         console.log(result);
@@ -144,9 +116,12 @@ const CategoryPage = () => {
         }
       }
     };
+    if (convertNumber(page) >= totalpage) {
+      resetPageHandler();
+      setSearchParams(searchParams);
+    }
     fetchApi();
-  }, [filter, searchParams]);
-  console.log(searchResult);
+  }, [searchParams]);
   return (
     <Wrapper>
       <div className="container">
@@ -160,7 +135,7 @@ const CategoryPage = () => {
                 key={index}
                 onClick={() => handleCategoryClick(subject)}
                 className={
-                  subject === filter.category
+                  subject === searchParams.get("category")
                     ? "TitleOnClick"
                     : "criterionTitle"
                 }
@@ -176,7 +151,7 @@ const CategoryPage = () => {
             {priceRanges.map((priceRange, index) => (
               <div
                 className={
-                  price[index] === filter.from
+                  price[index].toString() === searchParams.get("from")
                     ? "TitleOnClick"
                     : "criterionTitle"
                 }
@@ -199,7 +174,8 @@ const CategoryPage = () => {
                     className="starItem"
                     size={24}
                     style={
-                      filter.rating > index || index <= hover
+                      convertNumber(searchParams.get("rating")) > index ||
+                      index <= hover
                         ? {
                             color: "#dcd13a",
                           }
@@ -219,12 +195,12 @@ const CategoryPage = () => {
             <div className="categoryTitle">
               <span>
                 {searchParams.get("category")
-                  ? filter.category
+                  ? searchParams.get("category")
                   : "The Book Store"}
               </span>
             </div>
             <label className="dropDown">
-              {filter.best_selling ? "Best Selling" : "Alls"}
+              {searchParams.get("best_selling") ? "Best Selling" : "Alls"}
               <FaChevronDown className="dropIcon" />
               <ul className="dropDownList">
                 <li
@@ -248,18 +224,34 @@ const CategoryPage = () => {
           <div className="headBanner">
             <FaBookOpen size={14} className="mx-2" />
             Have a good day at Book a book. Get it at our home page
-            <Link to={"#"} className="mx-2">
-              Home
-            </Link>
           </div>
-          <div className="bookContainer">
-            {searchResult.map((result) => {
-              return <BookCard key={result.id} book={result} />;
-            })}
-          </div>
+          {searchResult.length !== 0 ? (
+            <div className="bookContainer">
+              {searchResult.map((result) => {
+                return <BookCard key={result.id} book={result} />;
+              })}
+            </div>
+          ) : (
+            <div className="flex-column align-items-center">
+              <div
+                className="d-flex flex-column align-items-center bg-white pb-4 rounded"
+                style={{ width: "100%" }}
+              >
+                <img
+                  src="/images/cannot-search.png"
+                  alt="empty"
+                  style={{ width: "40%" }}
+                />
+                <span className="mb-4 text-muted">
+                  We don't have any books like that!!!
+                </span>
+              </div>
+            </div>
+          )}
+
           <Pagination
             count={totalpage}
-            page={currentPage + 1}
+            page={convertNumber(searchParams.get("page") || "0") + 1}
             showFirstButton
             showLastButton
             color="primary"
@@ -269,7 +261,7 @@ const CategoryPage = () => {
               // marginLeft: "auto",
               // marginRight: "auto",
               // height: "auto",
-              // marginTop: "auto",
+              marginTop: "20px",
             }}
             onChange={handleChangePage}
             className={totalpage <= 1 ? "pageNull" : ""}
@@ -279,4 +271,4 @@ const CategoryPage = () => {
     </Wrapper>
   );
 };
-export default CategoryPage;
+export default Category;

@@ -22,11 +22,9 @@ import DashBoardOrder from "./pages/DashBoard/Orders/Order";
 import DashBoardOrderDetail from "./pages/DashBoard/Orders/OrderDetail";
 import DashBoardBookDetail from "./pages/DashBoard/Books/BookDetail";
 import DashBoardComment from "./pages/DashBoard/Comments/CommentList";
-import CategoryPage from "./pages/Category/Category";
 import Product from "./pages/Product/Product";
 import AboutUs from "./pages/AboutUs/AboutUs";
 import { createTheme, ThemeProvider } from "@mui/material";
-import Purchase from "./pages/Purchase/Purchase";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Layout from "./components/Layout";
@@ -36,6 +34,8 @@ import SignUp from "./pages/Signup/SignUp";
 import Account from "./pages/Account/Account";
 import Checkout from "./pages/Checkout/Checkout";
 import Error from "./pages/Error/Error";
+import Purchase from "./pages/Purchase/Purchase";
+import Category from "./pages/Category/Category";
 const Cart = React.lazy(() => import("./pages/Cart/Cart"));
 
 const theme = createTheme({
@@ -83,8 +83,8 @@ const App = () => {
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="product/:id/:title" element={<Product />} />
-            <Route path="books" element={<CategoryPage />} />
-            <Route path="user/purchase" element={<Purchase />} />
+            <Route path="books" element={<Category />} />
+            <Route path="purchase" element={<Purchase />} />
             <Route path="account" element={<Account />} />
             <Route path="about-us" element={<AboutUs />} />
             {/* Product Collection Account AboutUs Blog Checkout Order */}

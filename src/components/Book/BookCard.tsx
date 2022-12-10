@@ -12,7 +12,6 @@ const BookCard = (props: { book: Book }) => {
   const { isLoggedIn } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const [checked, setChecked] = useState(false);
 
   let path = `/product/${props.book.id}/${props.book.name
     .split(" ")
@@ -36,14 +35,13 @@ const BookCard = (props: { book: Book }) => {
         quantity: 1,
       })
     );
-    setChecked(true);
   };
   return (
     <div className="CardFrame">
       <div id="CardImg">
         <img
           src={props.book.image}
-          width={160}
+          width={"100%"}
           height={200}
           alt="error"
           onClick={handleProductClick}
@@ -57,7 +55,7 @@ const BookCard = (props: { book: Book }) => {
         </div>
         <div id="CardText">
           <h3 id="CardName" onClick={handleProductClick}>
-            {formatStr(props.book.name, 16)}
+            {formatStr(props.book.name, 18)}
           </h3>
           <span>
             by{" "}
