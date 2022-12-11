@@ -1,12 +1,12 @@
 import { FcAssistant, FcShipped, FcSynchronize } from "react-icons/fc";
-import "./index.css";
+import style from "./Privacy.module.css";
 
 const Privacy = () => {
   return (
     <div>
-      <div id="privacyFooter">
-        <div className="privacyFooter">
-          <span className="iconPr">
+      <div id={style.privacyFooter}>
+        <div className={style.privacyFooterInner}>
+          <span className={style.iconPr}>
             <FcShipped fontSize={60} />
           </span>
           <p>
@@ -16,13 +16,13 @@ const Privacy = () => {
           </p>
         </div>
         <div
-          className="privacyFooter"
+          className={style.privacyFooterInner}
           style={{
             borderLeft: "1px solid #f0f0f0",
             borderRight: "1px solid #f0f0f0",
           }}
         >
-          <span className="iconPr">
+          <span className={style.iconPr}>
             <FcSynchronize fontSize={60} />
           </span>
           <p>
@@ -31,8 +31,8 @@ const Privacy = () => {
             <span>Producer's fault</span>
           </p>
         </div>
-        <div className="privacyFooter">
-          <span className="iconPr">
+        <div className={style.privacyFooterInner}>
+          <span className={style.iconPr}>
             <FcAssistant fontSize={60} />
           </span>
           <p>
@@ -42,7 +42,7 @@ const Privacy = () => {
           </p>
         </div>
       </div>
-      <div id="sponsor">
+      <div id={style.sponsor}>
         <a href="https://nxbvanhoc.com.vn/" target="_blank" rel="noreferrer">
           <img
             alt="sponsor"

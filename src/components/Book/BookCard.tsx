@@ -1,4 +1,4 @@
-import "./index.css";
+import style from "./Book.module.css";
 import { Book } from "../../models";
 import { useNavigate, useLocation } from "react-router-dom";
 import { formatStr } from "../../utils";
@@ -37,8 +37,8 @@ const BookCard = (props: { book: Book }) => {
     );
   };
   return (
-    <div className="CardFrame">
-      <div id="CardImg">
+    <div className={style.CardFrame}>
+      <div id={style.CardImg}>
         <img
           src={props.book.image}
           width={"100%"}
@@ -47,14 +47,14 @@ const BookCard = (props: { book: Book }) => {
           onClick={handleProductClick}
         />
       </div>
-      <div id="CardInfor">
-        <div id="AddContainer">
-          <div id="QuickAdd" onClick={handleAddToCart}>
+      <div id={style.CardInfor}>
+        <div id={style.AddContainer}>
+          <div id={style.QuickAdd} onClick={handleAddToCart}>
             Quick Add
           </div>
         </div>
-        <div id="CardText">
-          <h3 id="CardName" onClick={handleProductClick}>
+        <div id={style.CardText}>
+          <h3 id={style.CardName} onClick={handleProductClick}>
             {formatStr(props.book.name, 18)}
           </h3>
           <span>

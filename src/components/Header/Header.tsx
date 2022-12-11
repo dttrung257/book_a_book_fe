@@ -1,7 +1,7 @@
 import { ChangeEvent, Fragment, useState } from "react";
 import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
 import { VscTriangleDown } from "react-icons/vsc";
-import "./index.css";
+import style from "./Header.module.css";
 import {
   Avatar,
   Badge,
@@ -47,9 +47,9 @@ const Header = () => {
   };
 
   return (
-    <div className="header">
-      <div id="headerLeft">
-        <div className="logo">
+    <div id={style.header}>
+      <div id={style.headerLeft}>
+        <div id={style.logo}>
           <Link to="/">
             <p>
               <span>
@@ -59,28 +59,34 @@ const Header = () => {
             </p>
           </Link>
         </div>
-        <div className="nav">
-          <div className="navAddr">
-            <Link to="/">Home</Link>
+        <div id={style.nav}>
+            <Link to="/">
+          <div className={style.navAddr}>
+              Home
           </div>
-          <div className="navAddr">
+              </Link>
             <Link to="/books">
-              Collections
+          <div className={style.navAddr}>
+              Categories
               <VscTriangleDown />
+          </div>
             </Link>
-          </div>
 
-          <div className="navAddr">
-            <Link to="/about-us">Blogs</Link>
+            <Link to="/about-us">
+          <div className={style.navAddr}>
+              Blogs
           </div>
-          <div className="navAddr">
-            <Link to="/about-us">About us</Link>
+              </Link>
+            <Link to="/about-us">
+          <div className={style.navAddr}>
+              About us
           </div>
+              </Link>
         </div>
       </div>
-      <div className="search">
+      <div id={style.search}>
         <input
-          id="searchBar"
+          id={style.searchBar}
           placeholder="Search book..."
           value={name}
           onChange={(e) =>
@@ -91,18 +97,18 @@ const Header = () => {
         <FiSearch
           color="008B8B"
           onClick={handleSearch}
-          id="searchIcon"
+          id={style.searchIcon}
         ></FiSearch>
       </div>
-      <div className="account">
+      <div id={style.account}>
         {isLoggedIn ? (
           <Fragment>
-            <div className="dropdown">
+            <div className={style.dropdown}>
               <div
                 style={{
                   display: "flex",
                 }}
-                className="dropbtn"
+                className={style.dropbtn}
               >
                 <Avatar
                   src={user.avatar}
@@ -111,7 +117,7 @@ const Header = () => {
                 &nbsp;&nbsp;
                 <span>{`${user.firstName} ${user.lastName}`}</span>
               </div>
-              <div className="dropdown-content">
+              <div className={style.dropdownContent}>
                 <List>
                   <ListItem disablePadding>
                     <ListItemButton

@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { PersonalOrder } from "../../models";
 import { useAppSelector } from "../../store/hook";
 import OrderItem from "./OrderItem";
+import style from "./Purchase.module.css";
 
 const convertNumber = (value: any) => {
   if (value === null) {
@@ -57,7 +58,7 @@ const OrderList = () => {
   }, [getPersonalOrdersList, searchParams]);
   return (
     <>
-      <div className="orderContainer">
+      <div className={style.orderContainer}>
         {orderList.map((order) => (
           <OrderItem key={order.id} order={order} />
         ))}
@@ -94,11 +95,10 @@ const OrderList = () => {
             // height: "auto",
             // marginTop: "auto",
             marginTop: "50px",
-            marginBottom: "20px",
-            alignSelf: "flex-end",
+            marginBottom: "20px"
           }}
           onChange={handleChangePage}
-          className={totalPages <= 1 ? "pageNull" : ""}
+          className={totalPages <= 1 ? `${style.pageNull}` : ""}
         />
       </div>
     </>

@@ -6,13 +6,13 @@ import { IoAdd, IoRemove } from "react-icons/io5";
 import { MdCollectionsBookmark } from "react-icons/md";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getBooksOfCategory, getBookViaId } from "../../apis/book";
-import BookCarousel from "../../components/BookCarousel/BookCarousel";
-import Span from "../../components/Span";
+import BookCarousel from "../../components/BookCarousel";
+import Span from "../Home/Span";
 import { Book, BookInfoBrief, Category } from "../../models";
-import "./index.css";
-import BookDetail from "../../components/BookDetail/BookDetail";
+import style from "./Product.module.css";
+import BookDetail from "./BookDetail/BookDetail";
 import { formatStr } from "../../utils";
-import Comment from "../../components/Comment/Comment";
+import Comment from "./Comment/Comment";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { cartActions } from "../../store/cartSlice";
 import AlertSuccess from "../../components/AlertSuccess";
@@ -62,43 +62,35 @@ const Product = () => {
   }, [params.id]);
 
   const checkAmountInCart = () => {
-    return items.find((item) => item.id === info.id)?.quantity as number;
+    let tmp = items.find((item) => item.id === info.id)?.quantity as number;
+    if (tmp !== undefined) return tmp;
+    else return 0;
   };
 
   const addAmount = (c: boolean) => {
+    setErr("");
     setAmount(
       c
-        ? amount +
-            1 +
-            (checkAmountInCart() !== undefined ? checkAmountInCart() : 0) <=
-          info.availableQuantity
+        ? amount + 1 + checkAmountInCart() <= info.availableQuantity
           ? amount + 1
           : amount
         : amount - 1 >= 1
         ? amount - 1
         : amount
     );
-    if (
-      amount +
-        1 +
-        (checkAmountInCart() !== undefined ? checkAmountInCart() : 0) >
-      info.availableQuantity
-    )
+    if (c && amount + 1 + checkAmountInCart() > info.availableQuantity)
       setErr("Maximum");
     else setErr("");
   };
 
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
+    setErr("");
     if (event.target.value === "") {
       setAmount(1);
       return;
     }
     let tmp = event.target.valueAsNumber;
-    setErr("");
-    if (
-      tmp + (checkAmountInCart() !== undefined ? checkAmountInCart() : 0) >
-      info.availableQuantity
-    ) {
+    if (tmp + checkAmountInCart() > info.availableQuantity) {
       tmp =
         info.availableQuantity - checkAmountInCart() > 0
           ? info.availableQuantity - checkAmountInCart()
@@ -120,10 +112,7 @@ const Product = () => {
       toast.warning("Admin can not add book to cart!");
       return;
     }
-    if (
-      amount + (checkAmountInCart() !== undefined ? checkAmountInCart() : 0) >
-      info.availableQuantity
-    ) {
+    if (amount + checkAmountInCart() > info.availableQuantity) {
       toast.error(
         "Unable to add selected quantity to cart as it would exceed the maximum quantity available for this item"
       );
@@ -140,7 +129,7 @@ const Product = () => {
   };
 
   return (
-    <div id="productPage">
+    <div id={style.productPage}>
       {isSending ? (
         <AlertSuccess
           setIsSending={() => setIsSending(false)}
@@ -169,13 +158,13 @@ const Product = () => {
           }
           rectText={info.category.toUpperCase()}
         />
-        <div id="bookDetail">
-          <div id="frame">
+        <div id={style.bookDetail}>
+          <div id={style.frame}>
             <img src={info.image} alt={info.name} />
           </div>
-          <div id="detail">
-            <p id="bookName">{formatStr(info.name.toUpperCase(), 63)}</p>
-            <div id="caption">
+          <div id={style.detail}>
+            <p id={style.bookName}>{formatStr(info.name.toUpperCase(), 63)}</p>
+            <div id={style.caption}>
               <span style={{ marginRight: "5px" }}>
                 {info.rating !== null ? info.rating : 5}
               </span>
@@ -203,9 +192,9 @@ const Product = () => {
                 {info.quantityInStock} books available
               </p>
             </div>
-            <p id="price">{`${info.sellingPrice}$`}</p>
-            <p id="vat">*Product prices excluding VAT</p>
-            <p id="description">Description:</p>
+            <p id={style.price}>{`${info.sellingPrice}$`}</p>
+            <p id={style.vat}>*Product prices excluding VAT</p>
+            <p id={style.description}>Description:</p>
             <p>Author: {info.author}</p>
             {/* <p>{info.description}</p> */}
             {/* <p style={{textAlign: "justify"}}>What I Learned from the Trees delves into the intricate relationship between humans and nature, and how these often overlooked, everyday interactions affect us as individuals, families, and communities. </p> */}
@@ -221,11 +210,11 @@ const Product = () => {
               </h6>
             ) : (
               <div>
-                <div id="quantity">
-                  <span id="description">Quantity:</span>
+                <div id={style.quantity}>
+                  <span id={style.description}>Quantity:</span>
                   <div style={{ display: "inline-block", marginLeft: "20px" }}>
                     <span
-                      className="selectAmount"
+                      className={style.selectAmount}
                       onClick={() => addAmount(false)}
                     >
                       <IoRemove />
@@ -236,7 +225,7 @@ const Product = () => {
                       onChange={handleChangeAmount}
                     />
                     <span
-                      className="selectAmount"
+                      className={style.selectAmount}
                       onClick={() => addAmount(true)}
                     >
                       <IoAdd />
@@ -276,7 +265,7 @@ const Product = () => {
           rectLeftWidth={170}
         />
         {recommend.length > 0 && (
-          <div id="books">
+          <div id={style.books}>
             <BookCarousel books={recommend} />
           </div>
         )}

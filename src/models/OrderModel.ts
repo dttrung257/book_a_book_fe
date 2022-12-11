@@ -27,3 +27,12 @@ export interface OrderPost {
     quantity: number;
   }[];
 }
+
+export interface Item {
+  bookName: string;
+  id: string;
+  image: string;
+  priceEach: number;
+  quantityOrdered: number;
+}
+

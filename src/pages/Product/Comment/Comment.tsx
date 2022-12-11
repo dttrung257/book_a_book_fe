@@ -1,14 +1,14 @@
 import { ChangeEvent, Fragment, useEffect, useState } from "react";
-import { Comment as Cmt } from "../../models";
+import { Comment as Cmt } from "../../../models";
 import {
   deleteComment,
   getAllComments,
   getOtherComments,
   getUserComments,
-} from "../../apis/comment";
-import { useAppSelector } from "../../store/hook";
-import Star from "../Star";
-import "./index.css";
+} from "../../../apis/comment";
+import { useAppSelector } from "../../../store/hook";
+import Star from "../../../components/Star";
+import style from "./Comment.module.css";
 import ModalComment from "./ModalComment";
 import { Avatar, Button, Pagination } from "@mui/material";
 import { Modal } from "react-bootstrap";
@@ -107,10 +107,10 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
   };
 
   return (
-    <div id="comment">
-      <p id="title">Reviews</p>
+    <div id={style.comment}>
+      <p id={style.title}>Reviews</p>
       <hr style={{ height: "3px", borderWidth: 0, backgroundColor: "#666" }} />
-      <p className="title">Rating: </p>
+      <p className={style.title}>Rating: </p>
       <Star rate={props.rate} />
       <br />
       <br />
@@ -125,7 +125,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
               sent={sent ? true : false}
               setsent={(c) => setSent(c)}
             />
-            <div className="btnFrame">
+            <div className={style.btnFrame}>
               <Button
                 variant="contained"
                 color="primary"
@@ -139,15 +139,15 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
           </Fragment>
         ) : (
           <Fragment>
-            <div className="frame-comment">
-              <div className="frame-avatar">
+            <div className={style.frameComment}>
+              <div className={style.frameAvatar}>
                 <Avatar
                   src={user.avatar}
                   style={{ maxWidth: 25, maxHeight: 25 }}
                 />
               </div>
-              <div className="textField">
-                <p className="ownerCmt">{`${user.firstName} ${user.lastName}`}</p>
+              <div className={style.textField}>
+                <p className={style.ownerCmt}>{`${user.firstName} ${user.lastName}`}</p>
                 <Star rate={rate} />
                 <p style={{float: "right", color: "#666"}}>{date}</p>
                 <p>{comment}</p>
@@ -161,7 +161,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
               setsent={(c) => setSent(c)}
               comment={{ content: comment, rate: rate }}
             />
-            <div className="btnFrame" style={{ marginTop: "10px" }}>
+            <div className={style.btnFrame} style={{ marginTop: "10px" }}>
               <Button
                 variant="contained"
                 color="error"
@@ -191,12 +191,12 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
         <></>
       )}
       <div>
-        <div className="frame-comment">
-          <div className="frame-avatar">
+        <div className={style.frameComment}>
+          <div className={style.frameAvatar}>
             <Avatar style={{ maxWidth: 30, maxHeight: 30 }}>A</Avatar>
           </div>
-          <div className="textField">
-            <p className="ownerCmt">Admin </p>
+          <div className={style.textField}>
+            <p className={style.ownerCmt}>Admin </p>
             <Star rate={5} />
             <p>
               Because, despite the fairly innocuous first 200 pages, the title
@@ -214,15 +214,15 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
         otherComments.map((cmt, i) => {
           return (
             <div key={i}>
-              <div className="frame-comment">
-                <div className="frame-avatar">
+              <div className={style.frameComment}>
+                <div className={style.frameAvatar}>
                   <Avatar
                     src={cmt.avatar}
                     style={{ maxWidth: 30, maxHeight: 30 }}
                   />
                 </div>
-                <div className="textField">
-                  <p className="ownerCmt">{cmt.fullName} </p>
+                <div className={style.textField}>
+                  <p className={style.ownerCmt}>{cmt.fullName} </p>
                   <Star rate={cmt.star} />
                   <p style={{float: "right"}}>{cmt.updatedAt ? `Updated at ${new Date(cmt.updatedAt).toLocaleString()}` : new Date(cmt.createdAt).toLocaleString()}</p>
                   <p>{cmt.content}</p>
@@ -257,13 +257,12 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <div style={{ width: "100%" }}>
+      <div>
         <Pagination
-          className="nextPage"
+          className={style.nextPage}
           count={totalPage}
           page={page + 1}
           color="primary"
-          style={{ margin: "auto" }}
           onChange={handleChangePage}
         />
       </div>

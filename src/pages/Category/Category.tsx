@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import "./index.css";
+import style from "./Category.module.css";
 import { FaStar, FaBookOpen, FaChevronDown } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import * as bookSearch from "../../apis/book";
@@ -124,10 +124,10 @@ const Category = () => {
   }, [searchParams]);
   return (
     <Wrapper>
-      <div className="container">
-        <div className="filter">
-          <div className="filterArea">
-            <div className="filterTitle">
+      <div className={style.container}>
+        <div className={style.filter}>
+          <div className={style.filterArea}>
+            <div className={style.filterTitle}>
               <span>CATEGORY</span>
             </div>
             {Subject.map((subject, index) => (
@@ -136,24 +136,24 @@ const Category = () => {
                 onClick={() => handleCategoryClick(subject)}
                 className={
                   subject === searchParams.get("category")
-                    ? "TitleOnClick"
-                    : "criterionTitle"
+                    ? `${style.titleOnClick}`
+                    : `${style.criterionTitle}`
                 }
               >
                 {subject}
               </div>
             ))}
           </div>
-          <div className="filterArea">
-            <div className="filterTitle">
+          <div className={style.filterArea}>
+            <div className={style.filterTitle}>
               <span>PRICES</span>
             </div>
             {priceRanges.map((priceRange, index) => (
               <div
                 className={
                   price[index].toString() === searchParams.get("from")
-                    ? "TitleOnClick"
-                    : "criterionTitle"
+                    ? `${style.titleOnClick}`
+                    : `${style.criterionTitle}`
                 }
                 key={index}
                 onClick={() => handlePriceChange(index)}
@@ -162,16 +162,16 @@ const Category = () => {
               </div>
             ))}
           </div>
-          <div className="filterArea">
-            <div className="filterTitle">
+          <div className={style.filterArea}>
+            <div className={style.filterTitle}>
               <span>review</span>
             </div>
-            <div className="starContainer">
+            <div className={style.starContainer}>
               {stars.map((_, index) => {
                 return (
                   <FaStar
                     key={index}
-                    className="starItem"
+                    className={style.starItem}
                     size={24}
                     style={
                       convertNumber(searchParams.get("rating")) > index ||
@@ -190,27 +190,27 @@ const Category = () => {
             </div>
           </div>
         </div>
-        <div className="content">
-          <div className="bookHeader">
-            <div className="categoryTitle">
+        <div className={style.content}>
+          <div className={style.bookHeader}>
+            <div className={style.categoryTitle}>
               <span>
                 {searchParams.get("category")
                   ? searchParams.get("category")
                   : "The Book Store"}
               </span>
             </div>
-            <label className="dropDown">
+            <label className={style.dropDown}>
               {searchParams.get("best_selling") ? "Best Selling" : "Alls"}
-              <FaChevronDown className="dropIcon" />
-              <ul className="dropDownList">
+              <FaChevronDown className={style.dropIcon} />
+              <ul className={style.dropDownList}>
                 <li
-                  className="dropDownItem"
+                  className={style.dropDownItem}
                   onClick={() => handleBestSelling(false)}
                 >
                   All
                 </li>
                 <li
-                  className="dropDownItem"
+                  className={style.dropDownItem}
                   onClick={() => handleBestSelling(true)}
                 >
                   Best Selling
@@ -221,12 +221,12 @@ const Category = () => {
           {/* <div className="bannerContainer">
             <CategoryBanner category={"FANTASY"} />
           </div> */}
-          <div className="headBanner">
+          <div className={style.headBanner}>
             <FaBookOpen size={14} className="mx-2" />
             Have a good day at Book a book. Get it at our home page
           </div>
           {searchResult.length !== 0 ? (
-            <div className="bookContainer">
+            <div className={style.bookContainer}>
               {searchResult.map((result) => {
                 return <BookCard key={result.id} book={result} />;
               })}
@@ -264,7 +264,7 @@ const Category = () => {
               marginTop: "20px",
             }}
             onChange={handleChangePage}
-            className={totalpage <= 1 ? "pageNull" : ""}
+            className={totalpage <= 1 ? `${style.pageNull}` : ""}
           />
         </div>
       </div>

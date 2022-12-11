@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
-import { BookInfoBrief, PersonalOrder } from "../../models";
+import { BookInfoBrief, Item, PersonalOrder } from "../../models";
 import AppModal from "../../components/AppModal/AppModal";
 import { deleteOrder, getOrderDetails } from "../../apis/order";
 import { useAppSelector } from "../../store/hook";
 import { BsTruck } from "react-icons/bs";
 import { Button } from "react-bootstrap";
+import style from "./Purchase.module.css";
 
-interface Item {
-  bookName: string;
-  id: string;
-  image: string;
-  priceEach: number;
-  quantityOrdered: number;
-}
 const OrderItem = (props: { order: PersonalOrder }) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
@@ -37,10 +31,10 @@ const OrderItem = (props: { order: PersonalOrder }) => {
     window.location.reload();
   };
   return (
-    <div className="itemContainer">
+    <div className={style.itemContainer}>
       <div style={{ display: "flex" }}>
-        <span className="date">{props.order.orderDate.toString()}</span>
-        <div className="status">
+        <span className={style.date}>{props.order.orderDate.toString()}</span>
+        <div className={style.status}>
           <BsTruck className="mx-2" />
           {props.order.status}
         </div>
@@ -48,8 +42,8 @@ const OrderItem = (props: { order: PersonalOrder }) => {
 
       {itemList.map((item, index) => {
         return (
-          <div className="item" key={index}>
-            <div className="itemBox">
+          <div className={style.item} key={index}>
+            <div className={style.itemBox}>
               <img
                 src={item.image}
                 alt={item.id}
@@ -58,17 +52,17 @@ const OrderItem = (props: { order: PersonalOrder }) => {
                 height={90}
               />
             </div>
-            <div className="infor">
+            <div className={style.infor}>
               <h5>{item.bookName}</h5>
               <p>x{item.quantityOrdered}</p>
             </div>
           </div>
         );
       })}
-      <div className="divider"></div>
-      <div className="totalInfor mb-3">
+      <div className={style.divider}></div>
+      <div className={`${style.totalInfor} mb-3`}>
         <div className="mt-3 d-flex justify-content-end">
-          <span className="cash">
+          <span className={style.cash}>
             <span style={{ color: "black", fontSize: "16px" }}>Total:</span>
             <sup>$</sup>
             {props.order.total}
@@ -78,10 +72,10 @@ const OrderItem = (props: { order: PersonalOrder }) => {
           Address: {props.order.address}
         </div>
       </div>
-      <div className="buttonOrder">
+      <div className={style.buttonOrder}>
         <Button
           variant="secondary"
-          className="deleteOrderBt px-5"
+          className={`${style.deleteOrderBt} px-5`}
           onClick={() => setShowDeleteModal(true)}
         >
           Delete
@@ -99,13 +93,13 @@ const OrderItem = (props: { order: PersonalOrder }) => {
         )}
         <div className="mt-3 d-flex justify-content-end">
           <Button
-            className="cancelBt"
+            className={style.cancelBt}
             onClick={() => setShowDeleteModal(false)}
           >
             Cancel
           </Button>
           {status === "PENDING" ? (
-            <Button className="confirmBt mx-3" onClick={handleDelete}>
+            <Button className={`${style.confirmBt} mx-3`} onClick={handleDelete}>
               Confirm
             </Button>
           ) : (

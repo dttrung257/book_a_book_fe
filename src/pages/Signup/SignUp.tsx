@@ -11,23 +11,8 @@ import { checkPassword } from "../../utils/checkPassword";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import Loading from "../Loading";
 import { emailVerifyActions } from "../../store/emailVerifySlice";
-import { AuthError, AuthInfo } from "../../models";
+import { AuthError, AuthInfo, Hide, PassType, Show } from "../../models";
 import { signUp } from "../../apis/auth";
-
-interface PassType {
-  type: "text" | "password";
-  text: "Hide" | "Show";
-}
-
-const Show: PassType = {
-  type: "text",
-  text: "Hide",
-};
-
-const Hide: PassType = {
-  type: "password",
-  text: "Show",
-};
 
 const authValidator = (info: AuthInfo): AuthError => {
   const error: AuthError = {};

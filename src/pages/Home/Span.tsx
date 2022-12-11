@@ -1,4 +1,4 @@
-import { SpanProps } from "../models";
+import { SpanProps } from "../../models";
 
 const Span = (span: SpanProps) => {
   return (

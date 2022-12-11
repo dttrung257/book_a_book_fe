@@ -1,13 +1,13 @@
-.header,
-.account,
-.search {
+#header,
+#account,
+#search {
   display: flex;
   align-items: center;
 }
 
-.search,
-.logo,
-.account,
+#search,
+#logo,
+#account,
 .navAddr {
   cursor: pointer;
 }
@@ -21,7 +21,7 @@
   padding-top: 4px;
 }
 
-.header {
+#header {
   height: 55px;
   font-weight: 500;
   justify-content: space-between;
@@ -33,17 +33,17 @@
   background-color: white;
 }
 
-.search {
+#search {
   width: 28%;
   position: relative;
 }
 
-.account {
+#account {
   font-size: 15px;
   margin-right: 20px;
 }
 
-.logo {
+#logo {
   margin: auto 20px;
 }
 
@@ -53,40 +53,43 @@
   justify-content: space-around;
 }
 
-.logo a {
+#logo a {
   text-decoration: none;
 }
 
-.logo p {
+#logo p {
   font-size: 26px !important;
   margin: 0;
   color: black;
   font-weight: 500;
 }
-.logo p span {
+#logo p span {
   color: #008b8b;
   font-weight: bolder;
   font-size: 26;
 }
-
-.navAddr:hover {
-  background-color: #efefef;
-  border-bottom: 3.5px solid #008b8b;
-  margin-bottom: -2px;
+#nav {
+  display: flex;
 }
 
-.navAddr > a {
-  margin: 0 20px;
+#nav > a:hover {
+  background-color: #efefef;
+  border-bottom: 3.5px solid #008b8b;
+  margin-bottom: -3.5px;
+}
+
+#nav > a {
+  padding: 0 20px;
   position: relative;
   text-decoration: none;
   color: black;
 }
 
-.account > span {
+#account > span {
   font-weight: 400;
   margin: 0 10px;
 }
-.account a {
+#account a {
   text-decoration: none;
   color: black;
 }
@@ -128,8 +131,8 @@
   position: relative;
   display: inline-block;
 }
-.dropdown-content::before,
-.dropdown-content::after {
+.dropdownContent::before,
+.dropdownContent::after {
   content: "";
   display: block;
   position: absolute;
@@ -139,19 +142,19 @@
   border-style: solid;
 }
 
-.dropdown-content::after {
+.dropdownContent::after {
   right: calc(50% - 7px);
   border-color: transparent transparent #fff transparent;
   border-width: 7px;
 }
 
-.dropdown-content::before {
+.dropdownContent::before {
   right: calc(50% - 7px);
   border-color: transparent transparent #666 transparent;
   border-width: 7px;
 }
 
-.dropdown-content {
+.dropdownContent {
   display: none;
   position: absolute;
   right: 5px;
@@ -160,18 +163,11 @@
   z-index: 1;
 }
 
-/* .dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-} */
-
-.dropdown-content a:hover {
+.dropdownContent a:hover {
   color: #008b8b;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown:hover .dropdownContent {
   display: block;
 }
 

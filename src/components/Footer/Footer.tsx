@@ -2,20 +2,20 @@ import { Button } from "@mui/material";
 import { FaFacebook, FaWhatsapp, FaTwitter, FaInstagram } from "react-icons/fa";
 import { FaPhoneAlt, FaBuilding } from "react-icons/fa";
 import { MdMail } from "react-icons/md";
-import "./index.css";
+import style from "./Footer.module.css";
 
 const Footer = () => {
   return (
-    <div id="footer">
-      <div id="container">
-        <div id="support">
-          <div id="privacy">
+    <div id={style.footer}>
+      <div id={style.container}>
+        <div id={style.support}>
+          <div id={style.privacy}>
             <h3>PRIVACY</h3>
             <p>Security privacy</p>
             <p>Insurance privacy</p>
             <p>Terms of service</p>
           </div>
-          <div id="help">
+          <div id={style.help}>
             <h3>HELP & SUPPORT</h3>
             <p>Shipping info</p>
             <p>Returns</p>
@@ -23,7 +23,7 @@ const Footer = () => {
             <p>How to track</p>
           </div>
         </div>
-        <div id="findUs">
+        <div id={style.findUs}>
           <h3>FIND US ON</h3>
           <span>
             <a href="https://m.me/thuy.quynhz.169">
@@ -46,37 +46,15 @@ const Footer = () => {
             </a>
           </span>
           <h3 style={{ marginTop: "20px" }}>SIGN UP FOR NEWS</h3>
-          {/* <TextField
-            id="outlined-basic"
-            variant="outlined"
-            size="small"
-            //   value={searchKey}
-            //   onChange={onChangeSearchBox}
-            placeholder="Your email address..."
-            fullWidth={true}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end" style={{ marginRight: "-3.5%" }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    style={{ height: "44px", marginBottom: "5px" }}
-                  >
-                    Subcribe
-                  </Button>
-                </InputAdornment>
-              ),
-            }}
-          /> */}
           <div style={{ position: "relative" }}>
-            <input id="searchBar" placeholder="Your email address..." />
-            <Button variant="contained" color="primary" id="subscribe">
+            <input id={style.searchBar} placeholder="Your email address..." />
+            <Button variant="contained" color="primary" id={style.subscribe}>
               Subcribe
             </Button>
           </div>
         </div>
-        <div id="intro" style={{ marginRight: "5%" }}>
-          <p id="logo">
+        <div id={style.intro} style={{ marginRight: "5%" }}>
+          <p id={style.logo}>
             <span>
               <i>Book</i>
             </span>
@@ -105,7 +83,7 @@ const Footer = () => {
           </p>
         </div>
       </div>
-      <div id="copyright">
+      <div id={style.copyright}>
         <p>@2022- Book a book All Rights Reserved</p>
       </div>
     </div>

@@ -1,4 +1,4 @@
-#back-to-top {
+#backToTop {
   /* display: none; */
   position: fixed;
   background-color: #549da0;
@@ -9,7 +9,7 @@
   cursor: pointer;
   border-radius: 30px;
 }
-#back-to-top:hover {
+#backToTop:hover {
   background-color: #3a696b;
 }
 #locate {

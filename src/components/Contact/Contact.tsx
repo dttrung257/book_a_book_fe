@@ -2,7 +2,7 @@ import { Tooltip, Zoom } from "@mui/material";
 import { useState } from "react";
 import { BsMessenger } from "react-icons/bs";
 import { HiChevronDoubleUp, HiLocationMarker, HiMail } from "react-icons/hi";
-import "./index.css";
+import style from "./Contact.module.css";
 
 const Contact = () => {
   const [visible, setVisible] = useState<boolean>(false);
@@ -33,7 +33,7 @@ const Contact = () => {
         TransitionComponent={Zoom}
         arrow
       >
-        <span id="mess">
+        <span id={style.mess}>
           <BsMessenger fontSize={26} color="fff" />
         </span>
       </Tooltip>
@@ -43,7 +43,7 @@ const Contact = () => {
         TransitionComponent={Zoom}
         arrow
       >
-        <span id="mail">
+        <span id={style.mail}>
           <HiMail fontSize={26} color="fff" />
         </span>
       </Tooltip>
@@ -53,12 +53,12 @@ const Contact = () => {
         TransitionComponent={Zoom}
         arrow
       >
-        <span id="locate">
+        <span id={style.locate}>
           <HiLocationMarker fontSize={26} color="fff" />
         </span>
       </Tooltip>
       <span
-        id="back-to-top"
+        id={style.backToTop}
         onClick={scroll}
         style={{ display: visible ? "block" : "none" }}
       >

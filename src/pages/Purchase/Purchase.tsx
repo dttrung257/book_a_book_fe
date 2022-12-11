@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import "./index.css";
+import style from "./Purchase.module.css";
 import { FaShoppingBag } from "react-icons/fa";
 import { useAppSelector } from "../../store/hook";
 import { Navigate } from "react-router-dom";
@@ -22,14 +22,14 @@ const Purchase = () => {
   }
   return (
     <Wrapper>
-      <div className="purchaseContainer">
-        <div id="panel">
-          <div id="purchaseLogo">
+      <div className={style.purchaseContainer}>
+        <div id={style.panel}>
+          <div id={style.purchaseLogo}>
             <div style={{ display: "block" }}>
-              <div className="left">
+              <div className={style.left}>
                 Personal <FaShoppingBag />
               </div>
-              <div className="right">Purchase</div>
+              <div className={style.right}>Purchase</div>
             </div>
           </div>
         </div>

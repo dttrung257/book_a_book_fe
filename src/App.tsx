@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,33 +10,45 @@ import { authActions } from "./store/authSlice";
 import { cartActions } from "./store/cartSlice";
 import { useAppDispatch, useAppSelector } from "./store/hook";
 import Cookies from "js-cookie";
-import CodeVerify from "./pages/ForgetPassword/CodeVerify";
-import ForgetPasswordLayout from "./pages/ForgetPassword/Layout";
-import Forget from "./pages/ForgetPassword/Forget";
-import Reset from "./pages/ForgetPassword/Reset";
-import AuthVerify from "./pages/VerifyEmail/AuthVerify";
-import DashBoardUser from "./pages/DashBoard/User/User";
-import DashBoardUserDetail from "./pages/DashBoard/User/UserDetail";
-import DashBoardBook from "./pages/DashBoard/Books/Book";
-import DashBoardOrder from "./pages/DashBoard/Orders/Order";
-import DashBoardOrderDetail from "./pages/DashBoard/Orders/OrderDetail";
-import DashBoardBookDetail from "./pages/DashBoard/Books/BookDetail";
-import DashBoardComment from "./pages/DashBoard/Comments/CommentList";
-import Product from "./pages/Product/Product";
-import AboutUs from "./pages/AboutUs/AboutUs";
 import { createTheme, ThemeProvider } from "@mui/material";
-import Home from "./pages/Home/Home";
-import Login from "./pages/Login/Login";
-import Layout from "./components/Layout";
-import DashBoardLayout from "./pages/DashBoard/DashBoardLayout";
-import Loading from "./pages/Loading";
-import SignUp from "./pages/Signup/SignUp";
-import Account from "./pages/Account/Account";
-import Checkout from "./pages/Checkout/Checkout";
-import Error from "./pages/Error/Error";
-import Purchase from "./pages/Purchase/Purchase";
-import Category from "./pages/Category/Category";
-const Cart = React.lazy(() => import("./pages/Cart/Cart"));
+import { lazy } from "react";
+
+const Login = lazy(() => import("./pages/Login/Login"));
+const SignUp = lazy(() => import("./pages/Signup/SignUp"));
+const Home = lazy(() => import("./pages/Home/Home"));
+const Error = lazy(() => import("./pages/Error/Error"));
+const Layout = lazy(() => import("./components/Layout"));
+const Loading = lazy(() => import("./pages/Loading"));
+const DashBoardLayout = lazy(() => import("./pages/DashBoard/DashBoardLayout"));
+const Cart = lazy(() => import("./pages/Cart/Cart"));
+const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
+const Product = lazy(() => import("./pages/Product/Product"));
+const Category = lazy(() => import("./pages/Category/Category"));
+const Account = lazy(() => import("./pages/Account/Account"));
+const AboutUs = lazy(() => import("./pages/AboutUs/AboutUs"));
+const Purchase = lazy(() => import("./pages/Purchase/Purchase"));
+const AuthVerify = lazy(() => import("./pages/VerifyEmail/AuthVerify"));
+const ForgetPasswordLayout = lazy(
+  () => import("./pages/ForgetPassword/Layout")
+);
+const Forget = lazy(() => import("./pages/ForgetPassword/Forget"));
+const CodeVerify = lazy(() => import("./pages/ForgetPassword/CodeVerify"));
+const Reset = lazy(() => import("./pages/ForgetPassword/Reset"));
+const DashBoardUser = lazy(() => import("./pages/DashBoard/User/User"));
+const DashBoardUserDetail = lazy(
+  () => import("./pages/DashBoard/User/UserDetail")
+);
+const DashBoardBook = lazy(() => import("./pages/DashBoard/Books/Book"));
+const DashBoardBookDetail = lazy(
+  () => import("./pages/DashBoard/Books/BookDetail")
+);
+const DashBoardOrder = lazy(() => import("./pages/DashBoard/Orders/Order"));
+const DashBoardOrderDetail = lazy(
+  () => import("./pages/DashBoard/Orders/OrderDetail")
+);
+const DashBoardComment = lazy(
+  () => import("./pages/DashBoard/Comments/CommentList")
+);
 
 const theme = createTheme({
   palette: {

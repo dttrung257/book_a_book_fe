@@ -2,7 +2,7 @@ import { TooltipProps, Tooltip } from "@mui/material";
 import { styled } from "@mui/material";
 import { BsCartPlus } from "react-icons/bs";
 import { BookInfoBrief } from "../../models";
-import "./index.css";
+import style from "./Book.module.css";
 import { Link } from "react-router-dom";
 import { formatStr } from "../../utils";
 
@@ -28,46 +28,26 @@ const Book = (props: { book: BookInfoBrief }) => {
     .join("-")
     .toLowerCase()}`;
 
-  // const handleAddToCart = () => {
-  //   if (!isLoggedIn) {
-  //     return navigate("/login", {
-  //       replace: true,
-  //       state: { from: location },
-  //     });
-  //   }
-  //   if (user.authority === "ADMIN") {
-  //     toast.warning("Admin can not add book to cart!")
-  //     return;
-  //   }
-  //   dispatch(
-  //     cartActions.addToCart({
-  //       id: info.id,
-  //       stopSelling: false,
-  //       quantity: 1,
-  //     })
-  //   );
-  // };
-
   return (
-    <div className="frame">
+    <div className={style.frame}>
       <Link to={path}>
         <div>
           <img src={info.image} alt={info.name} />
         </div>
-      <div id="info">
-        <div id="text">
-          {/* <Link to={path}> */}
+        <div id={style.info}>
+          <div id={style.text}>
+            {/* <Link to={path}> */}
             <LightTooltip title={info.name}>
-              <p id="bookName">{formatStr(info.name, 20)}</p>
+              <p id={style.bookName}>{formatStr(info.name, 20)}</p>
             </LightTooltip>
-          {/* </Link> */}
-          <p id="author">{formatStr(info.author, 25)}</p>
-          <p id="price">{`${info.sellingPrice}$`}</p>
+            {/* </Link> */}
+            <p id={style.author}>{formatStr(info.author, 25)}</p>
+            <p id={style.price}>{`${info.sellingPrice}$`}</p>
+          </div>
+          <div id={style.cart}>
+            <BsCartPlus fontSize={24} color="008b8b" />
+          </div>
         </div>
-        <div id="cart">
-          <BsCartPlus fontSize={24} color="008b8b" />
-        </div>
-      </div>
       </Link>
       {/* <Zoom in={checked}>
         <div id="alert-success">

@@ -1,7 +1,7 @@
 import OwlCarousel from "react-owl-carousel";
-import Book from "../Book/Book";
-import { BookInfoBrief } from "../../models";
-import "./index.css";
+import Book from "./Book/Book";
+import { BookInfoBrief } from "../models";
+// import "./index.css";
 
 const BookCarousel = (props: { books: BookInfoBrief[] }) => {
   const list = props.books;
@@ -36,7 +36,7 @@ const BookCarousel = (props: { books: BookInfoBrief[] }) => {
   };
 
   return (
-    <OwlCarousel className="owl-theme" {...options}>
+    <OwlCarousel {...options}>
       {list.map((book) => (
         <Book book={book} key={book.id} />
       ))}

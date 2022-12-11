@@ -2,7 +2,7 @@
   --head-banner: #e8ebe6;
 }
 .container {
-  width: 1400px;
+  /* width: 1400px; */
   min-height: 500px;
   height: fit-content;
   display: flex;

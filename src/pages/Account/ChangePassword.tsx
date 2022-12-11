@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form } from "react-bootstrap";
 import { changeUserPassword } from "../../apis/auth";
-import { changePass, PassError } from "../../models";
+import { changePass, Hide, PassError, PassType, Show } from "../../models";
 import { useAppSelector } from "../../store/hook";
 import validator from "validator";
 import style from "./Account.module.css";
@@ -11,20 +11,6 @@ import { BiHide } from "react-icons/bi";
 import { AiOutlineEye } from "react-icons/ai";
 import { checkPassword } from "../../utils";
 
-interface PassType {
-  type: "text" | "password";
-  text: "Hide" | "Show";
-}
-
-const Show: PassType = {
-  type: "text",
-  text: "Hide",
-};
-
-const Hide: PassType = {
-  type: "password",
-  text: "Show",
-};
 const PassValidator = (pass: changePass) => {
   const error: PassError = {};
   if (!pass.oldPassword) error.oldPassword = "Current password is required";
