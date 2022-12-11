@@ -1,4 +1,4 @@
-input[type="checkbox"]:checked {
+#container input[type="checkbox"]:checked {
   position: relative;
   cursor: pointer;
   background-color: var(--primary-color);
@@ -18,6 +18,7 @@ input[type="checkbox"]:checked {
   justify-content: space-between;
   gap: 20px;
   min-height: 80vh;
+  max-width: 100%;
 }
 
 #left {
@@ -31,9 +32,11 @@ input[type="checkbox"]:checked {
 .trashIcon {
   width: 20px;
   height: 20px;
+  position: relative;
+  z-index: 10;
 }
 
-.sticky {
+.checkout {
   position: sticky;
   top: 68px;
 }
@@ -60,6 +63,23 @@ input[type="checkbox"]:checked {
   font-size: 1.1rem;
 }
 
+.cartItem {
+  position: relative;
+}
+
+.cartItem > div {
+  position: relative;
+}
+
+.cartItem > .disable {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.09);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .cartItem .productInfo {
   width: 100%;
   display: flex;
@@ -80,10 +100,18 @@ input[type="checkbox"]:checked {
   border: 1px #f0f0f0 solid;
 }
 
-#container .cartItem .quantity > div {
+#container .cartItem .quantity > div:first-child {
   border: 1px solid #999;
   border-radius: 3px;
   width: fit-content;
+}
+
+#container .cartItem .quantity > .soldOut {
+  color: red;
+  position: absolute;
+  bottom: 0;
+  transform: translateY(30%);
+  z-index: 10;
 }
 
 #container .cartItem .selectAmount {
@@ -118,4 +146,28 @@ input[type="checkbox"]:checked {
 
 #container .cartItem .btnGroup button + button {
   margin-left: 12px;
+}
+
+#container .emptyImg {
+  width: 42%;
+}
+
+/* tablet */
+
+/* Mobile */
+@media screen and (max-width: 479px) {
+  #container .emptyImg {
+    width: 90%;
+  }
+
+  .checkout {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 100%;
+    transform: translateY(-100%);
+    z-index: 91;
+    border-top: 1px solid #e7e7e7;
+    border-radius: 4px;
+  }
 }

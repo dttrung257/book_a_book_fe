@@ -8,6 +8,36 @@ export const verifyEmail = async (verify: VerifyEmail) => {
   return res.data;
 };
 
+export const resetUserPassword = async (
+  email: string,
+  resetToken: string,
+  newPassword: string
+) => {
+  const res = await axiosInstance.put(`/users/forgot_password/reset_password`, {
+    email,
+    resetToken,
+    newPassword,
+  });
+  return res.data;
+};
+
+export const forgetPassword = async (email: string) => {
+  const res = await axiosInstance.get(`/users/forgot_password/${email}`);
+  return res.data;
+};
+
+export const confirmVerifyCode = async (email: string, verifyCode: string) => {
+  const res = await axiosInstance.get(
+    `/authen/${email}/confirm_verification/${verifyCode}`
+  );
+  return res.data;
+};
+
+export const sendCodeEmail = async (email: string) => {
+  const res = await axiosInstance.get(`/authen/send_email/${email}`);
+  return res.data;
+};
+
 export const signUp = async (info: UserSignUp) => {
   const response = await axiosInstance.post("/authen/register", info);
   return response.data;

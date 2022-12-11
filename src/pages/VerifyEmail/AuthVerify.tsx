@@ -5,11 +5,12 @@ import VerificationInput from "react-verification-input";
 import { FaCheckCircle } from "react-icons/fa";
 import styled from "styled-components";
 import { BiSend } from "react-icons/bi";
-import axios, { isAxiosError } from "../../apis/axiosInstance";
+import { isAxiosError } from "../../apis/axiosInstance";
 import style from "./AuthVerify.module.css";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { emailVerifyActions } from "../../store/emailVerifySlice";
 import Loading from "../Loading";
+import { confirmVerifyCode, sendCodeEmail } from "../../apis/auth";
 
 const Container = styled.div`
   width: 600px;
@@ -48,11 +49,10 @@ const AuthVerify = () => {
   const email = useAppSelector((state) => state.emailVerify.email);
 
   const sendCode = useCallback(async () => {
-    console.log("code send");
     try {
       setIsSending(true);
 
-      await axios.get(`/authen/send_email/${email}`);
+      await sendCodeEmail(email);
 
       setErrMessage("");
     } catch (error) {
@@ -71,7 +71,6 @@ const AuthVerify = () => {
   useEffect(() => {
     if (email && !effectRun.current) {
       sendCode();
-      console.log(email, effectRun.current);
     }
     return () => {
       effectRun.current = true;
@@ -91,11 +90,7 @@ const AuthVerify = () => {
       e.preventDefault();
       setIsSending(true);
 
-      const response = await axios.get(
-        `/authen/${email}/confirm_verification/${verifyCode}`
-      );
-
-      console.log(response);
+      await confirmVerifyCode(email, verifyCode);
 
       setVerified(true);
     } catch (error) {

@@ -8,6 +8,7 @@
   position: relative;
   margin-top: 0;
   padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .imageContainer {
@@ -23,11 +24,6 @@
 
 .shippingHeader {
   color: var(--primary-color);
-}
-
-.bookSumamry {
-  max-height: 400px;
-  overflow: auto;
 }
 
 .divider {
@@ -46,3 +42,7 @@
 .deliveryOptions.selected {
   border-color: var(--primary-color);
 }
+
+/* tablet */
+
+/* mobile */

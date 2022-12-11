@@ -66,7 +66,6 @@ const Checkout = () => {
             },
           });
 
-          console.log(res);
           setAddress(res.address || "");
           setPhoneNumber(res.phoneNumber || "");
         } catch (error) {
@@ -84,7 +83,6 @@ const Checkout = () => {
 
       getInfo();
       setBooksInfo(location.state.items as BookCart[]);
-      console.log(location.state.items);
     }
 
     return () => {};
@@ -95,7 +93,6 @@ const Checkout = () => {
 
     const err = infoValidator({ phoneNumber, address });
     if (err && Object.keys(err).length !== 0) {
-      console.log(err);
       return setDeliveryInfoErr(err);
     }
     setDeliveryInfoErr({});
@@ -119,13 +116,13 @@ const Checkout = () => {
         })
       );
 
-      //TODO: navigate to user's orders
-      navigate("/");
+      navigate("/purchase", {
+        replace: true,
+      });
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;
         setErrMessage(data?.message);
-        console.log(error);
       } else {
         setErrMessage("Unknow error!!!");
         console.log(error);
@@ -142,7 +139,7 @@ const Checkout = () => {
     <div id={style.checkout}>
       <Container fluid="md" id={style.content}>
         <Row>
-          <Col xs={7}>
+          <Col xs={12} lg={7}>
             <div className={`${style.shippingHeader} fs-4 fw-semibold mb-4`}>
               <ImLocation2 />
               <span> SHIPPING ADDRESS </span>
@@ -203,7 +200,7 @@ const Checkout = () => {
                   <Form.Label>Delivery options</Form.Label>
                   <Row>
                     {[1, 2, 3].map((num) => (
-                      <Col xs={4} key={num}>
+                      <Col xs={12} lg={4} key={num}>
                         <div
                           className={`${style.deliveryOptions} ${
                             deliveryOption === num && style.selected
@@ -227,7 +224,7 @@ const Checkout = () => {
                   </Row>
                 </Form.Group>
 
-                <div className="float-end">
+                <div className="float-end mb-4">
                   <Button variant="contained" type="submit">
                     PLACE ORDER
                   </Button>
@@ -235,7 +232,7 @@ const Checkout = () => {
               </Form>
             </div>
           </Col>
-          <Col xs={5}>
+          <Col xs={12} lg={5}>
             <div>
               <h4>Order summary</h4>
               <div>
@@ -254,7 +251,7 @@ const Checkout = () => {
               </div>
             </div>
             <div className={`${style.divider} my-2`}></div>
-            <div className={style.bookSumamry}>
+            <div>
               {booksInfo.length > 0 &&
                 booksInfo.map((bookInfo) => (
                   <CheckoutItem

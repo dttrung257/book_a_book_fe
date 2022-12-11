@@ -6,8 +6,9 @@ import style from "./User.module.css";
 import { UserDetailInfo } from "../../../models";
 import { Link } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { useAppSelector } from "../../../store/hook";
+import { changeUserStatus } from "../../../apis/manage";
 
 const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
   const [locked, setLocked] = useState<boolean>(userInfo.locked);
@@ -30,8 +31,8 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
     try {
       setErrMessage("");
 
-      const res = await axios.put(
-        `manage/users/${userInfo.id}/status`,
+      const data = await changeUserStatus(
+        userInfo.id,
         {
           status: "locked",
           state: !locked,
@@ -45,15 +46,15 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
 
       setLocked(!locked);
       closeModal(false);
-      toast.success(res.data);
+      toast.success(data);
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;
         setErrMessage(data?.message);
       } else {
         setErrMessage("Unknow error!!!");
+        console.log(error);
       }
-      console.log(error);
     }
   };
 
@@ -63,8 +64,8 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
         return toast.error("This user has been activated!");
       }
 
-      const res = await axios.put(
-        `manage/users/${userInfo.id}/status`,
+      const data = await changeUserStatus(
+        userInfo.id,
         {
           status: "activated",
           state: true,
@@ -75,18 +76,17 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
           },
         }
       );
-      console.log(res);
 
       closeModal(false);
-      toast.success(res.data);
+      toast.success(data);
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;
         setErrMessage(data?.message);
       } else {
         setErrMessage("Unknow error!!!");
+        console.log(error);
       }
-      console.log(error);
     }
   };
 

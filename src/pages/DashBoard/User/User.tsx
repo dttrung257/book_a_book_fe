@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button, Pagination } from "@mui/material";
 import { toast } from "react-toastify";
@@ -10,8 +10,9 @@ import UserItem from "./UserItem";
 import style from "./User.module.css";
 import styleMain from "../MainLayout.module.css";
 import { useAppSelector } from "../../../store/hook";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import AppModal from "../../../components/AppModal/AppModal";
+import { addUser, getUsersList } from "../../../apis/manage";
 
 interface InfoError {
   firstName?: string;
@@ -69,21 +70,6 @@ const User = () => {
   const addUserInputRef = useRef<HTMLInputElement>(null);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
 
-  const getUsersList = useCallback(
-    async (name: string, page: number | string = 0) => {
-      const response = await axios.get(
-        `/manage/users?name=${name}&page=${page}&size=15`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      return response.data;
-    },
-    [accessToken]
-  );
-
   const handleCloseAddModal = (show: boolean) => {
     setShowAddModal(show);
     setUserAddInfo({
@@ -102,7 +88,11 @@ const User = () => {
     let page = 0;
     if (!isNaN(Number(pageParam))) page = Number(pageParam);
 
-    getUsersList(user, page)
+    getUsersList(user, page, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
       .then((data) => {
         setUsersList(data.content);
         setCurPage(page);
@@ -114,31 +104,29 @@ const User = () => {
           toast.error(data?.message);
         } else {
           toast.error("Unknow error!!!");
+          console.log(error);
         }
-        console.log(error);
       });
 
     window.scrollTo(0, 0);
     return () => {};
-  }, [getUsersList, searchParams, checkAddUser]);
+  }, [searchParams, checkAddUser]);
 
   const onAddUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       const err = validationInfo(userAddInfo);
-      console.log(err);
       if (err && Object.keys(err).length !== 0) return setError(err);
       setError({});
 
-      const response = await axios.post(`/manage/users`, userAddInfo, {
+      const data = await addUser(userAddInfo, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
       toast.success("User has been added successfully");
-      console.log(response);
       setCheckAddUser((pre) => !pre);
       handleCloseAddModal(false);
     } catch (error) {

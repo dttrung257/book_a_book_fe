@@ -10,9 +10,15 @@ import style from "./User.module.css";
 import styleMain from "../MainLayout.module.css";
 import { UserDetailInfo } from "../../../models";
 import AppModal from "../../../components/AppModal/AppModal";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { useAppSelector } from "../../../store/hook";
 import PasswordError, { checkPassword } from "../../../utils/checkPassword";
+import {
+  changeUserPassword,
+  deleteUser,
+  getUser,
+  getUserOrders,
+} from "../../../apis/manage";
 
 interface Order {
   id: string;
@@ -44,37 +50,33 @@ const UserDetail = () => {
   });
 
   const getOrders = async (id: string, page: number = 0) => {
-    const responseOrder = await axios.get(
-      `manage/orders?user_id=${id}&page=${page}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    if (page === 0 && responseOrder.data.content.length > 0) {
+    const userOrders = await getUserOrders(id, page, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    if (page === 0 && userOrders.content.length > 0) {
       setLastOrder({
-        date: responseOrder.data.content[0].orderDate,
-        id: responseOrder.data.content[0].id,
+        date: userOrders.content[0].orderDate,
+        id: userOrders.content[0].id,
       });
     }
-    console.log(responseOrder);
-    setOrders(responseOrder.data.content);
-    setTotalPages(responseOrder.data.totalPages);
+
+    setOrders(userOrders.content);
+    setTotalPages(userOrders.totalPages);
   };
 
   useEffect(() => {
-    const getInfo = async () => {
+    const getUserInfo = async () => {
       try {
         if (!userInfo) {
-          const responseUser = await axios.get(`manage/users/${id}`, {
+          const user = await getUser(id as string, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           });
-          setUserInfo(responseUser.data);
-          console.log(responseUser);
-          await getOrders(responseUser.data.id as string);
+          setUserInfo(user);
+          await getOrders(user.id as string);
         } else {
           await getOrders(userInfo.id, curPage);
         }
@@ -89,7 +91,7 @@ const UserDetail = () => {
       }
     };
 
-    getInfo();
+    getUserInfo();
     window.scrollTo(0, 0);
     return () => {};
   }, [accessToken, id, curPage]);
@@ -101,18 +103,17 @@ const UserDetail = () => {
     setCurPage(value - 1);
   };
 
-  const deleteUser = async () => {
+  const handleDeleteUser = async () => {
     if (userInfo && userInfo.authority === "ADMIN") {
       return toast.error("Can not delete this user!");
     }
 
     try {
-      const res = await axios.delete(`manage/users/${id}`, {
+      await deleteUser(id as string, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(res);
 
       toast.success(
         `User ${
@@ -147,18 +148,11 @@ const UserDetail = () => {
       setEditPassErrMessage(passwordError);
       if (passwordError && Object.keys(passwordError).length !== 0) return;
 
-      const response = await axios.put(
-        `/manage/users/${userInfo?.id}/password`,
-        {
-          newPassword: newPassword,
+      await changeUserPassword(userInfo?.id as string, newPassword, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log(response);
+      });
 
       toast.success("Change password successfully");
       setEditModal(false);
@@ -358,7 +352,7 @@ const UserDetail = () => {
             <Button
               variant="contained"
               onClick={() => {
-                deleteUser();
+                handleDeleteUser();
               }}
             >
               Confirm

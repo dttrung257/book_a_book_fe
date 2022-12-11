@@ -8,7 +8,6 @@ export const login = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      console.log(email, password);
       const response = await axiosInstance.post("/authen/sign_in", {
         email: email,
         password: password,

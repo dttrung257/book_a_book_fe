@@ -8,8 +8,9 @@ import {
 import { Form, Button } from "react-bootstrap";
 import { FaCheckCircle } from "react-icons/fa";
 import PasswordError, { checkPassword } from "../../utils/checkPassword";
-import axios, { isAxiosError } from "../../apis/axiosInstance";
+import { isAxiosError } from "../../apis/axiosInstance";
 import Loading from "../Loading";
+import { resetUserPassword } from "../../apis/auth";
 
 interface ContextType {
   email: string;
@@ -37,11 +38,7 @@ const Reset = () => {
       setErr(passwordError);
       if (passwordError && Object.keys(passwordError).length !== 0) return;
 
-      await axios.put("/users/forgot_password/reset_password", {
-        email,
-        resetToken,
-        newPassword: password,
-      });
+      await resetUserPassword(email, resetToken as string, password);
 
       setPasswordChange(true);
     } catch (error) {

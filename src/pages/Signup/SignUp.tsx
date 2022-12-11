@@ -113,11 +113,9 @@ const Login = () => {
         password: info.password,
         gender: info.gender,
       });
-      console.log(data);
 
       setErrMessage("");
       dispatch(emailVerifyActions.setEmail({ email: info.email }));
-      console.log("navigate from singup");
       return navigate("/verify-email");
     } catch (error) {
       if (isAxiosError(error)) {

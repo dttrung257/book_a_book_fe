@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, Navigate, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { useAppSelector } from "../../store/hook";
-import axios from "../../apis/axiosInstance";
+import { forgetPassword } from "../../apis/auth";
 
 const Wrapper = styled.div`
   background-color: #f8f8f8;
@@ -59,7 +59,7 @@ const Layout = () => {
   if (isLoggedIn) return <Navigate to="/" />;
 
   const sendForgetPassword = async () => {
-    return await axios.get(`/users/forgot_password/${email}`);
+    return await forgetPassword(email);
   };
 
   return (

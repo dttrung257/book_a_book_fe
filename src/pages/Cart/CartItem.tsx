@@ -57,6 +57,7 @@ const CartItem = ({
       toast.warning(
         `"${book.name}" now has only ${book.availableQuantity} left in stock`
       );
+      return handleAmount(book.id, book.availableQuantity);
     }
     const newAmount =
       quantity + 1 <= book.availableQuantity ? quantity + 1 : quantity;
@@ -110,11 +111,11 @@ const CartItem = ({
         <input
           className="form-check-input"
           type="checkbox"
-          checked={checked && book.availableQuantity !== 0}
+          checked={checked && book.availableQuantity !== 0 && !book.stopSelling}
           name=""
           id=""
           onChange={handleChecked}
-          disabled={book.availableQuantity === 0}
+          disabled={book.availableQuantity === 0 || book.stopSelling}
         />
       </div>
       <div className={`${style.productInfo}`}>
@@ -136,20 +137,25 @@ const CartItem = ({
               .toLowerCase()}`}
             className={`${style.name}`}
           >
-            <h5 className={`${book.availableQuantity === 0 && "text-muted"}`}>
+            <h5
+              className={`${
+                (book.availableQuantity === 0 || book.stopSelling) &&
+                "text-muted"
+              }`}
+            >
               {formatStr(book.name, 28)}
             </h5>
           </Link>
           <div
             className={`${style.author} ${
-              book.availableQuantity === 0 && "text-muted"
+              (book.availableQuantity === 0 || book.stopSelling) && "text-muted"
             }`}
           >
             Author: {formatStr(book.author, 28)}
           </div>
           <div
             className={`${style.category} ${
-              book.availableQuantity === 0 && "text-muted"
+              (book.availableQuantity === 0 || book.stopSelling) && "text-muted"
             }`}
           >
             Category:{" "}
@@ -178,6 +184,9 @@ const CartItem = ({
             <IoAdd />
           </div>
         </div>
+        {(book.availableQuantity === 0 || book.stopSelling) && (
+          <div className={`${style.soldOut}`}>Sold out!</div>
+        )}
       </div>
       <div>{(book.sellingPrice * quantity).toFixed(2)}$</div>
       <div>
@@ -203,6 +212,9 @@ const CartItem = ({
           </div>
         </div>
       </AppModal>
+      {(book.availableQuantity === 0 || book.stopSelling) && (
+        <div className={`${style.box} ${style.disable}`}></div>
+      )}
     </div>
   );
 };

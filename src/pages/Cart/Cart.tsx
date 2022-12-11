@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
-import axios, { isAxiosError } from "../../apis/axiosInstance";
+import { isAxiosError } from "../../apis/axiosInstance";
 import { Book } from "../../models";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import style from "./Cart.module.css";
@@ -10,6 +10,7 @@ import CartItem from "./CartItem";
 import { useNavigate } from "react-router-dom";
 import { cartActions } from "../../store/cartSlice";
 import AppModal from "../../components/AppModal/AppModal";
+import { getBooksCart } from "../../apis/book";
 
 interface BookCart {
   book: Book;
@@ -29,7 +30,6 @@ const Cart = () => {
 
   const calculateTotalPrice = () => {
     return booksInfo.reduce((total, item) => {
-      console.log(item.quantity);
       return item.checked
         ? total + item.book.sellingPrice * item.quantity
         : total;
@@ -39,11 +39,9 @@ const Cart = () => {
   useEffect(() => {
     const getBook = async () => {
       try {
-        const response = await axios.get(
-          `/books/cart?ids=${items.map((item) => item.id).toString()}`
-        );
-
-        const books = response.data as Book[];
+        const books = (await getBooksCart(
+          items.map((item) => item.id)
+        )) as Book[];
         const newBooksInfo = books.map((book) => ({
           book,
           quantity: items.find((item) => item.id === book.id)
@@ -51,11 +49,12 @@ const Cart = () => {
           checked: false,
         }));
         setBooksInfo(newBooksInfo);
-        console.log("async:", newBooksInfo);
       } catch (error) {
         if (isAxiosError(error)) {
-          console.log(error);
           toast.error(error.response?.data.message);
+        } else {
+          toast.error("Unknow error!!!");
+          console.log(error);
         }
       }
     };
@@ -67,7 +66,10 @@ const Cart = () => {
     let check = true;
     let checkedAmount = 0;
     for (let i = 0; i < booksInfo.length; i++) {
-      if (booksInfo[i].book.availableQuantity !== 0) {
+      if (
+        booksInfo[i].book.availableQuantity !== 0 &&
+        !booksInfo[i].book.stopSelling
+      ) {
         if (!booksInfo[i].checked) {
           check = false;
         } else checkedAmount++;
@@ -84,7 +86,10 @@ const Cart = () => {
     setBooksInfo(
       booksInfo.map((bookInfo) => ({
         ...bookInfo,
-        checked: bookInfo.book.availableQuantity !== 0 ? !checkedAll : false,
+        checked:
+          bookInfo.book.availableQuantity !== 0 && !bookInfo.book.stopSelling
+            ? !checkedAll
+            : false,
       }))
     );
   };
@@ -101,7 +106,6 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
-    console.log(booksInfo);
     if (checkedQuantity === 0) setNoItemModal(true);
     else
       navigate("/checkout", {
@@ -133,7 +137,9 @@ const Cart = () => {
                 Product (
                 {totalQuantity -
                   booksInfo.filter(
-                    (bookInfo) => bookInfo.book.availableQuantity === 0
+                    (bookInfo) =>
+                      bookInfo.book.availableQuantity === 0 ||
+                      bookInfo.book.stopSelling
                   ).length}
                 )
               </div>
@@ -161,7 +167,7 @@ const Cart = () => {
             </div>
           </div>
           <div id={style.right}>
-            <div className={`${style.sticky}`}>
+            <div className={`${style.checkout}`}>
               <div className={`${style.box}`}>
                 <div className="d-flex justify-content-between flex-row">
                   <p>Total</p>
@@ -187,7 +193,7 @@ const Cart = () => {
             <img
               src="/images/empty_cart.jpg"
               alt="empty"
-              style={{ width: "40%" }}
+              className={style.emptyImg}
             />
             <span className="mb-4 text-muted">Your shopping cart is empty</span>
             <Button variant="contained" onClick={() => navigate("/")}>

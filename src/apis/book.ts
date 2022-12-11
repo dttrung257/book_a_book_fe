@@ -6,6 +6,11 @@ export const getBookViaId = async (id: number) => {
   return response.data;
 };
 
+export const getBooksCart = async (ids: number[]) => {
+  const response = await axiosInstance.get(`books/cart/?ids=${ids.toString()}`);
+  return response.data;
+};
+
 //param page size
 export const getBestSeller = async (filter: FilterSearch) => {
   let query = "";

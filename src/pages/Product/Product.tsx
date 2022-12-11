@@ -88,7 +88,6 @@ const Product = () => {
     else setErr("");
   };
 
-  //TODO: check amount can add (already have in cart or not)
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === "") {
       setAmount(1);
