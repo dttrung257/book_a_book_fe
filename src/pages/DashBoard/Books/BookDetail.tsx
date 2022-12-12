@@ -7,8 +7,8 @@ import AppModal from "../../../components/AppModal/AppModal";
 import { TiArrowBack } from "react-icons/ti";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { Book } from "../../../models";
-import style from "../MainLayout.module.css";
-import "./index.css";
+import styleMain from "../MainLayout.module.css";
+import style from "./Books.module.css";
 import EditBookModal from "./EditBookModal";
 const BookDetail = () => {
   const { id } = useParams();
@@ -61,10 +61,10 @@ const BookDetail = () => {
   };
   return (
     <>
-      <div className={`${style.header} mb-2`}>
+      <div className={`${styleMain.header} mb-2`}>
         <div className="d-flex align-items-center">
           <TiArrowBack
-            className={style.goBackBtn}
+            className={styleMain.goBackBtn}
             onClick={() => navigate(-1)}
             style={{ cursor: "pointer" }}
             size="30"
@@ -96,14 +96,14 @@ const BookDetail = () => {
           </Button>
         </div>
       </div>
-      <div className={`${style.content}`}>
+      <div className={`${styleMain.content}`}>
         <h4 style={{ marginBottom: "20px" }}>Book ID #{book?.id}</h4>
-        <div className="bookinfo d-flex justify-content-around">
-          <div id="bookframe">
+        <div className={`${style.bookinfo} d-flex justify-content-around`}>
+          <div id={`${style.bookframe}`}>
             <img src={book?.image} alt={book?.name} />
           </div>
 
-          <div className="detail">
+          <div className={`${style.detail}`}>
             <h5 className="fw-bold" style={{ marginBottom: "20px" }}>
               {book?.name.toUpperCase()}
             </h5>
@@ -113,7 +113,7 @@ const BookDetail = () => {
             </div>
             <div>
               <div className="fw-bold title">Description: &nbsp;</div>
-              <p id="book-description">{book?.description}</p>
+              <p id={`${style.bookDescription}`}>{book?.description}</p>
             </div>
             <div className="d-flex">
               <div className="fw-bold title">Category:&nbsp;</div>
@@ -195,27 +195,19 @@ const BookDetail = () => {
         showModal={deleteModal}
         setShowModal={setDeleteModal}
       >
-        <div className={`${style.deleteModal}`}>
+        <div className={`${styleMain.deleteModal}`}>
           <p>Delete book #{id} ?</p>
-          {/* {message ? (
-            <div
-              style={{
-                color: message.status === "fail" ? "red" : "green",
-              }}
-            >
-              {message?.message}
-            </div>
-          ) : null} */}
+
           <div className="d-flex justify-content-end">
             <Button
-              className={style.cancelBtn}
+              className={styleMain.cancelBtn}
               type="button"
               onClick={() => setDeleteModal(false)}
             >
               Cancel
             </Button>
             <Button
-              className={`${style.deleteBtn} float-end`}
+              className={`${styleMain.deleteBtn} float-end`}
               onClick={() => {
                 deleteBook();
                 console.log("delete");

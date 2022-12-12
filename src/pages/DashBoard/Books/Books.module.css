@@ -23,7 +23,7 @@
   display: block;
   margin: 50px auto;
 }
-.bookinfo .detail #book-description {
+.bookinfo .detail #bookDescription {
   text-align: justify;
   margin: 0;
 }

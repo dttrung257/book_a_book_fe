@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { toast } from "react-toastify";
-import { Table, Form } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import style from "../MainLayout.module.css";
 import { CommentDetail } from "../../../models";
 import { useAppSelector } from "../../../store/hook";
@@ -55,7 +55,7 @@ const CommentList = () => {
 
     getCommentsList({ bookID, bookName, date, userName }, page)
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setCommentsList(data.content);
         setTotalPages(data.totalPages);
       })
@@ -126,41 +126,45 @@ const CommentList = () => {
       <div className={`${style.header} mb-2`}>
         <h2> Comments list</h2>
       </div>
-      <div className={`${style.content}`}>
-        <div className="d-flex justify-content-between align-items-center">
-          <h4>Result for {searchParams.get("bookName") || "all comments"}</h4>
-          <div
-            id={style.search}
-            className="px-3 py-2 d-flex justify-content-between align-items-center"
-            onClick={() => setShowSearchModal(true)}
-          >
-            Filter
-            <FaFilter color="#008b8b" />
-          </div>
-        </div>
+      <div
+        className={`${style.content} d-flex flex-column justify-content-between`}
+      >
         <div>
-          <Table className="mt-4" hover responsive="md">
-            <thead className={`${style.tableHeader}`}>
-              <tr>
-                <th>ID</th>
-                <th>Content</th>
-                <th>Star</th>
-                <th>Book</th>
-                <th>User</th>
-                <th>Created At</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody className={`${style.tableBody}`}>
-              {commentsList.map((comment) => (
-                <CommentItem
-                  key={comment.id}
-                  comment={comment}
-                  setCheckDeleteComment={setCheckDeleteComment}
-                />
-              ))}
-            </tbody>
-          </Table>
+          <div className="d-flex justify-content-between align-items-center">
+            <h4>Result for {searchParams.get("bookName") || "all comments"}</h4>
+            <div
+              id={style.search}
+              className="px-3 py-2 d-flex justify-content-between align-items-center"
+              onClick={() => setShowSearchModal(true)}
+            >
+              Filter
+              <FaFilter color="#008b8b" />
+            </div>
+          </div>
+          <div>
+            <Table className="mt-4" hover responsive="md">
+              <thead className={`${style.tableHeader}`}>
+                <tr>
+                  <th>ID</th>
+                  <th>Content</th>
+                  <th>Star</th>
+                  <th>Book</th>
+                  <th>User</th>
+                  <th>Created At</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody className={`${style.tableBody}`}>
+                {commentsList.map((comment) => (
+                  <CommentItem
+                    key={comment.id}
+                    comment={comment}
+                    setCheckDeleteComment={setCheckDeleteComment}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </div>
         </div>
 
         <Pagination
@@ -171,7 +175,9 @@ const CommentList = () => {
           color="primary"
           style={{
             maxHeight: "25px",
-            width: "75vw",
+            width: "fit-content",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
           onChange={handleChangePage}
         />

@@ -17,19 +17,6 @@
   overflow-y: auto;
   max-height: 40vh;
 }
-/* .orderTable thead,
-.orderTable tbody,
-.orderTable tr,
-.orderTable td,
-.orderTable th {
-  display: block;
-}
-
-.orderTable tbody td,
-.orderTable thead > tr > th {
-  float: left;
-  border-bottom-width: 0;
-} */
 
 .orderTable .index {
   width: 5%;

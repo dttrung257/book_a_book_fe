@@ -1,5 +1,3 @@
-//import { useParams } from "react-router-dom";
-
 import { Avatar, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Form, Table } from "react-bootstrap";
@@ -52,7 +50,7 @@ const OrderDetail = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log("order: ", responseOrder.data);
+        // console.log("order: ", responseOrder.data);
         setOrderInfo(responseOrder.data);
 
         setOrderStatus(responseOrder.data.status);
@@ -65,7 +63,7 @@ const OrderDetail = () => {
             },
           }
         );
-        console.log("orderdetails: ", responseOrderDetails.data.content);
+        // console.log("orderdetails: ", responseOrderDetails.data.content);
         setOrderDetails(responseOrderDetails.data.content);
         if (responseOrder.data.userId) {
           const responseUser = await axios.get(
@@ -76,7 +74,6 @@ const OrderDetail = () => {
               },
             }
           );
-          console.log(responseUser.data);
           setUserInfo(responseUser.data);
         }
       } catch (error) {

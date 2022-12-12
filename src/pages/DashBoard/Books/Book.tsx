@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Rating } from "@mui/material";
-//import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import { Table, Form } from "react-bootstrap";
-import style from "../MainLayout.module.css"; // dung ke
+import style from "../MainLayout.module.css";
 import BookItem from "./BookItem";
 import { useAppSelector } from "../../../store/hook";
 import { Book } from "../../../models";
@@ -51,21 +51,21 @@ const Books = () => {
     const priceFrom = searchParams.get("from") || "";
     const priceTo = searchParams.get("to") || "";
     const rating = searchParams.get("rating") || "";
-    const page = searchParams.get("page") || "0";
+    const pageParam = searchParams.get("page") || "0";
+    let page = 0;
+    if (!isNaN(Number(pageParam))) page = Number(pageParam);
     getBooksList({ name, category, priceFrom, priceTo, rating }, page)
       .then((data) => {
-        console.log(data);
+        setCurrentPage(page);
         setBooksList(data.content);
         setTotalPages(data.totalPages);
       })
       .catch((error) => {
         if (isAxiosError(error)) {
           const data = error.response?.data;
-          console.log("error:", data);
-          //setMessage(data?.message);
+          toast.error(data?.message);
         } else {
-          //setMessage("Unknow error!!!");
-          console.log(error);
+          toast.error("Unknow error!!!");
         }
       });
     window.scrollTo(0, 0);
@@ -118,7 +118,7 @@ const Books = () => {
     }
     searchParams.set("page", "0");
     setSearchParams(searchParams);
-    setCurrentPage(0);
+
     setSearchInfo({});
     setShowSearchModal(false);
   };
@@ -127,7 +127,6 @@ const Books = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setCurrentPage(value - 1);
     searchParams.set("page", (value - 1).toString());
     setSearchParams(searchParams);
   };
@@ -146,50 +145,58 @@ const Books = () => {
           Add Book
         </Button>
       </div>
-      <div className={`${style.content}`}>
-        <div className="d-flex justify-content-between align-items-center">
-          <h4>Result for {searchParams.get("books") || "all books"}</h4>
-          <div
-            id={style.search}
-            className="px-3 py-2 d-flex justify-content-between align-items-center"
-            onClick={() => setShowSearchModal(true)}
-          >
-            Filter
-            <FaFilter color="#008b8b" />
+      <div
+        className={`${style.content} d-flex flex-column justify-content-between`}
+      >
+        <div>
+          <div className="d-flex justify-content-between align-items-center">
+            <h4>Result for {searchParams.get("books") || "all books"}</h4>
+            <div
+              id={style.search}
+              className="px-3 py-2 d-flex justify-content-between align-items-center"
+              onClick={() => setShowSearchModal(true)}
+            >
+              Filter
+              <FaFilter color="#008b8b" />
+            </div>
+          </div>
+          <div>
+            <Table className="mt-4" hover responsive="md">
+              <thead className={`${style.tableHeader}`}>
+                <tr>
+                  <th>ID</th>
+                  <th></th>
+                  <th>Name</th>
+                  {/* <th>Category</th> */}
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Sold</th>
+                  <th>Ratings</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody className={`${style.tableBody}`}>
+                {booksList.map((book) => (
+                  <BookItem key={book.id} book={book} />
+                ))}
+              </tbody>
+            </Table>
           </div>
         </div>
-        <div>
-          <Table className="mt-4" hover responsive="md">
-            <thead className={`${style.tableHeader}`}>
-              <tr>
-                <th>ID</th>
-                <th></th>
-                <th>Name</th>
-                {/* <th>Category</th> */}
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Sold</th>
-                <th>Ratings</th>
-                <th>Status</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody className={`${style.tableBody}`}>
-              {booksList.map((book) => (
-                <BookItem key={book.id} book={book} />
-              ))}
-            </tbody>
-          </Table>
-        </div>
+
         <Pagination
           count={totalpage}
           page={currentPage + 1}
           showFirstButton
           showLastButton
+          className="pagination"
           color="primary"
           style={{
             maxHeight: "25px",
-            width: "75vw",
+            width: "fit-content",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
           onChange={handleChangePage}
         />

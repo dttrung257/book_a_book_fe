@@ -56,11 +56,13 @@ const Order = () => {
     const priceFrom = searchParams.get("from") || "";
     const priceTo = searchParams.get("to") || "";
     const date = searchParams.get("date") || "";
-    const page = searchParams.get("page") || "0";
-
+    const pageParam = searchParams.get("page") || "0";
+    let page = 0;
+    if (!isNaN(Number(pageParam))) page = Number(pageParam);
     getOrdersList({ name, status, priceFrom, priceTo, date }, page)
       .then((data) => {
-        console.log(data);
+        // console.log(data);
+        setCurrentPage(page);
         setOrdersList(data.content);
         setTotalPages(data.totalPages);
       })
@@ -70,7 +72,6 @@ const Order = () => {
           toast.error(data?.message);
         } else {
           toast.error("Unknow error!!!");
-          console.log(error);
         }
       });
     window.scrollTo(0, 0);
@@ -124,7 +125,6 @@ const Order = () => {
     }
     searchParams.set("page", "0");
     setSearchParams(searchParams);
-    setCurrentPage(0);
     setSearchInfo({});
     setShowSearchModal(false);
   };
@@ -133,7 +133,6 @@ const Order = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setCurrentPage(value - 1);
     searchParams.set("page", (value - 1).toString());
     setSearchParams(searchParams);
   };
@@ -151,37 +150,41 @@ const Order = () => {
           Add Order
         </Button>
       </div>
-      <div className={`${style.content}`}>
-        <div className="d-flex justify-content-between align-items-center">
-          <h4>Result for {searchParams.get("name") || "all orders"}</h4>
-          <div
-            id={style.search}
-            className="px-3 py-2 d-flex justify-content-between align-items-center"
-            onClick={() => setShowSearchModal(true)}
-          >
-            Filter
-            <FaFilter color="#008b8b" />
-          </div>
-        </div>
+      <div
+        className={`${style.content} d-flex flex-column justify-content-between`}
+      >
         <div>
-          <Table className="mt-4" hover responsive="md">
-            <thead className={`${style.tableHeader}`}>
-              <tr>
-                <th>ID</th>
-                <th>User</th>
-                <th>Date</th>
-                <th>Quantity</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody className={`${style.tableBody}`}>
-              {ordersList.map((order) => (
-                <OrderItem key={order.id} order={order} />
-              ))}
-            </tbody>
-          </Table>
+          <div className="d-flex justify-content-between align-items-center">
+            <h4>Result for {searchParams.get("name") || "all orders"}</h4>
+            <div
+              id={style.search}
+              className="px-3 py-2 d-flex justify-content-between align-items-center"
+              onClick={() => setShowSearchModal(true)}
+            >
+              Filter
+              <FaFilter color="#008b8b" />
+            </div>
+          </div>
+          <div>
+            <Table className="mt-4" hover responsive="md">
+              <thead className={`${style.tableHeader}`}>
+                <tr>
+                  <th>ID</th>
+                  <th>User</th>
+                  <th>Date</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody className={`${style.tableBody}`}>
+                {ordersList.map((order) => (
+                  <OrderItem key={order.id} order={order} />
+                ))}
+              </tbody>
+            </Table>
+          </div>
         </div>
 
         <Pagination
@@ -192,7 +195,9 @@ const Order = () => {
           color="primary"
           style={{
             maxHeight: "25px",
-            width: "75vw",
+            width: "fit-content",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
           onChange={handleChangePage}
         />
