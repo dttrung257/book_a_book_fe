@@ -18,9 +18,12 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 const convertNumber = (value: any) => {
-  if (value === null) {
-    return -0.1;
+  if (numberFault(value)) {
+    return 0;
   } else return parseInt(value);
+};
+const numberFault = (value: any) => {
+  return isNaN(value) || value === null;
 };
 const price = [0, 5, 10, 25, 50, 100000000];
 
@@ -48,9 +51,15 @@ const Category = () => {
   const resetPageHandler = () => {
     searchParams.set("page", "0");
   };
-
+  const resetPriceHandler = () => {
+    searchParams.set("from", "0");
+    searchParams.set("to", "5");
+  };
+  const resetRatingHandler = () => {
+    searchParams.set("rating", "0");
+  };
   const handlePriceChange = (id: number) => {
-    if (convertNumber(searchParams.get("from")) !== price[id]) {
+    if (searchParams.get("from") !== price[id].toString()) {
       searchParams.set("from", price[id].toString());
       searchParams.set("to", price[id + 1].toString());
     } else {
@@ -94,7 +103,7 @@ const Category = () => {
     const from = searchParams.get("from") || "";
     const to = searchParams.get("to") || "";
     const rating = searchParams.get("rating") || "";
-    const page = searchParams.get("page") || "0";
+    const page = searchParams.get("page") || "";
     const best_selling = searchParams.get("best_selling") || false;
     const fetchApi = async () => {
       try {
@@ -118,6 +127,14 @@ const Category = () => {
     };
     if (convertNumber(page) >= totalpage) {
       resetPageHandler();
+      setSearchParams(searchParams);
+    }
+    if (numberFault(from) || numberFault(to)) {
+      resetPriceHandler();
+      setSearchParams(searchParams);
+    }
+    if (numberFault(rating) || convertNumber(rating) > 5) {
+      resetRatingHandler();
       setSearchParams(searchParams);
     }
     fetchApi();
@@ -257,9 +274,9 @@ const Category = () => {
             color="primary"
             style={{
               maxHeight: "25px",
-              width: "75vw",
-              // marginLeft: "auto",
-              // marginRight: "auto",
+              width: "fit-content",
+              marginLeft: "auto",
+              marginRight: "auto",
               // height: "auto",
               marginTop: "20px",
             }}

@@ -48,38 +48,54 @@ const OrderItem = (props: { order: PersonalOrder }) => {
                 src={item.image}
                 alt={item.id}
                 key={item.id}
-                width={90}
-                height={90}
+                width={80}
+                height={80}
               />
             </div>
             <div className={style.infor}>
-              <h5>{item.bookName}</h5>
-              <p>x{item.quantityOrdered}</p>
+              <h5 style={{ width: "100%" }}>{item.bookName}</h5>
+              <p style={{ textAlign: "left", width: "50%" }}>
+                x{item.quantityOrdered}
+              </p>
+              <p style={{ textAlign: "right", width: "50%" }}>
+                <sup>$</sup>
+                {item.priceEach}
+              </p>
             </div>
           </div>
         );
       })}
       <div className={style.divider}></div>
       <div className={`${style.totalInfor} mb-3`}>
-        <div className="mt-3 d-flex justify-content-end">
-          <span className={style.cash}>
-            <span style={{ color: "black", fontSize: "16px" }}>Total:</span>
-            <sup>$</sup>
-            {props.order.total}
-          </span>
-        </div>
         <div className="d-flex justify-content-end">
-          Address: {props.order.address}
+          <div className={`${style.blockText}`} style={{ width: "30%" }}>
+            {" "}
+            <span style={{ color: "grey" }}>Address:</span>{" "}
+            {props.order.address}
+          </div>
+        </div>
+        <div className="mt-3 d-flex justify-content-end">
+          <div className={`${style.blockText}`} style={{ width: "30%" }}>
+            <span className={style.cash}>
+              <span style={{ color: "grey", fontSize: "16px" }}>Total:</span>
+              <sup>$</sup>
+              {props.order.total}
+            </span>
+          </div>
         </div>
       </div>
       <div className={style.buttonOrder}>
-        <Button
-          variant="secondary"
-          className={`${style.deleteOrderBt} px-5`}
-          onClick={() => setShowDeleteModal(true)}
-        >
-          Delete
-        </Button>
+        {status === "PENDING" ? (
+          <Button
+            variant="secondary"
+            className={`${style.deleteOrderBt} px-5`}
+            onClick={() => setShowDeleteModal(true)}
+          >
+            Cancel
+          </Button>
+        ) : (
+          <></>
+        )}
       </div>
       <AppModal
         showModal={showDeleteModal}
@@ -99,7 +115,10 @@ const OrderItem = (props: { order: PersonalOrder }) => {
             Cancel
           </Button>
           {status === "PENDING" ? (
-            <Button className={`${style.confirmBt} mx-3`} onClick={handleDelete}>
+            <Button
+              className={`${style.confirmBt} mx-3`}
+              onClick={handleDelete}
+            >
               Confirm
             </Button>
           ) : (

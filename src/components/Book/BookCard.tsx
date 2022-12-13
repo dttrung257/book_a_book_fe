@@ -6,7 +6,15 @@ import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { cartActions } from "../../store/cartSlice";
 import { useState } from "react";
 import { FaStar } from "react-icons/fa";
+import { styled, Tooltip, TooltipProps } from "@mui/material";
 
+const LightTooltip = styled(({ ...props }: TooltipProps) => (
+  <Tooltip {...props} />
+))(() => ({
+  [`& .MuiTooltip-tooltip`]: {
+    fontSize: 12,
+  },
+}));
 const BookCard = (props: { book: Book }) => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAppSelector((state) => state.auth);
@@ -54,9 +62,12 @@ const BookCard = (props: { book: Book }) => {
           </div>
         </div>
         <div id={style.CardText}>
-          <h3 id={style.CardName} onClick={handleProductClick}>
-            {formatStr(props.book.name, 18)}
-          </h3>
+          <LightTooltip title={props.book.name}>
+            <h3 id={style.CardName} onClick={handleProductClick}>
+              {formatStr(props.book.name, 18)}
+            </h3>
+          </LightTooltip>
+
           <span>
             by{" "}
             <span style={{ color: "#008b8b" }}>

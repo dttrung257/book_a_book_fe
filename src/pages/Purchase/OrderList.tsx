@@ -90,12 +90,12 @@ const OrderList = () => {
           style={{
             maxHeight: "25px",
             width: "100%",
-            // marginLeft: "auto",
-            // marginRight: "auto",
+            marginLeft: "auto",
+            marginRight: "auto",
             // height: "auto",
             // marginTop: "auto",
             marginTop: "50px",
-            marginBottom: "20px"
+            marginBottom: "20px",
           }}
           onChange={handleChangePage}
           className={totalPages <= 1 ? `${style.pageNull}` : ""}
