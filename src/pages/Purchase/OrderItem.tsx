@@ -6,11 +6,13 @@ import { useAppSelector } from "../../store/hook";
 import { BsTruck } from "react-icons/bs";
 import { Button } from "react-bootstrap";
 import style from "./Purchase.module.css";
+import { useNavigate } from "react-router-dom";
 
 const OrderItem = (props: { order: PersonalOrder }) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const [itemList, setItemList] = useState<Item[]>([]);
+  const navigate = useNavigate();
   const status = props.order.status;
   useEffect(() => {
     const fetchApi = async () => {
@@ -30,6 +32,9 @@ const OrderItem = (props: { order: PersonalOrder }) => {
     setShowDeleteModal(false);
     window.location.reload();
   };
+  const producClickHandler = (product: string) => {
+    navigate(`/books?page=0&name=${product.replace(/\s+/g, " ").trim()}`);
+  };
   return (
     <div className={style.itemContainer}>
       <div style={{ display: "flex" }}>
@@ -42,7 +47,11 @@ const OrderItem = (props: { order: PersonalOrder }) => {
 
       {itemList.map((item, index) => {
         return (
-          <div className={style.item} key={index}>
+          <div
+            className={style.item}
+            key={index}
+            onClick={() => producClickHandler(item.bookName)}
+          >
             <div className={style.itemBox}>
               <img
                 src={item.image}

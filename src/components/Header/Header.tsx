@@ -22,13 +22,18 @@ const Header = () => {
   const [searchKey, setSearchKey] = useState("");
   const dispatch = useAppDispatch();
   const [name, setName] = useState("");
+  const [previousName, setPreviousName] = useState<string>();
   const handleSearch = () => {
-    setName(name.trim());
-    let param = `books?page=0`;
-    if (name !== "") {
-      param = param.concat(`&name=${name}`);
+    if (name !== previousName) {
+      setName(name.replace(/\s+/g, " ").trim());
+      let param = `books?page=0`;
+      if (name !== "") {
+        param = param.concat(`&name=${name}`);
+      }
+      setName("");
+      navigate(param);
+      setPreviousName(name);
     }
-    navigate(param);
   };
 
   const searchEnterHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -60,28 +65,22 @@ const Header = () => {
           </Link>
         </div>
         <div id={style.nav}>
-            <Link to="/">
-          <div className={style.navAddr}>
-              Home
-          </div>
-              </Link>
-            <Link to="/books">
-          <div className={style.navAddr}>
+          <Link to="/">
+            <div className={style.navAddr}>Home</div>
+          </Link>
+          <Link to="/books">
+            <div className={style.navAddr}>
               Categories
               <VscTriangleDown />
-          </div>
-            </Link>
+            </div>
+          </Link>
 
-            <Link to="/about-us">
-          <div className={style.navAddr}>
-              Blogs
-          </div>
-              </Link>
-            <Link to="/about-us">
-          <div className={style.navAddr}>
-              About us
-          </div>
-              </Link>
+          <Link to="/about-us">
+            <div className={style.navAddr}>Blogs</div>
+          </Link>
+          <Link to="/about-us">
+            <div className={style.navAddr}>About us</div>
+          </Link>
         </div>
       </div>
       <div id={style.search}>

@@ -47,7 +47,6 @@ const Category = () => {
     searchParams.set("page", (value - 1).toString());
     setSearchParams(searchParams);
   };
-
   const resetPageHandler = () => {
     searchParams.set("page", "0");
   };
@@ -125,7 +124,7 @@ const Category = () => {
         }
       }
     };
-    if (convertNumber(page) >= totalpage) {
+    if (convertNumber(page) > totalpage) {
       resetPageHandler();
       setSearchParams(searchParams);
     }
@@ -138,6 +137,7 @@ const Category = () => {
       setSearchParams(searchParams);
     }
     fetchApi();
+    console.log(searchParams.toString());
   }, [searchParams]);
   return (
     <Wrapper>
