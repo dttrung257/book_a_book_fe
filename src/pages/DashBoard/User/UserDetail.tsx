@@ -280,7 +280,7 @@ const UserDetail = () => {
               </div>
             </div>
           </div>
-          <div>
+          <div className="d-flex flex-column justify-content-between">
             <p className={`${style.title}`}>Orders history</p>
             {totalPages > 0 ? (
               <>

@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Rating } from "@mui/material";
 import { toast } from "react-toastify";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { Table, Form } from "react-bootstrap";
 import style from "../MainLayout.module.css";
 import BookItem from "./BookItem";
-import { useAppSelector } from "../../../store/hook";
 import { Book } from "../../../models";
 import { Button } from "@mui/material";
 import { FaFilter } from "react-icons/fa";
@@ -14,37 +13,21 @@ import AppModal from "../../../components/AppModal/AppModal";
 
 import Pagination from "@mui/material/Pagination";
 import AddBookModal from "./AddBookModal";
-
-interface SearchInfo {
-  name?: string;
-  category?: string;
-  priceFrom?: number | string;
-  priceTo?: number | string;
-  rating?: string;
-}
+import { FilterBookDashboard } from "../../../models/Filter";
+import { getBooksList } from "../../../apis/manage";
 
 const Books = () => {
-  const accessToken = useAppSelector((state) => state.auth.accessToken);
   const [booksList, setBooksList] = useState<Book[]>([]);
   const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchInfo, setSearchInfo] = useState<SearchInfo>({});
+  const [searchInfo, setSearchInfo] = useState<FilterBookDashboard>({});
   const [message, setMessage] = useState<string>("");
   const [totalpage, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(
     parseInt(searchParams.get("page") || "0")
   );
 
-  const getBooksList = useCallback(
-    async (filter: SearchInfo, page: number | string = 0) => {
-      const response = await axios.get(
-        `/books/?page=${page}&name=${filter.name}&category=${filter.category}&from=${filter.priceFrom}&to=${filter.priceTo}&rating=${filter.rating}`
-      );
-      return response.data;
-    },
-    [accessToken]
-  );
   useEffect(() => {
     const name = searchParams.get("name") || "";
     const category = searchParams.get("category") || "";
@@ -70,7 +53,7 @@ const Books = () => {
       });
     window.scrollTo(0, 0);
     return () => {};
-  }, [getBooksList, searchParams]);
+  }, [searchParams]);
 
   const onSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -193,10 +176,10 @@ const Books = () => {
           className="pagination"
           color="primary"
           style={{
-            maxHeight: "25px",
-            width: "fit-content",
             marginLeft: "auto",
             marginRight: "auto",
+            height: "auto",
+            marginTop: "auto",
           }}
           onChange={handleChangePage}
         />

@@ -5,9 +5,10 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppSelector } from "../../../store/hook";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { Form, Button } from "react-bootstrap";
 import style from "./Orders.module.css";
+import { addOrder, getBook } from "../../../apis/manage";
 interface BookOrder {
   id: number;
   image: string;
@@ -39,21 +40,20 @@ const AddOrderModal = (prop: {
       return;
     }
     try {
-      const response = await axios.get(`/books/${bookAddID}`);
-      console.log(response);
-      if (response.data.availableQuantity < 1) {
+      const data = await getBook(bookAddID);
+      if (data.availableQuantity < 1) {
         setErrorMessage(`Book ID #${bookAddID} is out of stock`);
         return;
       }
 
-      if (response.data.stopSelling) {
+      if (data.stopSelling) {
         setErrorMessage(`Book ID #${bookAddID} status is stop selling`);
         return;
       }
       setBookList([
         ...bookList,
         {
-          ...response.data,
+          ...data,
           quantity: 1,
         },
       ]);
@@ -106,7 +106,7 @@ const AddOrderModal = (prop: {
     setBookList(bookList.filter((book) => book.id !== bookID));
   };
 
-  const addOrder = async () => {
+  const onAddOrder = async () => {
     setErrorMessage("");
     if (bookList.length < 1) {
       setErrorMessage("No book in order");
@@ -120,16 +120,13 @@ const AddOrderModal = (prop: {
       return;
     }
     try {
-      const response = await axios.post(
-        `/manage/orders`,
-        {
-          orderdetails: bookList.map((item) => {
-            return {
-              bookId: item.id,
-              quantity: item.quantity,
-            };
-          }),
-        },
+      const data = await addOrder(
+        bookList.map((item) => {
+          return {
+            bookId: item.id,
+            quantity: item.quantity,
+          };
+        }),
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -138,7 +135,7 @@ const AddOrderModal = (prop: {
       );
       toast.success("Order has been added successfully");
       closeModal();
-      navigate(`/dashboard/orders/${response.data.id}`);
+      navigate(`/dashboard/orders/${data.id}`);
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;
@@ -288,7 +285,7 @@ const AddOrderModal = (prop: {
                 color: "white",
               }}
               className={`${style.index} float-end`}
-              onClick={addOrder}
+              onClick={onAddOrder}
             >
               SUBMIT
             </Button>

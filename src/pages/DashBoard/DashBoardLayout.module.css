@@ -77,12 +77,12 @@
   background-color: #efefef;
 }
 
-#dashboard nav {
+#dashboard .nav {
   background-color: white;
   width: 240px;
 }
 
-#dashboard nav a {
+#dashboard .nav a {
   width: 100%;
   display: inline-block;
   background-color: white;
@@ -96,12 +96,12 @@
   align-items: center;
 }
 
-#dashboard nav a svg {
+#dashboard .nav a svg {
   margin: 0 12px;
 }
 
-#dashboard nav a.isActive,
-#dashboard nav a:hover {
+#dashboard .nav a.isActive,
+#dashboard .nav a:hover {
   color: white;
   background-color: var(--primary-color);
   border-color: var(--primary-color);

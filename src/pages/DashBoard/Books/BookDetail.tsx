@@ -5,11 +5,14 @@ import { FaStar } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
 import { TiArrowBack } from "react-icons/ti";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { Book } from "../../../models";
 import styleMain from "../MainLayout.module.css";
 import style from "./Books.module.css";
 import EditBookModal from "./EditBookModal";
+import { deleteBook, getBook } from "../../../apis/manage";
+import { toast } from "react-toastify";
+
 const BookDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,11 +22,10 @@ const BookDetail = () => {
   const [editModal, setEditModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   useEffect(() => {
-    const getInfo = async () => {
+    const getBookInfo = async () => {
       try {
-        const responseBook = await axios.get(`books/${id}`);
-        console.log(responseBook.data);
-        setBook(responseBook.data);
+        const book = await getBook(id as string);
+        setBook(book);
       } catch (error) {
         if (isAxiosError(error)) {
           const data = error.response?.data;
@@ -36,18 +38,18 @@ const BookDetail = () => {
       }
     };
 
-    getInfo();
+    getBookInfo();
     return () => {};
   }, [id, editModal]);
-  const deleteBook = async () => {
+  const onDeleteBook = async () => {
     try {
-      const res = await axios.delete(`manage/books/${id}`, {
+      await deleteBook(book?.id as number, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(res);
 
+      toast.success(`Book ${book?.name} has been deleted`);
       navigate("/dashboard/books");
     } catch (error) {
       if (isAxiosError(error)) {
@@ -209,7 +211,7 @@ const BookDetail = () => {
             <Button
               className={`${styleMain.deleteBtn} float-end`}
               onClick={() => {
-                deleteBook();
+                onDeleteBook();
                 console.log("delete");
               }}
             >

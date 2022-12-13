@@ -6,11 +6,12 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { useAppSelector } from "../../../store/hook";
 import AppModal from "../../../components/AppModal/AppModal";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { toast } from "react-toastify";
 import style from "../MainLayout.module.css";
+import { changeBookStatus } from "../../../apis/manage";
+
 const BookItem = ({ book: bookInfo }: { book: Book }) => {
-  const navigate = useNavigate();
   const { accessToken } = useAppSelector((state) => state.auth);
   const [statusModal, setStatusModal] = useState<boolean>(false);
   const [isStopSelling, setIsStopSelling] = useState<boolean>(
@@ -19,20 +20,14 @@ const BookItem = ({ book: bookInfo }: { book: Book }) => {
   const toggleBookStatus = () => {
     setStatusModal(true);
   };
-  const changeBookStatus = async () => {
+  const onChangeBookStatus = async () => {
     setIsStopSelling(!isStopSelling);
     try {
-      const response = await axios.put(
-        `manage/books/${bookInfo.id}/status`,
-        {
-          stopSelling: !isStopSelling,
+      await changeBookStatus(bookInfo.id, !isStopSelling, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      });
       setStatusModal(false);
       setIsStopSelling(!isStopSelling);
       toast.success(
@@ -97,7 +92,7 @@ const BookItem = ({ book: bookInfo }: { book: Book }) => {
               </Button>
               <Button
                 className={`${style.toggleLockBtn}`}
-                onClick={changeBookStatus}
+                onClick={onChangeBookStatus}
               >
                 Confirm
               </Button>

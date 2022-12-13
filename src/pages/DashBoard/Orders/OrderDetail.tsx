@@ -6,10 +6,15 @@ import styled from "styled-components";
 import { TiArrowBack } from "react-icons/ti";
 import axios, { isAxiosError } from "../../../apis/axiosInstance";
 import AppModal from "../../../components/AppModal/AppModal";
-import { OrderInfo, UserDetailInfo } from "../../../models";
+import {
+  OrderInfo,
+  UserDetailInfo,
+  Item as OrderDetails,
+} from "../../../models";
 import { useAppSelector } from "../../../store/hook";
 import { toast } from "react-toastify";
 import style from "../MainLayout.module.css";
+import { getOrder, getUser } from "../../../apis/manage";
 
 const SubContainer = styled.div`
   border-bottom: solid 2px #cbcbcb;
@@ -17,14 +22,6 @@ const SubContainer = styled.div`
   flex-direction: column;
   margin-top: 5px;
 `;
-
-interface OrderDetail {
-  id: string;
-  image: string;
-  bookName: string;
-  quantityOrdered: number;
-  priceEach: number;
-}
 
 interface MessageStatus {
   status: "success" | "fail" | "";
@@ -36,7 +33,7 @@ const OrderDetail = () => {
   const navigate = useNavigate();
   const { accessToken } = useAppSelector((state) => state.auth);
   const [orderInfo, setOrderInfo] = useState<OrderInfo | null>(null);
-  const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
+  const [orderDetails, setOrderDetails] = useState<OrderDetails[]>([]);
   const [userInfo, setUserInfo] = useState<UserDetailInfo | null>(null);
   const [statusModal, setStatusModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
@@ -45,15 +42,14 @@ const OrderDetail = () => {
   useEffect(() => {
     const getInfo = async () => {
       try {
-        const responseOrder = await axios.get(`manage/orders/${id}`, {
+        const order = await getOrder(id as string, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        // console.log("order: ", responseOrder.data);
-        setOrderInfo(responseOrder.data);
+        setOrderInfo(order);
 
-        setOrderStatus(responseOrder.data.status);
+        setOrderStatus(order.status);
 
         const responseOrderDetails = await axios.get(
           `/orders/${id}/orderdetails`,
@@ -65,16 +61,13 @@ const OrderDetail = () => {
         );
         // console.log("orderdetails: ", responseOrderDetails.data.content);
         setOrderDetails(responseOrderDetails.data.content);
-        if (responseOrder.data.userId) {
-          const responseUser = await axios.get(
-            `manage/users/${responseOrder.data.userId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
-          setUserInfo(responseUser.data);
+        if (order.userId) {
+          const user = await getUser(order.userId as string, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          setUserInfo(user);
         }
       } catch (error) {
         if (isAxiosError(error)) {

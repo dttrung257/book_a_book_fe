@@ -1,4 +1,4 @@
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
@@ -9,6 +9,7 @@ import validator from "validator";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import style from "../MainLayout.module.css";
+import { addBook } from "../../../apis/manage";
 interface InfoError {
   name?: string;
   image?: string;
@@ -88,24 +89,21 @@ const AddBookModal = (prop: {
   const [error, setError] = useState<InfoError>({});
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
-  const addBook = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onAddBook = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       //validate info
-      console.log(bookAddInfo);
       const err = validationInfo(bookAddInfo);
-      console.log(err);
       if (err && Object.keys(err).length !== 0) return setError(err);
       setError({});
 
-      const response = await axios.post(`/manage/books`, bookAddInfo, {
+      const data = await addBook(bookAddInfo, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
       toast.success("Book has been added successfully");
-      console.log(response);
-      navigate(`/dashboard/books/${response.data.id}`);
+      navigate(`/dashboard/books/${data.id}`);
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;
@@ -129,7 +127,7 @@ const AddBookModal = (prop: {
       >
         <Form
           className={style.editModal}
-          onSubmit={addBook}
+          onSubmit={onAddBook}
           style={{ minWidth: "50vw", maxHeight: "600px", overflowY: "auto" }}
         >
           <Form.Group className="mb-3" controlId="nameAdd">

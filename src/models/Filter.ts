@@ -9,3 +9,26 @@ export interface FilterSearch {
   to?: number | string;
   best_selling?: boolean | string;
 }
+
+export interface FilterBookDashboard {
+  name?: string;
+  category?: string;
+  priceFrom?: number | string;
+  priceTo?: number | string;
+  rating?: string;
+}
+
+export interface FilterCommentDashboard {
+  bookID?: string;
+  bookName?: string;
+  date?: string;
+  userName?: string;
+}
+
+export interface FilterOrderDashboard {
+  name?: string;
+  status?: string;
+  priceFrom?: number | string;
+  priceTo?: number | string;
+  date?: string;
+}

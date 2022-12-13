@@ -1,7 +1,6 @@
 import { Book } from "../../../models";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import AppModal from "../../../components/AppModal/AppModal";
 import { BookAddInfo, Category } from "../../../models";
@@ -10,6 +9,7 @@ import validator from "validator";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import style from "../MainLayout.module.css";
+import { changeBookInfo } from "../../../apis/manage";
 interface InfoError {
   name?: string;
   image?: string;
@@ -52,7 +52,7 @@ const validationInfo = (info: BookAddInfo): InfoError => {
     error.sellingPrice = "Selling Price must be higher than Buy Price";
   }
 
-  if (info.isbn && info.isbn != "" && !validator.isISBN(info.isbn))
+  if (info.isbn && info.isbn !== "" && !validator.isISBN(info.isbn))
     error.isbn = "Invalid ISBN";
 
   //   if (
@@ -90,7 +90,6 @@ const EditBookModal = (prop: {
   });
   const [error, setError] = useState<InfoError>({});
   const accessToken = useAppSelector((state) => state.auth.accessToken);
-  const navigate = useNavigate();
 
   const editBook = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,17 +100,12 @@ const EditBookModal = (prop: {
       if (err && Object.keys(err).length !== 0) return setError(err);
       setError({});
 
-      const response = await axios.put(
-        `/manage/books/${prop.book.id}`,
-        bookEditInfo,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      await changeBookInfo(prop.book.id, bookEditInfo, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       toast.success("Book has been changed successfully");
-      console.log(response);
       prop.setShowModal(false);
       //navigate(`/dashboard/books/${response.data.id}`);
     } catch (error) {

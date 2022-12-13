@@ -107,7 +107,7 @@ const Footer = () => {
 
 const Navbar = () => {
   return (
-    <nav>
+    <div className={style.nav}>
       <div>
         <NavLink
           to={"users"}
@@ -144,7 +144,7 @@ const Navbar = () => {
           Comments
         </NavLink>
       </div>
-    </nav>
+    </div>
   );
 };
 

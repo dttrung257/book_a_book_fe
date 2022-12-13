@@ -6,10 +6,12 @@ import AppModal from "../../../components/AppModal/AppModal";
 import style from "../MainLayout.module.css";
 import { Button } from "@mui/material";
 import { toast } from "react-toastify";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { isAxiosError } from "../../../apis/axiosInstance";
+import { deleteComment } from "../../../apis/manage";
+
 const CommentItem = ({
-  comment: comment,
-  setCheckDeleteComment: setCheckDeleteComment,
+  comment,
+  setCheckDeleteComment,
 }: {
   comment: CommentDetail;
   setCheckDeleteComment: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,14 +22,14 @@ const CommentItem = ({
     setDeleteModal(true);
   };
 
-  const deleteComment = async () => {
+  const onDeleteComment = async () => {
     try {
-      const response = await axios.delete(`manage/comments/${comment.id}`, {
+      await deleteComment(comment.id, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(response);
+
       setDeleteModal(false);
       toast.success("Comment deleted");
       setCheckDeleteComment((prev) => !prev);
@@ -76,7 +78,7 @@ const CommentItem = ({
               </Button>
               <Button
                 className={`${style.toggleLockBtn}`}
-                onClick={deleteComment}
+                onClick={onDeleteComment}
               >
                 Confirm
               </Button>

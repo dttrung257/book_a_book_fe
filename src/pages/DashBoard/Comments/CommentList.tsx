@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import axios, { isAxiosError } from "../../../apis/axiosInstance";
+import { useEffect, useState } from "react";
+import { isAxiosError } from "../../../apis/axiosInstance";
 import { toast } from "react-toastify";
 import { Table } from "react-bootstrap";
 import style from "../MainLayout.module.css";
@@ -11,20 +11,15 @@ import { useSearchParams } from "react-router-dom";
 import AppModal from "../../../components/AppModal/AppModal";
 import moment from "moment";
 import CommentItem from "./CommentItem";
-
-interface SearchInfo {
-  bookID?: string;
-  bookName?: string;
-  date?: string;
-  userName?: string;
-}
+import { FilterCommentDashboard } from "../../../models/Filter";
+import { getCommentsList } from "../../../apis/manage";
 
 const CommentList = () => {
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const [commentsList, setCommentsList] = useState<CommentDetail[]>([]);
   const [showSearchModal, setShowSearchModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchInfo, setSearchInfo] = useState<SearchInfo>({});
+  const [searchInfo, setSearchInfo] = useState<FilterCommentDashboard>({});
   const [message, setMessage] = useState<string>("");
   const [totalpage, setTotalPages] = useState<number>(0);
   const [checkDeleteComment, setCheckDeleteComment] = useState<boolean>(false);
@@ -32,20 +27,6 @@ const CommentList = () => {
     parseInt(searchParams.get("page") || "0")
   );
 
-  const getCommentsList = useCallback(
-    async (filter: SearchInfo, page: number | string = 0) => {
-      const response = await axios.get(
-        `/manage/comments?page=${page}&book_id=${filter.bookID}&book_name=${filter.bookName}&date=${filter.date}&fullname=${filter.userName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      return response.data;
-    },
-    [accessToken]
-  );
   useEffect(() => {
     const bookID = searchParams.get("bookID") || "";
     const bookName = searchParams.get("bookName") || "";
@@ -53,7 +34,11 @@ const CommentList = () => {
     const userName = searchParams.get("userName") || "";
     const page = searchParams.get("page") || "0";
 
-    getCommentsList({ bookID, bookName, date, userName }, page)
+    getCommentsList({ bookID, bookName, date, userName }, page, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
       .then((data) => {
         // console.log(data);
         setCommentsList(data.content);
@@ -174,10 +159,10 @@ const CommentList = () => {
           showLastButton
           color="primary"
           style={{
-            maxHeight: "25px",
-            width: "fit-content",
             marginLeft: "auto",
             marginRight: "auto",
+            height: "auto",
+            marginTop: "auto",
           }}
           onChange={handleChangePage}
         />
