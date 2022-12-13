@@ -1,9 +1,9 @@
 import { Button } from "@mui/material";
-import { useAppSelector } from "../../../store/hook";
+// import { useAppSelector } from "../../../store/hook";
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import AppModal from "../../../components/AppModal/AppModal";
+// import AppModal from "../../../components/AppModal/AppModal";
 import { TiArrowBack } from "react-icons/ti";
 import { isAxiosError } from "../../../apis/axiosInstance";
 import { Book } from "../../../models";
@@ -11,16 +11,16 @@ import styleMain from "../MainLayout.module.css";
 import style from "./Books.module.css";
 import EditBookModal from "./EditBookModal";
 import { deleteBook, getBook } from "../../../apis/manage";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const BookDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [book, setBook] = useState<Book | null>(null);
-  const { accessToken } = useAppSelector((state) => state.auth);
+  // const { accessToken } = useAppSelector((state) => state.auth);
   const [editModal, setEditModal] = useState<boolean>(false);
-  const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  // const [deleteModal, setDeleteModal] = useState<boolean>(false);
   useEffect(() => {
     const getBookInfo = async () => {
       try {
@@ -41,26 +41,26 @@ const BookDetail = () => {
     getBookInfo();
     return () => {};
   }, [id, editModal]);
-  const onDeleteBook = async () => {
-    try {
-      await deleteBook(book?.id as number, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+  // const onDeleteBook = async () => {
+  //   try {
+  //     await deleteBook(book?.id as number, {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
 
-      toast.success(`Book ${book?.name} has been deleted`);
-      navigate("/dashboard/books");
-    } catch (error) {
-      if (isAxiosError(error)) {
-        const data = error.response?.data;
-        //setErrMessage(data?.message);
-      } else {
-        //setErrMessage("Unknow error!!!");
-        console.log(error);
-      }
-    }
-  };
+  //     toast.success(`Book ${book?.name} has been deleted`);
+  //     navigate("/dashboard/books");
+  //   } catch (error) {
+  //     if (isAxiosError(error)) {
+  //       const data = error.response?.data;
+  //       //setErrMessage(data?.message);
+  //     } else {
+  //       //setErrMessage("Unknow error!!!");
+  //       console.log(error);
+  //     }
+  //   }
+  // };
   return (
     <>
       <div className={`${styleMain.header} mb-2`}>
@@ -86,7 +86,7 @@ const BookDetail = () => {
           >
             Edit Book
           </Button>
-          <Button
+          {/* <Button
             variant="contained"
             color="error"
             onClick={() => {
@@ -95,7 +95,7 @@ const BookDetail = () => {
             }}
           >
             Delete
-          </Button>
+          </Button> */}
         </div>
       </div>
       <div className={`${styleMain.content}`}>
@@ -192,7 +192,7 @@ const BookDetail = () => {
           </div>
         </div>
       </div>
-      <AppModal
+      {/* <AppModal
         title="Delete "
         showModal={deleteModal}
         setShowModal={setDeleteModal}
@@ -211,7 +211,7 @@ const BookDetail = () => {
             <Button
               className={`${styleMain.deleteBtn} float-end`}
               onClick={() => {
-                onDeleteBook();
+                // onDeleteBook();
                 console.log("delete");
               }}
             >
@@ -219,7 +219,7 @@ const BookDetail = () => {
             </Button>
           </div>
         </div>
-      </AppModal>
+      </AppModal> */}
       {book && (
         <EditBookModal
           book={book as Book}

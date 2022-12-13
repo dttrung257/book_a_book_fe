@@ -54,7 +54,7 @@ const validationInfo = (info: BookAddInfo): InfoError => {
     info.sellingPrice &&
     parseFloat(info.buyPrice) >= parseFloat(info.sellingPrice)
   ) {
-    error.sellingPrice = "Selling Price must be higher than Buy Price";
+    error.sellingPrice = "Selling Price must be greater than Buy Price";
   }
 
   if (info.isbn && !validator.isISBN(info.isbn)) error.isbn = "Invalid ISBN";
