@@ -1,8 +1,10 @@
 .purchaseContainer {
   display: flex;
+  align-items: center;
+  flex-direction: column;
   position: relative;
   background-color: white;
-  width: 70%;
+  width: 80%;
   padding-top: 40px;
 }
 .orderContainer {
@@ -42,6 +44,7 @@
   padding-left: 20px;
   display: flex;
   flex-wrap: wrap;
+  flex-grow: 1;
 }
 .divider {
   line-height: 0.5px;
@@ -70,9 +73,10 @@
   border: 0.1px solid rgb(206, 206, 206);
 }
 .totalInfor {
+  margin-top: 10px;
   width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: start;
 }
 .cash {
   font-size: 30px;
@@ -90,7 +94,7 @@
   color: black;
 }
 #panel {
-  width: 200px;
+  width: 100%px;
   display: flex;
   flex-direction: column;
   padding: 10px;
@@ -99,19 +103,10 @@
 }
 #purchaseLogo {
   height: 100%;
-}
-.left,
-.right {
-  color: #008b8b;
-  font-style: italic;
-  font-size: 25px;
+  width: 100%;
   font-weight: 500;
-}
-.left {
-  text-align: left;
-}
-.right {
-  text-align: right;
+  font-size: 40px;
+  color: #008b8b;
 }
 .confirmBt {
   background-color: red !important;
@@ -131,8 +126,14 @@
 }
 .blockText {
   word-wrap: break-word;
+  padding-right: 15px;
 }
-.wrapper{
+.blockText:nth-child(1),
+.blockText.blockText:nth-child(2) {
+  border-right: 1px solid rgb(222, 222, 222);
+  padding-top: 17px;
+}
+.wrapper {
   background-color: #ffffff;
   position: relative;
   overflow: auto;

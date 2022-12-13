@@ -45,7 +45,6 @@ const OrderList = () => {
         console.log(data);
         setOrderList(data.content);
         setTotalPages(data.totalPages);
-        console.log(data);
       })
       .catch((error) => {
         console.log(error);

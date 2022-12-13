@@ -17,6 +17,7 @@ export interface PersonalOrder {
   quantity: number;
   total?: number;
   status: string;
+  phoneNumber: string;
 }
 
 export interface OrderPost {
@@ -35,4 +36,3 @@ export interface Item {
   priceEach: number;
   quantityOrdered: number;
 }
-

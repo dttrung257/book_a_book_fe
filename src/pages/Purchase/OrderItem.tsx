@@ -76,21 +76,20 @@ const OrderItem = (props: { order: PersonalOrder }) => {
       })}
       <div className={style.divider}></div>
       <div className={`${style.totalInfor} mb-3`}>
-        <div className="d-flex justify-content-end">
-          <div className={`${style.blockText}`} style={{ width: "30%" }}>
-            {" "}
-            <span style={{ color: "grey" }}>Address:</span>{" "}
-            {props.order.address}
-          </div>
+        <div className={`${style.blockText}`} style={{ width: "40%" }}>
+          {" "}
+          <span style={{ color: "grey" }}>Address:</span> {props.order.address}
         </div>
-        <div className="mt-3 d-flex justify-content-end">
-          <div className={`${style.blockText}`} style={{ width: "30%" }}>
-            <span className={style.cash}>
-              <span style={{ color: "grey", fontSize: "16px" }}>Total:</span>
-              <sup>$</sup>
-              {props.order.total}
-            </span>
-          </div>
+        <div className={`${style.blockText} mx-4`} style={{ width: "30%" }}>
+          <span style={{ color: "grey" }}>Phone Number:</span>{" "}
+          {props.order.phoneNumber}
+        </div>
+        <div className={`${style.blockText} mx-4`} style={{ width: "30%" }}>
+          <span className={style.cash}>
+            <span style={{ color: "grey", fontSize: "16px" }}>Total:</span>
+            <sup>$</sup>
+            {props.order.total}
+          </span>
         </div>
       </div>
       <div className={style.buttonOrder}>

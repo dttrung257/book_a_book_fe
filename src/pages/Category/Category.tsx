@@ -186,7 +186,7 @@ const Category = () => {
                       convertNumber(searchParams.get("rating")) > index ||
                       index <= hover
                         ? {
-                            color: "#dcd13a",
+                            color: "#fed221",
                           }
                         : { color: "#989898" }
                     }
@@ -209,14 +209,14 @@ const Category = () => {
               </span>
             </div>
             <label className={style.dropDown}>
-              {searchParams.get("best_selling") ? "Best Selling" : "Alls"}
+              {searchParams.get("best_selling") ? "Best Selling" : "Default"}
               <FaChevronDown className={style.dropIcon} />
               <ul className={style.dropDownList}>
                 <li
                   className={style.dropDownItem}
                   onClick={() => handleBestSelling(false)}
                 >
-                  All
+                  Default
                 </li>
                 <li
                   className={style.dropDownItem}

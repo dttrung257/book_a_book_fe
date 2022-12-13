@@ -14,12 +14,7 @@ const Purchase = () => {
       <div className={style.purchaseContainer}>
         <div id={style.panel}>
           <div id={style.purchaseLogo}>
-            <div style={{ display: "block" }}>
-              <div className={style.left}>
-                Personal <FaShoppingBag />
-              </div>
-              <div className={style.right}>Order</div>
-            </div>
+            Personal <FaShoppingBag /> Order
           </div>
         </div>
         <OrderList />

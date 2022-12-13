@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { formatStr } from "../../utils";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { cartActions } from "../../store/cartSlice";
-import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { styled, Tooltip, TooltipProps } from "@mui/material";
 
@@ -70,14 +69,16 @@ const BookCard = (props: { book: Book }) => {
 
           <span>
             by{" "}
-            <span style={{ color: "#008b8b" }}>
-              {formatStr(props.book.author, 15)}
-            </span>
+            <LightTooltip title={props.book.author}>
+              <span style={{ color: "#008b8b" }}>
+                {formatStr(props.book.author, 15)}
+              </span>
+            </LightTooltip>
           </span>
           <div style={{ color: "grey" }}>
             {props.book.rating}{" "}
             <sup>
-              <FaStar size={16} style={{ color: "#dcd13a" }} />
+              <FaStar size={16} style={{ color: "#fed221" }} />
             </sup>
             <span className="mx-2">Sold: {props.book.quantitySold}</span>
           </div>
