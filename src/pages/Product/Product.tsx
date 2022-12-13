@@ -15,7 +15,7 @@ import { formatStr } from "../../utils";
 import Comment from "./Comment/Comment";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { cartActions } from "../../store/cartSlice";
-import AlertSuccess from "../../components/AlertSuccess";
+import AlertSuccess from "../../components/AlertSuccess/AlertSuccess";
 import { toast } from "react-toastify";
 
 const Product = () => {

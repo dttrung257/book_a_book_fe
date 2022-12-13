@@ -8,15 +8,7 @@ import BookCard from "../../components/Book/BookCard";
 import { Subject, priceRanges, Book } from "../../models";
 import { isAxiosError } from "../../apis/axiosInstance";
 import Pagination from "@mui/material/Pagination";
-const Wrapper = styled.div`
-  background-color: #ffffff;
-  position: relative;
-  overflow: auto;
-  min-height: 100vh;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-`;
+
 const convertNumber = (value: any) => {
   if (numberFault(value)) {
     return 0;
@@ -140,7 +132,7 @@ const Category = () => {
     console.log(searchParams.toString());
   }, [searchParams]);
   return (
-    <Wrapper>
+    <div className={style.wrapper}>
       <div className={style.container}>
         <div className={style.filter}>
           <div className={style.filterArea}>
@@ -285,7 +277,7 @@ const Category = () => {
           />
         </div>
       </div>
-    </Wrapper>
+    </div>
   );
 };
 export default Category;

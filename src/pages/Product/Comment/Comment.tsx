@@ -13,13 +13,14 @@ import ModalComment from "./ModalComment";
 import { Avatar, Button, Pagination } from "@mui/material";
 import { Modal } from "react-bootstrap";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { FaRegSadTear } from "react-icons/fa";
 
 const Comment = (props: { id: number; rate: number | undefined }) => {
   const { user, accessToken } = useAppSelector((state) => state.auth);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const [comment, setComment] = useState<string>("");
   const [rate, setRate] = useState<number>(0);
-  const [date, setDate] = useState<string>("")
+  const [date, setDate] = useState<string>("");
   const [otherComments, setOtherComments] = useState<Cmt[]>([]);
   const [toggle, setToggle] = useState<boolean>(false);
   const [toggleDel, setToggleDel] = useState<boolean>(false);
@@ -30,8 +31,8 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
   useEffect(() => {
     if (props.id === 0) return;
     setComment("");
-    setPage(0)
-    
+    setPage(0);
+
     if (sent) {
       getUserComments(props.id, {
         headers: {
@@ -40,7 +41,8 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
       }).then((res) => {
         setComment(res.content);
         setRate(res.star);
-        if(res.updatedAt) setDate(`Updated at ${new Date(res.updatedAt).toLocaleString()}`);
+        if (res.updatedAt)
+          setDate(`Updated at ${new Date(res.updatedAt).toLocaleString()}`);
         else setDate(new Date(res.createdAt).toLocaleString());
         setSent(false);
       });
@@ -48,8 +50,8 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
     }
     if (!isLoggedIn) {
       getAllComments(props.id, page).then((res) => {
-        setTotalPage(res.totalPage);
-        setOtherComments(res.content)
+        setTotalPage(res.totalPages);
+        setOtherComments(res.content);
       });
     } else {
       getUserComments(props.id, {
@@ -60,8 +62,9 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
         if (res !== "") {
           setComment(res.content);
           setRate(res.star);
-          if(res.updatedAt) setDate(`Updated at ${new Date(res.updatedAt).toLocaleString()}`);
-        else setDate(new Date(res.createdAt).toLocaleString());
+          if (res.updatedAt)
+            setDate(`Updated at ${new Date(res.updatedAt).toLocaleString()}`);
+          else setDate(new Date(res.createdAt).toLocaleString());
         }
       });
       getOtherComments(props.id, page, {
@@ -69,11 +72,11 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then((res) => {
-        setTotalPage(res.totalPage);
+        setTotalPage(res.totalPages);
         setOtherComments(res.content);
       });
     }
-  }, [sent, accessToken, isLoggedIn, page, props.id]);
+  }, [sent, accessToken, isLoggedIn, props.id]);
 
   const changeToggle = () => {
     setToggle(toggle ? false : true);
@@ -147,9 +150,11 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
                 />
               </div>
               <div className={style.textField}>
-                <p className={style.ownerCmt}>{`${user.firstName} ${user.lastName}`}</p>
+                <p
+                  className={style.ownerCmt}
+                >{`${user.firstName} ${user.lastName}`}</p>
                 <Star rate={rate} />
-                <p style={{float: "right", color: "#666"}}>{date}</p>
+                <p style={{ float: "right", color: "#666" }}>{date}</p>
                 <p>{comment}</p>
               </div>
             </div>
@@ -190,27 +195,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
       ) : (
         <></>
       )}
-      <div>
-        <div className={style.frameComment}>
-          <div className={style.frameAvatar}>
-            <Avatar style={{ maxWidth: 30, maxHeight: 30 }}>A</Avatar>
-          </div>
-          <div className={style.textField}>
-            <p className={style.ownerCmt}>Admin </p>
-            <Star rate={5} />
-            <p>
-              Because, despite the fairly innocuous first 200 pages, the title
-              speaks the truth: this is a book about war. All of its horrors and
-              atrocities. It is not sugar-coated, and it is often graphic. The
-              "poppy" aspect refers to opium, which is a big part of this book.
-              It is a fantasy, but the book draws inspiration from the Second
-              Sino-Japanese War and the Rape of Nanking.
-            </p>
-          </div>
-        </div>
-        <br />
-      </div>
-      {otherComments.length > 0 &&
+      {otherComments.length > 0 ? (
         otherComments.map((cmt, i) => {
           return (
             <div key={i}>
@@ -224,14 +209,28 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
                 <div className={style.textField}>
                   <p className={style.ownerCmt}>{cmt.fullName} </p>
                   <Star rate={cmt.star} />
-                  <p style={{float: "right"}}>{cmt.updatedAt ? `Updated at ${new Date(cmt.updatedAt).toLocaleString()}` : new Date(cmt.createdAt).toLocaleString()}</p>
+                  <p style={{ float: "right" }}>
+                    {cmt.updatedAt
+                      ? `Updated at ${new Date(cmt.updatedAt).toLocaleString()}`
+                      : new Date(cmt.createdAt).toLocaleString()}
+                  </p>
                   <p>{cmt.content}</p>
                 </div>
               </div>
               <br />
             </div>
           );
-        })}
+        })
+      ) : (
+        <div style={{ textAlign: "center" }}>
+          <p className={style.title}>
+            Oops, There are no comments yet <FaRegSadTear />
+          </p>
+          <p>
+            Please leave your comment here!
+          </p>
+        </div>
+      )}
       <Modal show={toggleDel} onHide={() => setToggleDel(false)}>
         <Modal.Header closeButton={true}>Comfirm Deletion</Modal.Header>
         <Modal.Body>
@@ -262,8 +261,11 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
           className={style.nextPage}
           count={totalPage}
           page={page + 1}
+          style={otherComments.length == 0 ? { display: "none" } : {}}
           color="primary"
           onChange={handleChangePage}
+          showFirstButton
+          showLastButton
         />
       </div>
     </div>

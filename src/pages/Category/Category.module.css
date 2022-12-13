@@ -11,6 +11,15 @@
   margin-top: 50px;
   margin-bottom: 50px;
 }
+.wrapper {
+  background-color: #ffffff;
+  position: relative;
+  overflow: auto;
+  min-height: 100vh;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+}
 .filter {
   display: flex;
   flex-direction: column;

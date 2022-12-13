@@ -162,7 +162,7 @@ const Header = () => {
                             fontSize: 14,
                             fontWeight: 500,
                           }}
-                          primary="My Purchase"
+                          primary="My Order"
                         />
                       </ListItemButton>
                     </ListItem>
