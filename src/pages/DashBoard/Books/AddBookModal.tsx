@@ -10,6 +10,9 @@ import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import style from "../MainLayout.module.css";
 import { addBook } from "../../../apis/manage";
+import "firebase/compat/storage";
+import { storage } from "../../../firebase/firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 interface InfoError {
   name?: string;
   image?: string;
@@ -22,15 +25,17 @@ interface InfoError {
   isbn?: string;
   yearOfPublication?: string;
 }
+const metadata = {
+  contentType: "image/jpeg",
+  accept: ".png",
+};
 
 const validationInfo = (info: BookAddInfo): InfoError => {
   const error: InfoError = {};
 
   if (!info.name) error.name = "Name is required";
 
-  if (!info.image) error.image = "Image URL is required";
-  else if (!validator.isURL(info.image))
-    error.image = "Image URL must be an URL";
+  if (!info.image) error.image = "Image is required";
 
   if (!info.category) error.category = "Category is required";
 
@@ -86,6 +91,7 @@ const AddBookModal = (prop: {
     numberOfPages: "",
     yearOfPublication: "",
   });
+  const [pathImage, setPathImage] = useState<string>("");
   const [error, setError] = useState<InfoError>({});
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
@@ -96,12 +102,13 @@ const AddBookModal = (prop: {
       const err = validationInfo(bookAddInfo);
       if (err && Object.keys(err).length !== 0) return setError(err);
       setError({});
-
+      
       const data = await addBook(bookAddInfo, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      setPathImage("")
       toast.success("Book has been added successfully");
       navigate(`/dashboard/books/${data.id}`);
     } catch (error) {
@@ -111,6 +118,54 @@ const AddBookModal = (prop: {
       } else {
         toast.error("Unknow error!!!");
         console.log(error);
+      }
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      let file = e.target.files[0];
+      if (file) {
+        var ext = file.type;
+        if (ext !== "image/jpeg" && ext !== "image/png") {
+          setError({ ...error, image: "Invalid file type!" });
+          return;
+        }
+        setError({ ...error, image: undefined });
+        setPathImage(file.name)
+        const path = `/images/${file.name}`;
+        const imgref = ref(storage, path);
+        const uploadTask = uploadBytesResumable(imgref, file, metadata);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            // console.log("Upload is " + progress + "% done");
+            // switch (snapshot.state) {
+            //   case "paused":
+            //     // console.log("Upload is paused");
+            //     break;
+            //   case "running":
+            //     // console.log("Upload is running");
+            //     break;
+            // }
+          },
+          (error) => {
+            setError({ ...error, image: "Upload photo failed!" });
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              setBookAddInfo({
+                ...bookAddInfo,
+                image: downloadURL,
+              })
+            });
+          }
+        );
       }
     }
   };
@@ -153,7 +208,7 @@ const AddBookModal = (prop: {
             <Form.Label>
               Image<span className="text-danger">*</span>
             </Form.Label>
-            <Form.Control
+            {/* <Form.Control
               type="url"
               placeholder="Image URL"
               value={bookAddInfo.image}
@@ -163,7 +218,21 @@ const AddBookModal = (prop: {
                   image: e.target.value,
                 })
               }
-            />
+            /> */}
+            <br />
+            <Form.Control
+          accept=".jpg,.jpeg,.png"
+          style={{ display: "none" }}
+          id="outlined-button-file"
+          type="file"
+          onChange={handleChange}
+        />
+        <label htmlFor="outlined-button-file">
+          <Button variant="outlined" component="span" size="small">
+            Choose file
+          </Button>&nbsp;&nbsp;
+          <span>{pathImage}</span>
+        </label>
             {error?.image ? (
               <Form.Text className="text-danger">{error.image}</Form.Text>
             ) : null}
@@ -213,6 +282,8 @@ const AddBookModal = (prop: {
                 <option value="LIFESTYLE">LIFESTYLE</option>
                 <option value="ROMANCE">ROMANCE</option>
                 <option value="EDUCATION">EDUCATION</option>
+                <option value="FANTASY">FANTASY</option>
+                <option value="BUSINESS">BUSINESS</option>
               </Form.Select>
               {error?.category ? (
                 <Form.Text className="text-danger">{error.category}</Form.Text>

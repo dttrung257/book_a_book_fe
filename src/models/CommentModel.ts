@@ -7,8 +7,8 @@ export interface Comment {
   bookName: string;
   star: number;
   content: string;
-  createdAt: Date;
-  updatedAt?: Date;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export interface CommentCore {
