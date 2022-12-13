@@ -124,7 +124,7 @@ const Order = () => {
       <div className={`${style.header} mb-2`}>
         <h2> Orders list</h2>
         <Button
-          style={{ backgroundColor: "var(--primary-color)", color: "white" }}
+          variant="contained"
           onClick={() => {
             setShowAddModal(true);
           }}

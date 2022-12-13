@@ -76,10 +76,9 @@ const BookDetail = () => {
         <div>
           <Button
             style={{
-              backgroundColor: "var(--primary-color)",
-              color: "white",
               marginRight: "10px",
             }}
+            variant="contained"
             onClick={() => {
               setEditModal(true);
               //   setMessage(null);
@@ -88,7 +87,8 @@ const BookDetail = () => {
             Edit Book
           </Button>
           <Button
-            style={{ backgroundColor: "red", color: "white" }}
+            variant="contained"
+            color="error"
             onClick={() => {
               setDeleteModal(true);
               //setMessage(null);

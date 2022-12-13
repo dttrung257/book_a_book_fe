@@ -154,9 +154,8 @@ const OrderDetail = () => {
         </div>
         <div>
           <Button
+            variant="contained"
             style={{
-              backgroundColor: "var(--primary-color)",
-              color: "white",
               marginRight: "10px",
             }}
             onClick={() => {
@@ -167,7 +166,8 @@ const OrderDetail = () => {
             Change Status
           </Button>
           <Button
-            style={{ backgroundColor: "red", color: "white" }}
+            variant="contained"
+            color="error"
             onClick={() => {
               setDeleteModal(true);
               setMessage(null);

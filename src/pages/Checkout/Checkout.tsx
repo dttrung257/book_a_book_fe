@@ -104,7 +104,7 @@ const Checkout = () => {
       }));
 
       setIsSending(true);
-      const data = await postOrder(accessToken, {
+      await postOrder(accessToken, {
         address: address.trim(),
         phoneNumber: phoneNumber,
         orderdetails: booksOrder,
@@ -224,10 +224,13 @@ const Checkout = () => {
                   </Row>
                 </Form.Group>
 
-                <div className="float-end mb-4">
-                  <Button variant="contained" type="submit">
-                    PLACE ORDER
-                  </Button>
+                <div className="mb-4">
+                  <p className="text-danger">{errMessage}</p>
+                  <div className="float-end">
+                    <Button variant="contained" type="submit">
+                      PLACE ORDER
+                    </Button>
+                  </div>
                 </div>
               </Form>
             </div>

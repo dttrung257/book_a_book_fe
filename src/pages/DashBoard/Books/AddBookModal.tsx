@@ -413,14 +413,7 @@ const AddBookModal = (prop: {
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              style={{
-                backgroundColor: "var(--primary-color)",
-                color: "white",
-              }}
-              className="float-end"
-            >
+            <Button type="submit" variant="contained" className="float-end">
               Submit
             </Button>
           </div>
