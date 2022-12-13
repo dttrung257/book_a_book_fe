@@ -197,3 +197,23 @@ export const getOrderDetail = async (id: string, options: Object) => {
   );
   return response.data;
 };
+
+export const changeOrderStatus = async (
+  id: string | number,
+  status: string,
+  options: Object
+) => {
+  const response = await axiosInstance.put(
+    `/manage/orders/${id}`,
+    {
+      status,
+    },
+    options
+  );
+  return response.data;
+};
+
+export const deleteOrder = async (id: string, options: Object) => {
+  const response = await axiosInstance.delete(`/manage/orders/${id}`, options);
+  return response.data;
+};

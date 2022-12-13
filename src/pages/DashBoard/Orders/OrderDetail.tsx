@@ -14,7 +14,13 @@ import {
 import { useAppSelector } from "../../../store/hook";
 import { toast } from "react-toastify";
 import style from "../MainLayout.module.css";
-import { getOrder, getUser } from "../../../apis/manage";
+import {
+  changeOrderStatus,
+  deleteOrder,
+  getOrder,
+  getOrderDetail,
+  getUser,
+} from "../../../apis/manage";
 
 const SubContainer = styled.div`
   border-bottom: solid 2px #cbcbcb;
@@ -51,16 +57,13 @@ const OrderDetail = () => {
 
         setOrderStatus(order.status);
 
-        const responseOrderDetails = await axios.get(
-          `/orders/${id}/orderdetails`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const data = await getOrderDetail(id as string, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         // console.log("orderdetails: ", responseOrderDetails.data.content);
-        setOrderDetails(responseOrderDetails.data.content);
+        setOrderDetails(data.content);
         if (order.userId) {
           const user = await getUser(order.userId as string, {
             headers: {
@@ -85,23 +88,16 @@ const OrderDetail = () => {
     return () => {};
   }, [accessToken, id]);
 
-  const changeOrderStatus = async (status: string) => {
+  const onChangeOrderStatus = async (status: string) => {
     try {
-      const res = await axios.put(
-        `manage/orders/${id}`,
-        {
-          status: status,
+      await changeOrderStatus(id as string, status, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      });
       setOrderInfo({ ...orderInfo, status } as OrderInfo);
       setStatusModal(false);
       toast.success(`Changed status of order #${id} to ${status}`);
-      console.log(res);
     } catch (error) {
       if (isAxiosError(error)) {
         const data = error.response?.data;
@@ -113,7 +109,7 @@ const OrderDetail = () => {
     }
   };
 
-  const deleteOrder = async () => {
+  const onDeleteOrder = async () => {
     if (
       orderInfo &&
       (orderInfo.status === "SUCCESS" || orderInfo.status === "SHIPPING")
@@ -125,12 +121,12 @@ const OrderDetail = () => {
       return;
     }
     try {
-      const res = await axios.delete(`manage/orders/${id}`, {
+      await deleteOrder(id as string, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(res);
+
       toast.success("Order deleted");
       navigate("/dashboard/orders");
     } catch (error) {
@@ -330,7 +326,7 @@ const OrderDetail = () => {
               className={`${style.deleteBtn} float-end`}
               onClick={() => {
                 // deleteOrder();
-                changeOrderStatus(orderStatus);
+                onChangeOrderStatus(orderStatus);
               }}
             >
               Confirm
@@ -366,7 +362,7 @@ const OrderDetail = () => {
             <Button
               className={`${style.deleteBtn} float-end`}
               onClick={() => {
-                deleteOrder();
+                onDeleteOrder();
                 console.log("delete");
               }}
             >
