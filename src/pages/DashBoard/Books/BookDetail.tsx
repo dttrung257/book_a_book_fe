@@ -124,10 +124,14 @@ const BookDetail = () => {
             <div className="d-flex">
               <div className="fw-bold title">Ratings: &nbsp;</div>
               <div style={{ alignItems: "center", display: "flex" }}>
-                <span style={{ marginRight: "5px" }}>
-                  {book?.rating !== null ? book?.rating : 5}
-                </span>
-                <FaStar color="ffc107" />
+                {book?.rating !== null ? (
+                  <>
+                    <span style={{ marginRight: "5px" }}>{book?.rating}</span>
+                    <FaStar color="ffc107" />
+                  </>
+                ) : (
+                  "No Ratings"
+                )}
               </div>
             </div>
             <div className="d-flex flex-row">

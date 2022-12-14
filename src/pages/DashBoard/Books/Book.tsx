@@ -154,8 +154,8 @@ const Books = () => {
                   <th>Price</th>
                   <th>Stock</th>
                   <th>Sold</th>
-                  <th>Ratings</th>
-                  <th>Status</th>
+                  <th style={{ width: "10%" }}>Ratings</th>
+                  <th style={{ width: "11%" }}>Keep Selling</th>
                   <th></th>
                 </tr>
               </thead>

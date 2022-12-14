@@ -66,7 +66,7 @@ const BookItem = ({ book: bookInfo }: { book: Book }) => {
         <td>${bookInfo.sellingPrice}</td>
         <td>{bookInfo.availableQuantity}</td>
         <td>{bookInfo.quantitySold}</td>
-        <td>{bookInfo.rating || 5}/5</td>
+        <td>{bookInfo.rating ? bookInfo.rating + "/5" : "No Ratings"}</td>
         <td>
           <Form>
             <Form.Switch onChange={toggleBookStatus} checked={!isStopSelling} />
