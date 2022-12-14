@@ -10,7 +10,7 @@ const Purchase = () => {
   if (!isLoggedIn) {
     return <Navigate to="/login" />;
   } else if (userRole === "ADMIN") {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/error" />;
   }
   return (
     <div className={style.wrapper}>
