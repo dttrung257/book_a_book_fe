@@ -6,8 +6,11 @@ import OrderList from "./OrderList";
 
 const Purchase = () => {
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const userRole = useAppSelector((state) => state.auth.user.authority);
   if (!isLoggedIn) {
     return <Navigate to="/login" />;
+  } else if (userRole === "ADMIN") {
+    return <Navigate to="/dashboard" />;
   }
   return (
     <div className={style.wrapper}>
