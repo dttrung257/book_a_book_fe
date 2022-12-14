@@ -1,4 +1,5 @@
 import { Rating, Button, Box } from "@mui/material";
+import { toast } from "react-toastify";
 import { ChangeEvent, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { styled } from "@mui/material/styles";
@@ -9,7 +10,10 @@ import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 import { addComment, updateComment } from "../../../apis/comment";
-import { useAppSelector } from "../../../store/hook";
+import { useAppDispatch, useAppSelector } from "../../../store/hook";
+import { isAxiosError } from "../../../apis/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../../store/authSlice";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
   "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
@@ -63,6 +67,8 @@ interface ModalProps {
 }
 
 const ModalComment = (props: ModalProps) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const accessToken = useAppSelector((state) => state.auth.accessToken);
   const [content, setContent] = useState<string>(
     props.comment !== undefined ? props.comment.content : ""
@@ -90,7 +96,19 @@ const ModalComment = (props: ModalProps) => {
             Authorization: `Bearer ${accessToken}`,
           },
         }
-      ).then((res) => console.log(res));
+      )
+        .then((res) => console.log(res))
+        .catch((error) => {
+          if (isAxiosError(error)) {
+            const data = error.response?.data;
+
+            if (data?.status === 401) {
+              toast.error("Your account has been locked!");
+              dispatch(authActions.logout());
+              return navigate("/login");
+            }
+          }
+        });
     } else
       addComment(
         { bookId: props.bookid, star: rate, content: content },
@@ -99,7 +117,19 @@ const ModalComment = (props: ModalProps) => {
             Authorization: `Bearer ${accessToken}`,
           },
         }
-      ).then((res) => console.log(res));
+      )
+        .then((res) => console.log(res))
+        .catch((error) => {
+          if (isAxiosError(error)) {
+            const data = error.response?.data;
+
+            if (data?.status === 401) {
+              toast.error("Your account has been locked!");
+              dispatch(authActions.logout());
+              return navigate("/login");
+            }
+          }
+        });
     props.setsent(true);
     props.onHide();
   };

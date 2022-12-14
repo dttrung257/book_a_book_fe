@@ -1,4 +1,5 @@
 import { ChangeEvent, Fragment, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Comment as Cmt } from "../../../models";
 import {
   deleteComment,
@@ -6,7 +7,7 @@ import {
   getOtherComments,
   getUserComments,
 } from "../../../apis/comment";
-import { useAppSelector } from "../../../store/hook";
+import { useAppDispatch, useAppSelector } from "../../../store/hook";
 import Star from "../../../components/Star";
 import style from "./Comment.module.css";
 import ModalComment from "./ModalComment";
@@ -14,8 +15,13 @@ import { Avatar, Button, Pagination } from "@mui/material";
 import { Modal } from "react-bootstrap";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { FaRegSadTear } from "react-icons/fa";
+import { isAxiosError } from "../../../apis/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import { authActions } from "../../../store/authSlice";
 
 const Comment = (props: { id: number; rate: number | undefined }) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { user, accessToken } = useAppSelector((state) => state.auth);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const [comment, setComment] = useState<string>("");
@@ -41,8 +47,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
       }).then((res) => {
         setComment(res.content);
         setRate(res.star);
-        if (res.updatedAt)
-          setDate(`Updated at ${res.updatedAt}`);
+        if (res.updatedAt) setDate(`Updated at ${res.updatedAt}`);
         else setDate(res.createdAt);
         setSent(false);
       });
@@ -62,8 +67,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
         if (res !== "") {
           setComment(res.content);
           setRate(res.star);
-          if (res.updatedAt)
-            setDate(`Updated at ${res.updatedAt}`);
+          if (res.updatedAt) setDate(`Updated at ${res.updatedAt}`);
           else setDate(res.createdAt);
         }
       });
@@ -103,10 +107,23 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    });
-    setComment("");
-    setRate(0);
-    setToggleDel(false);
+    })
+      .then((res) => {
+        setComment("");
+        setRate(0);
+        setToggleDel(false);
+      })
+      .catch((error) => {
+        if (isAxiosError(error)) {
+          const data = error.response?.data;
+          toast.error("Your account has been locked!");
+
+          if (data?.status === 401) {
+            dispatch(authActions.logout());
+            return navigate("/login");
+          }
+        }
+      });
   };
 
   return (
@@ -117,7 +134,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
       <Star rate={props.rate} /> 
       <br />
     <p style={{ fontSize: "20px" }}>Comment: </p>*/}
-    <br />
+      <br />
       {isLoggedIn ? (
         comment === "" ? (
           <Fragment>
@@ -195,7 +212,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
       ) : (
         <></>
       )}
-      {otherComments.length > 0 && (
+      {otherComments.length > 0 &&
         otherComments.map((cmt, i) => {
           return (
             <div key={i}>
@@ -220,16 +237,13 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
               <br />
             </div>
           );
-        })
-      )}
+        })}
       {otherComments.length === 0 && comment === "" && (
         <div style={{ textAlign: "center" }}>
           <p className={style.title}>
             Oops, There are no comments yet <FaRegSadTear />
           </p>
-          <p>
-            Please leave your comment here!
-          </p>
+          <p>Please leave your comment here!</p>
         </div>
       )}
       <Modal show={toggleDel} onHide={() => setToggleDel(false)}>

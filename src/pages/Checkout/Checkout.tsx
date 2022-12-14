@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import { Button } from "@mui/material";
@@ -13,6 +14,7 @@ import CheckoutItem from "./CheckoutItem";
 import { postOrder } from "../../apis/order";
 import { cartActions } from "../../store/cartSlice";
 import Loading from "../Loading";
+import { authActions } from "../../store/authSlice";
 
 interface BookCart {
   book: Book;
@@ -76,6 +78,7 @@ const Checkout = () => {
             setErrMessage("Unknow error!!!");
             console.log(error);
           }
+          console.log(error);
         } finally {
           setIsSending(false);
         }
@@ -123,6 +126,14 @@ const Checkout = () => {
       if (isAxiosError(error)) {
         const data = error.response?.data;
         setErrMessage(data?.message);
+
+        if (data?.status === 401) {
+          toast.error("Your account has been locked!");
+          dispatch(authActions.logout());
+          return navigate("/login", {
+            state: { from: location },
+          });
+        }
       } else {
         setErrMessage("Unknow error!!!");
         console.log(error);

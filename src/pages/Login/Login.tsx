@@ -68,6 +68,18 @@ const Login = () => {
     <Wrapper>
       <Loading isSending={isSending} />
       <div className={`${style.container}`}>
+        <div className={style.header}>
+          <div className={`${style.logo} ms-4`}>
+            <Link to="/">
+              <p>
+                <span>
+                  <i>Book</i>
+                </span>
+                a<i>Book</i>
+              </p>
+            </Link>
+          </div>
+        </div>
         <div className={`${style.left}`}>
           <img className={`${style.img2}`} src="/images/book.png" alt="img2" />
         </div>
