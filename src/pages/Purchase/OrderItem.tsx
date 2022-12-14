@@ -7,7 +7,11 @@ import { BsTruck } from "react-icons/bs";
 import { Button } from "react-bootstrap";
 import style from "./Purchase.module.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
+const timeout = (delay: number) => {
+  return new Promise((res) => setTimeout(res, delay));
+};
 const OrderItem = (props: { order: PersonalOrder }) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const accessToken = useAppSelector((state) => state.auth.accessToken);
@@ -28,7 +32,18 @@ const OrderItem = (props: { order: PersonalOrder }) => {
   }, [accessToken]);
 
   const handleDelete = async () => {
-    await deleteOrder(accessToken, props.order.id);
+    try {
+      await deleteOrder(accessToken, props.order.id);
+    } catch (error) {
+      toast.error(
+        "Can not delete this order. Reload web to get latest information"
+      );
+      await timeout(4000);
+      window.location.reload();
+      return;
+    }
+    toast.success(`Delete success order ${props.order.id}`);
+    await timeout(4000);
     setShowDeleteModal(false);
     window.location.reload();
   };
