@@ -150,9 +150,9 @@ const MyProfile = ({ setIsSending }: { setIsSending: () => void }) => {
             ...loginInfo,
             user: {
               ...loginInfo.user,
-              firstName: info.firstName,
-              lastName: info.lastName,
-              avatar: info.avatar,
+              firstName: res.firstName,
+              lastName: res.lastName,
+              avatar: res.avatar,
             },
           })
         );
