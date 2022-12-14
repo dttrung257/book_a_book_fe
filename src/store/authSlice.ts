@@ -44,8 +44,7 @@ const authSlice = createSlice({
 
       Cookies.remove("token");
       Cookies.remove("user");
-
-      localStorage.clear();
+      Cookies.remove("cartItems");
     },
   },
   extraReducers: (builder) => {

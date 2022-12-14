@@ -219,7 +219,7 @@ const UserDetail = () => {
                   color: userInfo && userInfo.locked ? "red" : "greenyellow",
                 }}
               >
-                {userInfo && userInfo.locked ? "Locked" : "Active"}
+                {userInfo && userInfo.locked ? "Locked" : "Not locked"}
               </p>
             </div>
           </div>

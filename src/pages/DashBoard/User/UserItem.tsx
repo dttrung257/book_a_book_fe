@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SlSettings } from "react-icons/sl";
 import { Button } from "@mui/material";
 import { toast } from "react-toastify";
+import { FcCheckmark } from "react-icons/fc";
 import style from "./User.module.css";
 import { UserDetailInfo } from "../../../models";
 import { Link } from "react-router-dom";
@@ -115,7 +116,8 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
         <td>{userInfo.email}</td>
         <td>{userInfo.phoneNumber || "Not updated"}</td>
         <td>{userInfo.authority}</td>
-        <td>{locked ? "Locked" : "Active"}</td>
+        <td>{userInfo.emailVerified && <FcCheckmark />}</td>
+        <td>{locked && "Locked"}</td>
         <td className={style.iconSetting}>
           <SlSettings />
           <div className={style.action}>

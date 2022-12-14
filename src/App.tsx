@@ -82,7 +82,7 @@ const App = () => {
       })
     );
 
-    const cart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    const cart = JSON.parse(Cookies.get("cartItems") || "[]");
     dispatch(cartActions.storeInfo(cart));
   }
 

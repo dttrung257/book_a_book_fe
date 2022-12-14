@@ -196,6 +196,7 @@ const User = () => {
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Role</th>
+                  <th>Activated</th>
                   <th>Status</th>
                   <th>Setting </th>
                 </tr>

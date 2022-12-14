@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
 interface Cart {
@@ -55,7 +56,7 @@ const cartSlice = createSlice({
 
       state.totalQuantity = state.items.length;
 
-      localStorage.setItem("cartItems", JSON.stringify(state.items));
+      Cookies.set("cartItems", JSON.stringify(state.items), { expires: 1 });
     },
     changeQuantity(
       state,
@@ -67,14 +68,14 @@ const cartSlice = createSlice({
 
       state.items[itemIndex].quantity = action.payload.quantity;
 
-      localStorage.setItem("cartItems", JSON.stringify(state.items));
+      Cookies.set("cartItems", JSON.stringify(state.items), { expires: 1 });
     },
     removeCart(state, action: PayloadAction) {
       state.items = [];
 
       state.totalQuantity = 0;
 
-      localStorage.setItem("cartItems", JSON.stringify(state.items));
+      Cookies.set("cartItems", JSON.stringify(state.items), { expires: 1 });
     },
     removeCartItems(state, action: PayloadAction<{ ids: number[] }>) {
       state.items = state.items.filter(
@@ -83,7 +84,7 @@ const cartSlice = createSlice({
 
       state.totalQuantity = state.items.length;
 
-      localStorage.setItem("cartItems", JSON.stringify(state.items));
+      Cookies.set("cartItems", JSON.stringify(state.items), { expires: 1 });
     },
   },
 });
