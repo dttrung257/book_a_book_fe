@@ -13,6 +13,7 @@ import { changeUserStatus } from "../../../apis/manage";
 
 const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
   const [locked, setLocked] = useState<boolean>(userInfo.locked);
+  const [activated, setActivated] = useState<boolean>(userInfo.emailVerified);
   const [modal, setModal] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>("");
   const [modalType, setModalType] = useState<"LOCK" | "ACTIVATE">("LOCK");
@@ -78,6 +79,7 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
         }
       );
 
+      setActivated(!activated);
       closeModal(false);
       toast.success(data);
     } catch (error) {
@@ -116,7 +118,7 @@ const UserItem = ({ user: userInfo }: { user: UserDetailInfo }) => {
         <td>{userInfo.email}</td>
         <td>{userInfo.phoneNumber || "Not updated"}</td>
         <td>{userInfo.authority}</td>
-        <td>{userInfo.emailVerified && <FcCheckmark />}</td>
+        <td>{activated && <FcCheckmark />}</td>
         <td>{locked && "Locked"}</td>
         <td className={style.iconSetting}>
           <SlSettings />
