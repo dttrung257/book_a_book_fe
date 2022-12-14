@@ -116,7 +116,7 @@ const OrderDetail = () => {
     ) {
       setMessage({
         status: "fail",
-        message: "Can not delete this order!",
+        message: "You can only delete order with status PENDING or CANCELED",
       });
       return;
     }
@@ -346,6 +346,7 @@ const OrderDetail = () => {
             <div
               style={{
                 color: message.status === "fail" ? "red" : "green",
+                marginBottom: "10px",
               }}
             >
               {message?.message}

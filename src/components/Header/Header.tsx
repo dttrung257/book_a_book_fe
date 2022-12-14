@@ -1,6 +1,5 @@
 import { ChangeEvent, Fragment, useState } from "react";
 import { FiSearch, FiUser, FiShoppingCart } from "react-icons/fi";
-import { VscTriangleDown } from "react-icons/vsc";
 import style from "./Header.module.css";
 import {
   Avatar,
@@ -71,7 +70,6 @@ const Header = () => {
           <Link to="/books">
             <div className={style.navAddr}>
               Categories
-              <VscTriangleDown />
             </div>
           </Link>
 

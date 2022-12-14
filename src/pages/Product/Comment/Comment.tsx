@@ -42,8 +42,8 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
         setComment(res.content);
         setRate(res.star);
         if (res.updatedAt)
-          setDate(`Updated at ${new Date(res.updatedAt).toLocaleString()}`);
-        else setDate(new Date(res.createdAt).toLocaleString());
+          setDate(`Updated at ${res.updatedAt}`);
+        else setDate(res.createdAt);
         setSent(false);
       });
       return;
@@ -63,8 +63,8 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
           setComment(res.content);
           setRate(res.star);
           if (res.updatedAt)
-            setDate(`Updated at ${new Date(res.updatedAt).toLocaleString()}`);
-          else setDate(new Date(res.createdAt).toLocaleString());
+            setDate(`Updated at ${res.updatedAt}`);
+          else setDate(res.createdAt);
         }
       });
       getOtherComments(props.id, page, {
@@ -113,11 +113,11 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
     <div id={style.comment}>
       <p id={style.title}>Reviews</p>
       <hr style={{ height: "3px", borderWidth: 0, backgroundColor: "#666" }} />
-      <p className={style.title}>Rating: </p>
-      <Star rate={props.rate} />
+      {/* <p className={style.title}>Rating: </p>
+      <Star rate={props.rate} /> 
       <br />
-      <br />
-      <p style={{ fontSize: "20px" }}>Comment: </p>
+    <p style={{ fontSize: "20px" }}>Comment: </p>*/}
+    <br />
       {isLoggedIn ? (
         comment === "" ? (
           <Fragment>
@@ -195,7 +195,7 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
       ) : (
         <></>
       )}
-      {otherComments.length > 0 ? (
+      {otherComments.length > 0 && (
         otherComments.map((cmt, i) => {
           return (
             <div key={i}>
@@ -211,8 +211,8 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
                   <Star rate={cmt.star} />
                   <p style={{ float: "right" }}>
                     {cmt.updatedAt
-                      ? `Updated at ${new Date(cmt.updatedAt).toLocaleString()}`
-                      : new Date(cmt.createdAt).toLocaleString()}
+                      ? `Updated at ${cmt.updatedAt}`
+                      : cmt.createdAt}
                   </p>
                   <p>{cmt.content}</p>
                 </div>
@@ -221,7 +221,8 @@ const Comment = (props: { id: number; rate: number | undefined }) => {
             </div>
           );
         })
-      ) : (
+      )}
+      {otherComments.length === 0 && comment === "" && (
         <div style={{ textAlign: "center" }}>
           <p className={style.title}>
             Oops, There are no comments yet <FaRegSadTear />

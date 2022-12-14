@@ -31,6 +31,7 @@
 }
 
 #bookDetail #frame img {
+  max-width: 70%;
   display: block;
   margin: auto;
   position: absolute;

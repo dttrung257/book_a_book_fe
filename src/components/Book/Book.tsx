@@ -31,7 +31,7 @@ const Book = (props: { book: BookInfoBrief }) => {
   return (
     <div className={style.frame}>
       <Link to={path}>
-        <div>
+        <div className={style.img}>
           <img src={info.image} alt={info.name} />
         </div>
         <div id={style.info}>
