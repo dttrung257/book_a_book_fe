@@ -217,3 +217,14 @@ export const deleteOrder = async (id: string, options: Object) => {
   const response = await axiosInstance.delete(`/manage/orders/${id}`, options);
   return response.data;
 };
+
+export const getStats = async (
+   options: Object, month?: number, year?: number, range?: number
+) => {
+  console.log(year !== undefined ?
+    `/sales_stats?year=${year}&month=${month}&range=${range}` : "/sales_stats")
+  const response = await axiosInstance.get(year !== undefined ?
+    `/sales_stats?year=${year}&month=${month}&range=${range}` : "/sales_stats", options
+  );
+  return response.data;
+}; 

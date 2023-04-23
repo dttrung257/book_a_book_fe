@@ -35,6 +35,7 @@ const Forget = lazy(() => import("./pages/ForgetPassword/Forget"));
 const CodeVerify = lazy(() => import("./pages/ForgetPassword/CodeVerify"));
 const Reset = lazy(() => import("./pages/ForgetPassword/Reset"));
 const DashBoardUser = lazy(() => import("./pages/DashBoard/User/User"));
+const DashBoardStatistics = lazy(() => import("./pages/DashBoard/Statistics/Statistics"));
 const DashBoardUserDetail = lazy(
   () => import("./pages/DashBoard/User/UserDetail")
 );
@@ -105,6 +106,7 @@ const App = () => {
           <Route path="dashboard" element={<DashBoardLayout />}>
             <Route index element={<Navigate to={"users"} />} />
             <Route path="users" element={<DashBoardUser />} />
+            <Route path="statistics" element={<DashBoardStatistics />} />
             <Route path="users/:id" element={<DashBoardUserDetail />} />
             <Route path="books" element={<DashBoardBook />} />
             <Route path="books/:id" element={<DashBoardBookDetail />} />

@@ -3,6 +3,7 @@ import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { HiUserGroup } from "react-icons/hi";
 import { MdLibraryBooks, MdComment } from "react-icons/md";
 import { RiFileList3Fill } from "react-icons/ri";
+import { GoGraph } from "react-icons/go";
 import style from "./DashBoardLayout.module.css";
 import {
   Avatar,
@@ -142,6 +143,15 @@ const Navbar = () => {
         >
           <MdComment />
           Comments
+        </NavLink>
+      </div>
+      <div>
+        <NavLink
+          to={"statistics"}
+          className={({ isActive }) => (isActive ? style.isActive : "")}
+        >
+          <GoGraph />
+          Statistics
         </NavLink>
       </div>
     </div>
